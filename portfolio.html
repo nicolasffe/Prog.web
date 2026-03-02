@@ -5,44 +5,262 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfólio | Meu Portfólio</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <header>
       <div class="container">
-        <nav>
-          <ul>
-            <li><a href="index.html">Início</a></li>
-            <li><a href="sobre.html">Sobre</a></li>
-            <li><a href="servicos.html">Serviços</a></li>
-            <li><a class="active" href="portfolio.html">Portfólio</a></li>
-            <li><a href="contato.html">Contato</a></li>
-          </ul>
-        </nav>
+        <div class="nav-inner">
+          <a class="nav-brand" href="index.html">
+            <img
+              class="nav-avatar"
+              src="https://i.pravatar.cc/100?img=12"
+              alt="Foto de Nicolas"
+            />
+            <span class="nav-brand__name">Nicolas</span>
+            <i
+              class="fa-solid fa-circle-check nav-verified"
+              aria-hidden="true"
+            ></i>
+          </a>
+          <nav>
+            <ul>
+              <li>
+                <a href="index.html"><span class="nav-num">01</span> Início</a>
+              </li>
+              <li>
+                <a href="sobre.html"><span class="nav-num">02</span> Sobre</a>
+              </li>
+              <li>
+                <a href="servicos.html"
+                  ><span class="nav-num">03</span> Serviços</a
+                >
+              </li>
+              <li>
+                <a class="active" href="portfolio.html"
+                  ><span class="nav-num">04</span> Portfólio</a
+                >
+              </li>
+              <li>
+                <a href="contato.html"
+                  ><span class="nav-num">05</span> Contato</a
+                >
+              </li>
+            </ul>
+          </nav>
+          <div class="nav-actions">
+            <a class="nav-icon-btn" href="contato.html" title="Contato"
+              ><i class="fa-solid fa-flag"></i
+            ></a>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="container">
-      <section class="panel">
-        <h1 class="section-title">Projetos</h1>
-        <div class="grid">
-          <article class="card">
-            <h3>Projeto 1</h3>
-            <p>Descrição breve do projeto e tecnologias utilizadas.</p>
-          </article>
-          <article class="card">
-            <h3>Projeto 2</h3>
-            <p>Descrição breve do projeto e resultados alcançados.</p>
-          </article>
-          <article class="card">
-            <h3>Projeto 3</h3>
-            <p>Descrição breve do projeto e objetivo principal.</p>
-          </article>
+    <main>
+      <section class="page-hero">
+        <div class="container page-hero__inner">
+          <span class="section-kicker">Meus trabalhos</span>
+          <h1>Projetos.</h1>
+          <p>Trabalhos reais desenvolvidos do design ao deploy.</p>
+        </div>
+      </section>
+
+      <section class="proj-section" style="padding-top: 0">
+        <div class="container">
+          <div class="proj-grid">
+            <!-- PROJETO 1 – substitua os atributos abaixo pelos dados reais -->
+            <article class="proj-card">
+              <!-- Substitua o div abaixo por <img src="imagens/projeto1.png" alt="..." class="proj-card__thumb"> quando tiver screenshot -->
+              <div class="proj-card__thumb--placeholder proj-card__thumb">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div class="proj-card__body">
+                <h3>Nome do Projeto 1</h3>
+                <p>
+                  Descrição breve do que o projeto faz, problema resolvido e seu
+                  impacto.
+                </p>
+              </div>
+              <div class="proj-card__tags">
+                <span class="proj-tag">HTML</span>
+                <span class="proj-tag">CSS</span>
+                <span class="proj-tag">JavaScript</span>
+              </div>
+              <div class="proj-card__footer">
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Ver online"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-solid fa-globe"></i>
+                </a>
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Repositório GitHub"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-brands fa-github"></i>
+                </a>
+              </div>
+            </article>
+
+            <!-- PROJETO 2 -->
+            <article class="proj-card">
+              <div class="proj-card__thumb--placeholder proj-card__thumb">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div class="proj-card__body">
+                <h3>Nome do Projeto 2</h3>
+                <p>
+                  Descrição breve do que o projeto faz, problema resolvido e seu
+                  impacto.
+                </p>
+              </div>
+              <div class="proj-card__tags">
+                <span class="proj-tag">React</span>
+                <span class="proj-tag">Node.js</span>
+                <span class="proj-tag">MySQL</span>
+              </div>
+              <div class="proj-card__footer">
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Ver online"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-solid fa-globe"></i>
+                </a>
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Repositório GitHub"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-brands fa-github"></i>
+                </a>
+              </div>
+            </article>
+
+            <!-- PROJETO 3 -->
+            <article class="proj-card">
+              <div class="proj-card__thumb--placeholder proj-card__thumb">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div class="proj-card__body">
+                <h3>Nome do Projeto 3</h3>
+                <p>
+                  Descrição breve do que o projeto faz, problema resolvido e seu
+                  impacto.
+                </p>
+              </div>
+              <div class="proj-card__tags">
+                <span class="proj-tag">Python</span>
+                <span class="proj-tag">TypeScript</span>
+              </div>
+              <div class="proj-card__footer">
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Ver online"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-solid fa-globe"></i>
+                </a>
+                <a
+                  href="#"
+                  class="proj-link"
+                  title="Repositório GitHub"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="fa-brands fa-github"></i>
+                </a>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="container">© 2026 - Portfólio de Nicolas</div>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-brand__logo">
+              <span class="footer-brand__logo-dot"></span>
+              <span class="footer-brand__logo-name"
+                >Nicolas<span>.dev</span></span
+              >
+            </div>
+            <p>
+              Desenvolvedor web criando experiências digitais elegantes e
+              funcionais.
+            </p>
+            <div class="footer-socials">
+              <a
+                class="footer-social-link"
+                href="#"
+                title="GitHub"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-github"></i
+              ></a>
+              <a
+                class="footer-social-link"
+                href="#"
+                title="LinkedIn"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-linkedin-in"></i
+              ></a>
+              <a
+                class="footer-social-link"
+                href="#"
+                title="Instagram"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Páginas</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Início</a></li>
+              <li><a href="sobre.html">Sobre</a></li>
+              <li><a href="servicos.html">Serviços</a></li>
+              <li><a href="portfolio.html">Portfólio</a></li>
+              <li><a href="contato.html">Contato</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contato</h4>
+            <ul class="footer-links">
+              <li><a href="mailto:nicolas@email.com">nicolas@email.com</a></li>
+              <li><a href="contato.html">Enviar mensagem</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Nicolas. Todos os direitos reservados.</span>
+          <span class="footer-bottom__made"
+            >Feito com <span class="footer-bottom__heart">♥</span> em HTML &amp;
+            CSS</span
+          >
+        </div>
+      </div>
     </footer>
   </body>
 </html>
