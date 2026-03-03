@@ -189,7 +189,35 @@ nav a.active::after {
 .nav-actions {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
+}
+
+.nav-cv-btn {
+  height: 42px;
+  border-radius: 999px;
+  padding: 0 0.95rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition:
+    border-color var(--ease-standard),
+    background var(--ease-standard),
+    transform var(--ease-standard);
+}
+
+.nav-cv-btn:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-1px);
 }
 
 .nav-icon-btn {
@@ -403,6 +431,19 @@ main {
   max-width: 55ch;
   font-size: 1.15rem;
   line-height: 1.82;
+}
+
+.about-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.about-links .button,
+.about-links .button-ghost {
+  margin-top: 0;
 }
 
 /* ── ABOUT PAGE ────────────────────────────────────── */
@@ -1128,6 +1169,12 @@ form .button {
     font-size: 0.82rem;
   }
 
+  .nav-cv-btn {
+    height: 38px;
+    padding: 0 0.8rem;
+    font-size: 0.76rem;
+  }
+
   .hero {
     padding: var(--space-section-md) 0;
   }
@@ -1270,6 +1317,10 @@ form .button {
     width: 36px;
     height: 36px;
     font-size: 0.85rem;
+  }
+
+  .nav-cv-btn {
+    display: none;
   }
 
   .hero h1 {
