@@ -854,11 +854,11 @@ form .button {
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-#svc-slide-1:checked ~ .svc-track {
+#svc-slide-1:checked ~ .svc-viewport .svc-track {
   transform: translateX(0%);
 }
 
-#svc-slide-2:checked ~ .svc-track {
+#svc-slide-2:checked ~ .svc-viewport .svc-track {
   transform: translateX(-50%);
 }
 
