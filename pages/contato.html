@@ -4,8 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sobre | Meu Portfólio</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <title>Contato | Meu Portfólio</title>
+    <link rel="stylesheet" href="../css/styles.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -18,7 +18,7 @@
       <div class="container">
         <div class="nav-inner">
           <!-- Logo com avatar -->
-          <a class="nav-brand" href="index.html">
+          <a class="nav-brand" href="../index.html">
             <img
               class="nav-avatar"
               src="https://i.pravatar.cc/100?img=12"
@@ -34,12 +34,12 @@
           <nav>
             <ul>
               <li>
-                <a href="index.html"><span class="nav-num">01</span> Início</a>
+                <a href="../index.html"
+                  ><span class="nav-num">01</span> Início</a
+                >
               </li>
               <li>
-                <a class="active" href="sobre.html"
-                  ><span class="nav-num">02</span> Sobre</a
-                >
+                <a href="sobre.html"><span class="nav-num">02</span> Sobre</a>
               </li>
               <li>
                 <a href="servicos.html"
@@ -52,7 +52,7 @@
                 >
               </li>
               <li>
-                <a href="contato.html"
+                <a class="active" href="contato.html"
                   ><span class="nav-num">05</span> Contato</a
                 >
               </li>
@@ -62,7 +62,7 @@
           <div class="nav-actions">
             <a
               class="nav-cv-btn"
-              href="imagens/curriculo-nicolas.pdf"
+              href="../imagens/curriculo-nicolas.pdf"
               title="Abrir currículo em PDF"
               target="_blank"
               rel="noopener"
@@ -94,101 +94,39 @@
     <!-- Conteúdo principal -->
     <main>
       <!-- Abertura da página -->
-      <section class="about-hero">
-        <div class="container">
-          <span class="about-hero__kicker">Olá, meu nome é Nicolas</span>
-          <h1>Desenvolvedor<br />web.</h1>
+      <section class="page-hero">
+        <div class="container page-hero__inner">
+          <span class="section-kicker">Fale comigo</span>
+          <h1>Contato.</h1>
+          <p>Tem um projeto em mente? Me manda uma mensagem.</p>
         </div>
       </section>
 
-      <!-- Miolo da página -->
-      <section class="about-body">
-        <div class="container">
-          <!--
-            Aqui a página se divide em duas partes:
-            de um lado sua história, do outro infos rápidas e links.
-          -->
-          <div class="about-grid">
-            <!-- Sua apresentação -->
-            <div class="about-text">
-              <p class="about-text__name">Nicolas</p>
-              <p>
-                Sou desenvolvedor web apaixonado por criar interfaces limpas,
-                funcionais e centradas no usuário. Trabalho com HTML, CSS e
-                JavaScript para construir experiências digitais que aliam
-                estética e performance.
-              </p>
-              <p>
-                Tenho interesse em front-end moderno, acessibilidade e boas
-                práticas de desenvolvimento. Estou sempre aprendendo e buscando
-                evoluir tanto como desenvolvedor quanto como profissional.
-              </p>
-              <div class="about-chips">
-                <span class="about-chip">HTML &amp; CSS</span>
-                <span class="about-chip">JavaScript</span>
-                <span class="about-chip">React</span>
-                <span class="about-chip">Node.js</span>
-                <span class="about-chip">Python</span>
-                <span class="about-chip">Git &amp; GitHub</span>
-                <span class="about-chip">Figma</span>
-              </div>
-              <div class="about-cta">
-                <a class="button" href="portfolio.html">Ver projetos</a>
-                <a class="button-ghost" href="contato.html">Falar comigo →</a>
-              </div>
-            </div>
+      <!-- Formulário de contato -->
+      <div class="container">
+        <!--
+          Form direto ao ponto:
+          nome, e-mail e mensagem.
+        -->
+        <form>
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" placeholder="Seu nome" />
 
-            <!-- Infos rápidas -->
-            <div class="about-facts">
-              <div class="about-fact">
-                <h4>Localização</h4>
-                <p>Brasil</p>
-              </div>
-              <div class="about-fact">
-                <h4>Foco</h4>
-                <p>Full-Stack Development</p>
-              </div>
-              <div class="about-fact">
-                <h4>Disponibilidade</h4>
-                <p>Aberto a propostas de trabalho</p>
-              </div>
-              <div class="about-fact">
-                <h4>Serviços</h4>
-                <p><a href="servicos.html">Ver o que ofereço</a></p>
-              </div>
-              <div class="about-links">
-                <a
-                  class="button"
-                  href="imagens/curriculo-nicolas.pdf"
-                  target="_blank"
-                  rel="noopener"
-                  >Currículo (PDF)</a
-                >
-                <a
-                  class="button-ghost"
-                  href="https://github.com/nicolasffe"
-                  target="_blank"
-                  rel="noopener"
-                  >GitHub</a
-                >
-                <a
-                  class="button-ghost"
-                  href="https://www.linkedin.com/in/nicolas-ferreira-fernandes/"
-                  target="_blank"
-                  rel="noopener"
-                  >LinkedIn</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <label for="email">E-mail</label>
+          <input id="email" type="email" placeholder="seuemail@exemplo.com" />
+
+          <label for="mensagem">Mensagem</label>
+          <textarea id="mensagem" placeholder="Escreva sua mensagem"></textarea>
+
+          <button class="button" type="submit">Enviar</button>
+        </form>
+      </div>
     </main>
 
     <!-- Rodapé -->
     <footer>
       <div class="container">
-        <!-- Links finais + contato -->
+        <!-- Resumo + links úteis + contato -->
         <div class="footer-grid">
           <div class="footer-brand">
             <div class="footer-brand__logo">
@@ -231,7 +169,7 @@
           <div class="footer-col">
             <h4>Páginas</h4>
             <ul class="footer-links">
-              <li><a href="index.html">Início</a></li>
+              <li><a href="../index.html">Início</a></li>
               <li><a href="sobre.html">Sobre</a></li>
               <li><a href="servicos.html">Serviços</a></li>
               <li><a href="portfolio.html">Portfólio</a></li>
@@ -241,17 +179,18 @@
           <div class="footer-col">
             <h4>Contato</h4>
             <ul class="footer-links">
-              <li><a href="mailto:nicolas@email.com">nicolas@email.com</a></li>
+              <li>
+                <a href="mailto:nicolasferreira.ismart@gmail.com"
+                  >nicolasferreira.ismart@gmail.com</a
+                >
+              </li>
               <li><a href="contato.html">Enviar mensagem</a></li>
             </ul>
           </div>
         </div>
         <div class="footer-bottom">
           <span>© 2026 Nicolas. Todos os direitos reservados.</span>
-          <span class="footer-bottom__made"
-            >Feito com <span class="footer-bottom__heart">♥</span> em HTML &amp;
-            CSS</span
-          >
+          <span class="footer-bottom__made">Feito em HTML &amp; CSS</span>
         </div>
       </div>
     </footer>
