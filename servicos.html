@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="pt-BR">
+  <!-- Meta e estilos -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Serviços | Meu Portfólio</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -12,9 +13,11 @@
     />
   </head>
   <body>
+    <!-- Topo do site -->
     <header>
       <div class="container">
         <div class="nav-inner">
+          <!-- Logo com avatar -->
           <a class="nav-brand" href="index.html">
             <img
               class="nav-avatar"
@@ -27,6 +30,7 @@
               aria-hidden="true"
             ></i>
           </a>
+          <!-- Menu principal -->
           <nav>
             <ul>
               <li>
@@ -52,6 +56,7 @@
               </li>
             </ul>
           </nav>
+          <!-- Atalhos rápidos -->
           <div class="nav-actions">
             <a
               class="nav-cv-btn"
@@ -84,8 +89,9 @@
       </div>
     </header>
 
+    <!-- Conteúdo principal -->
     <main>
-      <!-- ── PAGE HERO ─────────────────────────────────── -->
+      <!-- Abertura da página -->
       <section class="page-hero">
         <div class="container page-hero__inner">
           <span class="section-kicker">O que eu faço</span>
@@ -94,9 +100,13 @@
         </div>
       </section>
 
-      <!-- ── SERVIÇOS ─────────────────────────────────── -->
+      <!-- Seção de serviços -->
       <section class="svc-section" style="padding-top: 0">
         <div class="container">
+          <!--
+            Aqui ficam os serviços em formato de carrossel.
+            Os radios por trás controlam a troca dos blocos.
+          -->
           <div class="svc-carousel">
             <input
               class="svc-slide-toggle"
@@ -114,6 +124,7 @@
 
             <div class="svc-viewport">
               <div class="svc-track">
+                <!-- Primeira leva de serviços -->
                 <div class="svc-page svc-grid">
                   <article class="svc-card">
                     <div class="svc-card__top">
@@ -168,6 +179,7 @@
                   </article>
                 </div>
 
+                <!-- Segunda leva de serviços -->
                 <div class="svc-page svc-grid">
                   <article class="svc-card">
                     <div class="svc-card__top">
@@ -224,6 +236,7 @@
             </div>
 
             <div class="svc-dots" aria-label="Navegação dos serviços">
+              <!-- Bolinhas para navegar no carrossel -->
               <label
                 class="svc-dot"
                 for="svc-slide-1"
@@ -238,11 +251,12 @@
           </div>
         </div>
 
-        <!-- ── STACK & HABILIDADES ────────────────────────── -->
+        <!-- Skills e ferramentas -->
         <div class="skills-section">
           <div class="container">
             <h2 class="skills-title">Stack &amp; Habilidades.</h2>
 
+            <!-- Lista visual das tecnologias -->
             <div class="skills-grid">
               <div class="skill-bubble">
                 <div class="skill-bubble__circle">
@@ -370,8 +384,10 @@
       </section>
     </main>
 
+    <!-- Rodapé -->
     <footer>
       <div class="container">
+        <!-- Links finais + contato -->
         <div class="footer-grid">
           <div class="footer-brand">
             <div class="footer-brand__logo">
@@ -439,7 +455,9 @@
       </div>
     </footer>
 
+    <!-- Script da página -->
     <script>
+      // Passa os serviços automaticamente e pausa quando fizer sentido
       (() => {
         const carousel = document.querySelector(".svc-carousel");
         if (!carousel) return;

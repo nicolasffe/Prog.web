@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
+  /* Paleta principal do tema */
   --bg: #0d0e12;
   --bg-soft: #111318;
   --card: rgba(17, 25, 40, 0.78);
@@ -13,9 +14,12 @@
   --space-section-lg: 6rem;
   --space-section-md: 4.5rem;
   --space-section-sm: 3rem;
+  /* Ajustes globais de raio e transição */
   --radius-md: 0.65rem;
   --ease-standard: 0.26s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Base */
 
 * {
   margin: 0;
@@ -53,7 +57,7 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* ── HEADER ───────────────────────────────────────────── */
+/* Header */
 header {
   background: #0f1016;
   backdrop-filter: blur(20px);
@@ -107,6 +111,7 @@ header {
 }
 
 .container {
+  /* Limite de largura para manter leitura confortável */
   width: min(1120px, 92%);
   margin: 0 auto;
 }
@@ -148,6 +153,7 @@ nav a {
 }
 
 nav a::after {
+  /* Barrinha da aba ativa/hover no menu */
   content: "";
   position: absolute;
   bottom: -14px;
@@ -187,6 +193,7 @@ nav a.active::after {
 }
 
 .nav-actions {
+  /* Botões da direita (CV + redes) */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -245,7 +252,7 @@ nav a.active::after {
   transform: translateY(-1px);
 }
 
-/* ── FOOTER ───────────────────────────────────────────── */
+/* Footer */
 footer {
   background: rgba(5, 8, 18, 0.9);
   border-top: 1px solid var(--border);
@@ -390,11 +397,13 @@ footer {
 }
 
 main {
+  /* Respiro padrão entre header e conteúdo */
   padding: var(--space-section-sm) 0;
 }
 
-/* ── HOME HERO ────────────────────────────────────── */
+/* Home */
 .hero {
+  /* Hero mais aberto para dar presença na home */
   padding: var(--space-section-lg) 0 var(--space-section-md);
 }
 
@@ -413,6 +422,7 @@ main {
 }
 
 .hero h1 {
+  /* Título principal com destaque forte */
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(3.5rem, 8vw, 7.5rem);
   line-height: 1.03;
@@ -427,6 +437,7 @@ main {
 }
 
 .hero p {
+  /* Linha mais longa cansa a leitura; por isso max-width */
   color: var(--muted);
   max-width: 55ch;
   font-size: 1.15rem;
@@ -446,7 +457,7 @@ main {
   margin-top: 0;
 }
 
-/* ── ABOUT PAGE ────────────────────────────────────── */
+/* Sobre */
 .about-hero {
   padding: var(--space-section-lg) 0 var(--space-section-md);
 }
@@ -480,6 +491,7 @@ main {
 }
 
 .about-grid {
+  /* Duas colunas no desktop: texto + fatos/links */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem 6rem;
@@ -555,14 +567,16 @@ main {
 }
 
 .about-cta {
+  /* Ações com espaço confortável para clique */
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   margin-top: 2.5rem;
 }
 
-/* ── PAGE HERO (inner pages) ───────────────────────────── */
+/* Hero interno */
 .page-hero {
+  /* Padrão visual compartilhado nas páginas internas */
   padding: var(--space-section-lg) 0 var(--space-section-md);
   margin-bottom: 3.5rem;
 }
@@ -644,6 +658,7 @@ main {
 }
 
 .button {
+  /* Botão primário */
   display: inline-block;
   margin-top: 1.25rem;
   background: var(--primary-2);
@@ -665,6 +680,7 @@ main {
 }
 
 .button-ghost {
+  /* Botão secundário (menos ênfase) */
   display: inline-block;
   margin-top: 1.25rem;
   color: var(--text);
@@ -691,6 +707,11 @@ main {
 }
 
 form {
+  /*
+    Form centralizado e estreito de propósito.
+    A ideia aqui é facilitar a leitura do formulário
+    e evitar linhas largas demais em desktop.
+  */
   display: grid;
   gap: 1rem;
   max-width: 560px;
@@ -709,6 +730,7 @@ label {
 
 input,
 textarea {
+  /* Campos escuros para manter consistência com o tema */
   width: 100%;
   background-color: #13151c;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -741,7 +763,7 @@ form .button {
   font-size: 0.97rem;
 }
 
-/* ── PORTFOLIO CARDS ─────────────────────────────────── */
+/* Portfólio */
 .proj-section {
   padding: var(--space-section-md) 0;
 }
@@ -751,12 +773,14 @@ form .button {
 }
 
 .proj-grid {
+  /* Grid fluido: adapta o número de cards sozinho */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.8rem;
 }
 
 .proj-card {
+  /* Card com efeito de vidro leve */
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 1.25rem;
@@ -813,6 +837,7 @@ form .button {
 }
 
 .proj-card__tags {
+  /* Tecnologias do projeto */
   padding: 0.5rem 1.4rem 0;
   display: flex;
   flex-wrap: wrap;
@@ -855,7 +880,7 @@ form .button {
   transform: scale(1.15);
 }
 
-/* ── SECTION KICKER ───────────────────────────────────── */
+/* Kicker */
 .section-kicker {
   display: inline-block;
   margin-bottom: 0.5rem;
@@ -866,7 +891,7 @@ form .button {
   font-weight: 700;
 }
 
-/* ── SERVICES SECTION ─────────────────────────────────── */
+/* Serviços */
 .svc-section {
   padding: var(--space-section-md) 0 var(--space-section-sm);
 }
@@ -876,6 +901,7 @@ form .button {
 }
 
 .svc-carousel {
+  /* Wrapper do carrossel (serviços) */
   position: relative;
 }
 
@@ -884,12 +910,14 @@ form .button {
 }
 
 .svc-slide-toggle {
+  /* Radios escondidos controlam o slide via CSS */
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
 .svc-track {
+  /* Duas páginas lado a lado; translate troca o slide */
   display: flex;
   width: 200%;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
@@ -1015,7 +1043,7 @@ form .button {
   transform: scale(1.15);
 }
 
-/* ── SKILLS SECTION ───────────────────────────────────── */
+/* Skills */
 .skills-section {
   background: transparent;
   padding: var(--space-section-md) 0 calc(var(--space-section-md) + 0.5rem);
@@ -1033,6 +1061,7 @@ form .button {
 }
 
 .skills-grid {
+  /* Ícones em grade com densidade maior */
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1.35rem 0.9rem;
@@ -1087,6 +1116,7 @@ form .button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Respeita usuários que preferem menos animações */
   * {
     animation: none !important;
     transition: none !important;
@@ -1094,8 +1124,9 @@ form .button {
   }
 }
 
-/* ── RESPONSIVE ───────────────────────────────────────── */
+/* Responsivo */
 @media (max-width: 1024px) {
+  /* Tablet/desktop menor */
   .container {
     width: min(1120px, 93%);
   }
@@ -1124,6 +1155,7 @@ form .button {
 }
 
 @media (max-width: 768px) {
+  /* Faixa intermediária: ajusta navegação e grids */
   .container {
     width: min(1120px, 94%);
   }
@@ -1267,6 +1299,7 @@ form .button {
 }
 
 @media (max-width: 640px) {
+  /* Mobile principal */
   .nav-brand__name,
   .nav-verified {
     display: none;
@@ -1401,6 +1434,7 @@ form .button {
 }
 
 @media (max-width: 480px) {
+  /* Mobile compacto */
   nav {
     max-width: calc(100vw - 88px);
     margin-right: 0.1rem;
