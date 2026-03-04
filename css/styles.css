@@ -15,6 +15,7 @@
   --space-section-md: 4.5rem;
   --space-section-sm: 3rem;
   /* Ajustes globais de raio e transição */
+  /* Essas duas vars aqui deixam o site com cara mais "polida" sem esforço */
   --radius-md: 0.65rem;
   --ease-standard: 0.26s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -33,6 +34,7 @@ body {
 }
 
 body {
+  /* Fonte base: limpa, legível e sem dor de cabeça */
   font-family: "Manrope", "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -46,6 +48,7 @@ a,
 button,
 input,
 textarea {
+  /* Transição global pra tudo ficar suave sem exagero */
   transition: all var(--ease-standard);
 }
 
@@ -59,6 +62,7 @@ textarea:focus-visible {
 
 /* Header */
 header {
+  /* Header fixo no topo: navegação sempre à mão */
   background: #0f1016;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -69,6 +73,7 @@ header {
 }
 
 .nav-inner {
+  /* Gridzinho simples: logo | menu | ações */
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -117,6 +122,7 @@ header {
 }
 
 nav {
+  /* Menu centralizado sem complicar o layout */
   position: static;
   height: auto;
   display: flex;
@@ -132,6 +138,7 @@ nav ul {
 }
 
 nav a {
+  /* Link do menu com área de clique confortável */
   color: #ffffff;
   text-decoration: none;
   padding: 0.4rem 0.72rem;
@@ -201,6 +208,7 @@ nav a.active::after {
 }
 
 .nav-cv-btn {
+  /* Botão de CV discreto, mas presente */
   height: 42px;
   border-radius: 999px;
   padding: 0 0.95rem;
@@ -228,6 +236,7 @@ nav a.active::after {
 }
 
 .nav-icon-btn {
+  /* Ícones redondinhos pra social/ações rápidas */
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -254,6 +263,7 @@ nav a.active::after {
 
 /* Footer */
 footer {
+  /* Rodapé com contraste mais baixo pra não roubar atenção */
   background: rgba(5, 8, 18, 0.9);
   border-top: 1px solid var(--border);
   padding: 3.5rem 0 0;
@@ -261,6 +271,7 @@ footer {
 }
 
 .footer-grid {
+  /* Divide as infos do rodapé sem virar bagunça */
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 2.5rem 3rem;
@@ -306,6 +317,7 @@ footer {
 }
 
 .footer-social-link {
+  /* Botão social básico: redondo, leve e clicável */
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -408,6 +420,7 @@ main {
 }
 
 .hero-kicker {
+  /* "Selo" pequeno acima do título principal */
   display: block;
   margin-bottom: 1.2rem;
   font-size: 0.78rem;
@@ -445,6 +458,7 @@ main {
 }
 
 .about-links {
+  /* Agrupa CTAs da seção sobre sem quebrar feio */
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -534,6 +548,7 @@ main {
 }
 
 .about-chip {
+  /* Tags curtinhas tipo etiqueta */
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -611,6 +626,7 @@ main {
 }
 
 .section-title {
+  /* Título padrão de seção (aqui mora consistência) */
   font-size: clamp(1.4rem, 2.2vw, 1.9rem);
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -631,12 +647,14 @@ main {
 }
 
 .grid {
+  /* Grid genérico pra cartões/listas */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 1.2rem 1.6rem;
 }
 
 .card {
+  /* Card minimalista, só com linha inferior */
   background: transparent;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
@@ -865,6 +883,7 @@ form .button {
 }
 
 .proj-link {
+  /* Ícone de ação no card de projeto */
   color: var(--muted);
   font-size: 1.2rem;
   text-decoration: none;
@@ -937,12 +956,14 @@ form .button {
 }
 
 .svc-grid {
+  /* Aqui ficam os serviços por página do carrossel */
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2.3rem 2rem;
 }
 
 .svc-card {
+  /* Card de serviço sem caixa pesada, bem clean */
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -1015,6 +1036,7 @@ form .button {
 }
 
 .svc-dots {
+  /* Bolinhas pra trocar slide (o clássico que funciona) */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1051,6 +1073,7 @@ form .button {
 }
 
 .skills-title {
+  /* Título grandão pra puxar atenção da seção */
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(2.1rem, 3.8vw, 3rem);
   font-weight: 900;
@@ -1069,6 +1092,7 @@ form .button {
 }
 
 .skill-bubble {
+  /* Cada habilidade = bolha + nome */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1077,6 +1101,7 @@ form .button {
 }
 
 .skill-bubble__circle {
+  /* Círculo do ícone com sombra sutil */
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -1156,6 +1181,7 @@ form .button {
 
 @media (max-width: 768px) {
   /* Faixa intermediária: ajusta navegação e grids */
+  /* Nessa largura já começa a "apertar", então simplifica geral */
   .container {
     width: min(1120px, 94%);
   }
@@ -1300,6 +1326,7 @@ form .button {
 
 @media (max-width: 640px) {
   /* Mobile principal */
+  /* Aqui a prioridade é caber tudo sem ficar micro */
   .nav-brand__name,
   .nav-verified {
     display: none;
@@ -1447,6 +1474,7 @@ form .button {
 
 @media (max-width: 480px) {
   /* Mobile compacto */
+  /* Último ajuste: telas bem pequenas, foco total em legibilidade */
   nav {
     max-width: 100%;
     margin-left: 0.2rem;
