@@ -105,10 +105,7 @@
       <!-- Seção de serviços -->
       <section class="svc-section" style="padding-top: 0">
         <div class="container">
-          <!--
-            Aqui ficam os serviços em formato de carrossel.
-            Os radios por trás controlam a troca dos blocos.
-          -->
+          <!--serviços em formato de carrossel.-->
           <div class="svc-carousel">
             <input
               class="svc-slide-toggle"
@@ -126,7 +123,7 @@
 
             <div class="svc-viewport">
               <div class="svc-track">
-                <!-- Primeira leva de serviços -->
+                <!-- Os servicos que aparecem primeramente-->
                 <div class="svc-page svc-grid">
                   <article class="svc-card">
                     <div class="svc-card__top">
@@ -181,7 +178,7 @@
                   </article>
                 </div>
 
-                <!-- Segunda leva de serviços -->
+                <!-- Logo vem esses outros serviços -->
                 <div class="svc-page svc-grid">
                   <article class="svc-card">
                     <div class="svc-card__top">
@@ -238,7 +235,7 @@
             </div>
 
             <div class="svc-dots" aria-label="Navegação dos serviços">
-              <!-- Bolinhas para navegar no carrossel -->
+              <!-- navegacao do carrossel -->
               <label
                 class="svc-dot"
                 for="svc-slide-1"
@@ -511,73 +508,6 @@
       </div>
     </footer>
 
-    <!-- Script da página -->
-    <script>
-      // Passa os serviços automaticamente e pausa quando fizer sentido
-      (() => {
-        const carousel = document.querySelector(".svc-carousel");
-        if (!carousel) return;
 
-        const slides = Array.from(
-          carousel.querySelectorAll('input[name="svc-slide"]'),
-        );
-        if (slides.length < 2) return;
-
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        if (prefersReducedMotion) return;
-
-        let currentIndex = slides.findIndex((slide) => slide.checked);
-        if (currentIndex < 0) currentIndex = 0;
-
-        const intervalMs = 4000;
-        let timerId = null;
-
-        const goToNext = () => {
-          currentIndex = (currentIndex + 1) % slides.length;
-          slides[currentIndex].checked = true;
-        };
-
-        const startAutoplay = () => {
-          if (timerId !== null) return;
-          timerId = window.setInterval(goToNext, intervalMs);
-        };
-
-        const stopAutoplay = () => {
-          if (timerId === null) return;
-          window.clearInterval(timerId);
-          timerId = null;
-        };
-
-        const syncCurrentIndex = () => {
-          const checkedIndex = slides.findIndex((slide) => slide.checked);
-          if (checkedIndex >= 0) currentIndex = checkedIndex;
-        };
-
-        const restartAutoplay = () => {
-          stopAutoplay();
-          syncCurrentIndex();
-          startAutoplay();
-        };
-
-        slides.forEach((slide) => {
-          slide.addEventListener("change", restartAutoplay);
-        });
-
-        carousel.addEventListener("mouseenter", stopAutoplay);
-        carousel.addEventListener("mouseleave", startAutoplay);
-
-        document.addEventListener("visibilitychange", () => {
-          if (document.hidden) {
-            stopAutoplay();
-            return;
-          }
-          startAutoplay();
-        });
-
-        startAutoplay();
-      })();
-    </script>
   </body>
 </html>
