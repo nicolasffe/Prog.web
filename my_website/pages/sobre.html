@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="pt-BR">
+  <!-- Meta e estilos -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobre | Meu Portfólio</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- Topo do site -->
+    <header>
+      <div class="container">
+        <div class="nav-inner">
+          <!-- Logo com avatar -->
+          <a class="nav-brand" href="../index.html">
+            <img
+              class="nav-avatar"
+              src="../imagens/foto-profile.jpeg"
+              alt="Foto de Nicolas"
+            />
+            <span class="nav-brand__name">Nicolas</span>
+            <i
+              class="fa-solid fa-circle-check nav-verified"
+              aria-hidden="true"
+            ></i>
+          </a>
+          <!-- Menu principal -->
+          <nav>
+            <ul>
+              <li>
+                <a href="../index.html"
+                  ><span class="nav-num">01</span> Início</a
+                >
+              </li>
+              <li>
+                <a class="active" href="sobre.html"
+                  ><span class="nav-num">02</span> Sobre</a
+                >
+              </li>
+              <li>
+                <a href="servicos.html"
+                  ><span class="nav-num">03</span> Serviços</a
+                >
+              </li>
+              <li>
+                <a href="portfolio.html"
+                  ><span class="nav-num">04</span> Portfólio</a
+                >
+              </li>
+              <li>
+                <a href="contato.html"
+                  ><span class="nav-num">05</span> Contato</a
+                >
+              </li>
+            </ul>
+          </nav>
+          <!-- Atalhos rápidos para download e redes sociais -->
+          <div class="nav-actions">
+            <a
+              class="nav-cv-btn"
+              href="../imagens/curriculo-nicolas.pdf"
+              title="Abrir currículo em PDF"
+              target="_blank"
+              rel="noopener"
+              >Currículo</a
+            >
+            <a
+              class="nav-icon-btn"
+              href="https://github.com/nicolasffe"
+              title="GitHub"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+              ><i class="fa-brands fa-github"></i
+            ></a>
+            <a
+              class="nav-icon-btn"
+              href="https://www.linkedin.com/in/nicolasffe/"
+              title="LinkedIn"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+              ><i class="fa-brands fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+      <!-- Abertura da página -->
+      <section class="about-hero">
+        <div class="container">
+          <span class="about-hero__kicker">Olá, meu nome é Nicolas</span>
+          <h1>Desenvolvedor<br />Full-Stack.</h1>
+        </div>
+      </section>
+
+      <!-- Miolo da página -->
+      <section class="about-body">
+        <div class="container">
+          <!--
+            Aqui a página se divide em duas partes:
+            de um lado minha história, do outro infos rápidas e links.
+          -->
+          <div class="about-grid">
+            <!-- Minha apresentação -->
+            <div class="about-text">
+              <p class="about-text__name">Nicolas</p>
+              <p>
+                Sou desenvolvedor Full-Stack e gosto de atuar de ponta a ponta:
+                da estrutura de dados e regras de negócio no back-end até a
+                experiência visual no front-end. Curto transformar ideias em
+                produtos funcionais, com foco em performance, clareza e impacto
+                real para quem usa.
+              </p>
+              <p>
+                Pelos projetos que desenvolvi, meu perfil combina visão de
+                produto com execução técnica. Já construí soluções web,
+                aplicações desktop com Java e sistemas com integração de dados,
+                trabalhando com tecnologias modernas como React, Next.js,
+                TypeScript, Node.js e MySQL. Embora eu goste muito da parte full
+                stack, tenho um carinho especial por design e UI, buscando
+                interfaces bonitas, intuitivas e bem organizadas.
+              </p>
+              <p>
+                Fora do código, gosto de jogar videogame e sou apaixonado por
+                futebol. Esses hobbies reforçam características que levo para o
+                trabalho: estratégia, leitura de contexto, tomada de decisão
+                rápida e espírito de equipe.
+              </p>
+              <div class="about-chips">
+                <span class="about-chip">HTML &amp; CSS</span>
+                <span class="about-chip">Next.js</span>
+                <span class="about-chip">JavaScript</span>
+                <span class="about-chip">TypeScript</span>
+                <span class="about-chip">React</span>
+                <span class="about-chip">Node.js</span>
+                <span class="about-chip">Java</span>
+                <span class="about-chip">MySQL</span>
+                <span class="about-chip">Python</span>
+                <span class="about-chip">Git &amp; GitHub</span>
+                <span class="about-chip">Figma</span>
+              </div>
+              <div class="about-cta">
+                <a class="button" href="portfolio.html">Ver projetos</a>
+                <a class="button-ghost" href="contato.html">Falar comigo →</a>
+              </div>
+            </div>
+
+            <!-- Infos rápidas -->
+            <div class="about-facts">
+              <div class="about-fact">
+                <h4>Localização</h4>
+                <p>Brasil</p>
+              </div>
+              <div class="about-fact">
+                <h4>Foco</h4>
+                <p>Full-Stack com foco em produto e design de interface</p>
+              </div>
+              <div class="about-fact">
+                <h4>Hobbies</h4>
+                <p>Games e futebol</p>
+              </div>
+              <div class="about-fact">
+                <h4>Disponibilidade</h4>
+                <p>Aberto a propostas de trabalho</p>
+              </div>
+              <div class="about-fact">
+                <h4>Serviços</h4>
+                <p><a href="servicos.html">Ver o que ofereço</a></p>
+              </div>
+              <div class="about-links">
+                <a
+                  class="button"
+                  href="../imagens/curriculo-nicolas.pdf"
+                  target="_blank"
+                  rel="noopener"
+                  >Currículo (PDF)</a
+                >
+                <a
+                  class="button-ghost"
+                  href="https://github.com/nicolasffe"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub</a
+                >
+                <a
+                  class="button-ghost"
+                  href="https://www.linkedin.com/in/nicolas-ferreira-fernandes/"
+                  target="_blank"
+                  rel="noopener"
+                  >LinkedIn</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+      <div class="container">
+        <!-- Resumo + links + contato -->
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-brand__logo">
+              <span class="footer-brand__logo-dot"></span>
+              <span class="footer-brand__logo-name"
+                >Nicolas<span>.dev</span></span
+              >
+            </div>
+            <p>
+              Desenvolvedor web criando experiências digitais elegantes e
+              funcionais.
+            </p>
+            <div class="footer-socials">
+              <a
+                class="footer-social-link"
+                href="#"
+                title="GitHub"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-github"></i
+              ></a>
+              <a
+                class="footer-social-link"
+                href="#"
+                title="LinkedIn"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-linkedin-in"></i
+              ></a>
+              <a
+                class="footer-social-link"
+                href="#"
+                title="Instagram"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Páginas</h4>
+            <ul class="footer-links">
+              <li><a href="../index.html">Início</a></li>
+              <li><a href="sobre.html">Sobre</a></li>
+              <li><a href="servicos.html">Serviços</a></li>
+              <li><a href="portfolio.html">Portfólio</a></li>
+              <li><a href="contato.html">Contato</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contato</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="mailto:nicolasferreira.ismart@gmail.com"
+                  >nicolasferreira.ismart@gmail.com</a
+                >
+              </li>
+              <li><a href="contato.html">Enviar mensagem</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Nicolas. Todos os direitos reservados.</span>
+          <span class="footer-bottom__made">Feito em HTML &amp; CSS</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
