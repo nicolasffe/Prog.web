@@ -37,11 +37,11 @@ Se quiser usar um servidor local, rode na pasta do projeto:
 npx serve .
 ```
 
-Depois abra o endereÃ§o informado no terminal.
+Depois abra o endereço informado no terminal.
 
 ## DocumentaÃ§Ã£o
 
-A documentaÃ§Ã£o da atividade estÃ¡ na pasta `docs/`:
+A documentação da atividade está na pasta `docs/`:
 
 - `docs/documentacao.html`
 - `docs/documentacao.pdf`
