@@ -39,7 +39,7 @@ npx serve .
 
 Depois abra o endereço informado no terminal.
 
-## DocumentaÃ§Ã£o
+## Documentação
 
 A documentação da atividade está na pasta `docs/`:
 
