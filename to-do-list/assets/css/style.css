@@ -1,0 +1,480 @@
+﻿/* paleta principal do tema claro */
+:root {
+    --fundo: #f4efe6;
+    --fundo-secundario: #fffaf3;
+    --texto: #2f241f;
+    --texto-suave: #6f625a;
+    --borda: rgba(88, 60, 43, 0.16);
+    --sombra: 0 22px 45px rgba(70, 46, 32, 0.12);
+    --principal: #b85042;
+    --principal-escuro: #8e3d32;
+    --destaque: #2f6f62;
+    --alta: #c84b31;
+    --media: #e0a106;
+    --baixa: #2d8a61;
+    --concluida: #7f8c84;
+}
+
+/* aqui eu troco só as variáveis e o resto do css acompanha */
+body.tema-escuro {
+    --fundo: #181a1d;
+    --fundo-secundario: #23262b;
+    --texto: #f4eee7;
+    --texto-suave: #c0b4ab;
+    --borda: rgba(255, 239, 228, 0.1);
+    --sombra: 0 22px 45px rgba(0, 0, 0, 0.28);
+    --principal: #ff846e;
+    --principal-escuro: #e46953;
+    --destaque: #6bc2ac;
+    --alta: #ff7a5c;
+    --media: #ffc145;
+    --baixa: #5fd39a;
+    --concluida: #90a399;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* fundo geral da página */
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--texto);
+    background:
+        radial-gradient(circle at top left, rgba(184, 80, 66, 0.14), transparent 35%),
+        radial-gradient(circle at right center, rgba(47, 111, 98, 0.14), transparent 30%),
+        linear-gradient(180deg, #f9f4ed 0%, var(--fundo) 100%);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.tema-escuro {
+    background:
+        radial-gradient(circle at top left, rgba(255, 132, 110, 0.12), transparent 28%),
+        radial-gradient(circle at right center, rgba(107, 194, 172, 0.12), transparent 24%),
+        linear-gradient(180deg, #111315 0%, var(--fundo) 100%);
+}
+
+/* limita a largura para a interface respirar melhor */
+.pagina {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 36px 0 42px;
+}
+
+/* organiza o topo com texto de um lado e botão do outro */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.intro {
+    max-width: 720px;
+}
+
+.etiqueta,
+.mini-titulo {
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    color: var(--destaque);
+    font-weight: 700;
+}
+
+h1,
+h2 {
+    font-family: Cambria, Georgia, "Times New Roman", serif;
+    line-height: 1.05;
+}
+
+h1 {
+    font-size: clamp(2.25rem, 5vw, 3.8rem);
+    margin-bottom: 14px;
+}
+
+h2 {
+    font-size: 1.65rem;
+    margin-bottom: 10px;
+}
+
+.descricao,
+.texto-apoio {
+    color: var(--texto-suave);
+    line-height: 1.65;
+}
+
+/* botões compartilham a mesma transição para tudo ficar consistente */
+.botao-tema,
+.botao-principal,
+.botao-acao {
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.botao-tema {
+    padding: 14px 18px;
+    border-radius: 999px;
+    background: var(--fundo-secundario);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    box-shadow: var(--sombra);
+    font-weight: 700;
+}
+
+.botao-principal {
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: var(--principal);
+    color: #fff7f1;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 14px 26px rgba(184, 80, 66, 0.24);
+}
+
+.botao-tema:hover,
+.botao-principal:hover,
+.botao-acao:hover {
+    transform: translateY(-2px);
+}
+
+.botao-principal:hover {
+    background: var(--principal-escuro);
+}
+
+/* esse grid separa formulário e lista sem precisar inventar muita moda */
+.painel-principal {
+    display: grid;
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.coluna-lateral,
+.coluna-conteudo {
+    display: grid;
+    gap: 20px;
+}
+
+/* os blocos principais usam esse visual base */
+.caixa {
+    background: color-mix(in srgb, var(--fundo-secundario) 86%, transparent);
+    border: 1px solid var(--borda);
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: var(--sombra);
+    backdrop-filter: blur(12px);
+}
+
+/* aqui eu deixei os inputs bem limpos para a interface não ficar brigando com o usuário */
+.formulario {
+    display: grid;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+label {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+input,
+select {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 16px;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.68);
+    color: var(--texto);
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+body.tema-escuro input,
+body.tema-escuro select {
+    background: rgba(19, 21, 24, 0.82);
+}
+
+input:focus,
+select:focus {
+    border-color: color-mix(in srgb, var(--principal) 62%, white);
+    box-shadow: 0 0 0 4px rgba(184, 80, 66, 0.12);
+}
+
+.mensagem-formulario {
+    min-height: 24px;
+    font-size: 0.94rem;
+    color: var(--texto-suave);
+}
+
+.mensagem-formulario.erro {
+    color: var(--alta);
+}
+
+.mensagem-formulario.sucesso {
+    color: var(--baixa);
+}
+
+/* cards pequenos do resumo ali no começo */
+.cards-resumo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.card-resumo {
+    border-radius: 24px;
+    padding: 18px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff8f1;
+}
+
+.card-resumo strong {
+    font-size: 2.2rem;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.card-resumo-pendente {
+    background: linear-gradient(135deg, #b85042, #d97947);
+}
+
+.card-resumo-concluida {
+    background: linear-gradient(135deg, #2f6f62, #4d9b7c);
+}
+
+.topo-lista {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: end;
+}
+
+/* área dos filtros no topo da listagem */
+.filtros {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 14px;
+    width: min(100%, 430px);
+}
+
+.campo-filtro label {
+    display: block;
+}
+
+/* grade que segura todos os cards de tarefa */
+.lista-tarefas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+}
+
+/* cada tarefa vira um card com espaçamento interno */
+.card-tarefa {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 16px;
+    min-height: 245px;
+}
+
+.card-tarefa::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 7px;
+}
+
+.card-tarefa.prioridade-alta::before {
+    background: var(--alta);
+}
+
+.card-tarefa.prioridade-media::before {
+    background: var(--media);
+}
+
+.card-tarefa.prioridade-baixa::before {
+    background: var(--baixa);
+}
+
+.cabecalho-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.titulo-tarefa {
+    padding-right: 12px;
+    font-size: 1.3rem;
+}
+
+/* essas tags são os selinhos de categoria, prioridade e status */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tag-categoria {
+    color: var(--destaque);
+    background: color-mix(in srgb, var(--destaque) 14%, transparent);
+}
+
+.tag-prioridade-alta {
+    color: #fff;
+    background: var(--alta);
+}
+
+.tag-prioridade-media {
+    color: #3a2600;
+    background: rgba(224, 161, 6, 0.28);
+}
+
+.tag-prioridade-baixa {
+    color: #f4fff7;
+    background: var(--baixa);
+}
+
+.tag-status-pendente {
+    color: var(--texto);
+    background: rgba(47, 111, 98, 0.12);
+}
+
+.tag-status-concluida {
+    color: #f4fff7;
+    background: var(--concluida);
+}
+
+.metas-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.linha-info {
+    color: var(--texto-suave);
+    line-height: 1.55;
+}
+
+.acoes-card {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.botao-acao {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-weight: 700;
+}
+
+.botao-concluir {
+    background: rgba(47, 111, 98, 0.12);
+    color: var(--destaque);
+}
+
+.botao-excluir {
+    background: rgba(200, 75, 49, 0.12);
+    color: var(--alta);
+}
+
+/* estado visual para a tarefa que já foi resolvida */
+.card-tarefa.concluida {
+    opacity: 0.76;
+}
+
+.card-tarefa.concluida .titulo-tarefa {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+
+.card-tarefa.concluida .tag-categoria {
+    color: var(--concluida);
+    background: rgba(127, 140, 132, 0.18);
+}
+
+.card-tarefa.concluida .tag-status-concluida {
+    background: color-mix(in srgb, var(--concluida) 88%, white);
+}
+
+.estado-vazio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 44px 24px;
+}
+
+.estado-vazio h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.estado-vazio p {
+    color: var(--texto-suave);
+    line-height: 1.6;
+}
+
+/* responsivo de tablet para baixo */
+@media (max-width: 960px) {
+    .cabecalho,
+    .topo-lista {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .painel-principal {
+        grid-template-columns: 1fr;
+    }
+
+    .filtros {
+        width: 100%;
+    }
+}
+
+/* aqui entra o ajuste mais apertado para o celular */
+@media (max-width: 640px) {
+    .pagina {
+        width: min(100% - 20px, 1180px);
+        padding: 20px 0 28px;
+    }
+
+    .caixa {
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    .cards-resumo,
+    .filtros {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-card {
+        flex-direction: column;
+    }
+
+    .card-resumo {
+        min-height: 94px;
+    }
+
+    .lista-tarefas {
+        grid-template-columns: 1fr;
+    }
+}

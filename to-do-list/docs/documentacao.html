@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documenta&ccedil;&atilde;o - To-Do List</title>
+    <style>
+        :root {
+            --fundo: #f6f1ea;
+            --papel: #ffffff;
+            --texto: #2f241f;
+            --texto-suave: #65584f;
+            --principal: #b85042;
+            --destaque: #2f6f62;
+            --borda: #e4d7cb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            padding: 32px;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        main {
+            width: min(860px, 100%);
+            margin: 0 auto;
+            padding: 36px;
+            background: var(--papel);
+            border: 1px solid var(--borda);
+            border-radius: 24px;
+        }
+
+        h1,
+        h2 {
+            font-family: Cambria, Georgia, "Times New Roman", serif;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.3rem;
+        }
+
+        h2 {
+            margin: 28px 0 12px;
+            font-size: 1.3rem;
+            color: var(--principal);
+        }
+
+        p,
+        li {
+            line-height: 1.7;
+        }
+
+        p {
+            color: var(--texto-suave);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li + li {
+            margin-top: 8px;
+        }
+
+        .etiqueta {
+            margin-bottom: 12px;
+            color: var(--destaque);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        @page {
+            size: A4;
+            margin: 18mm;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: #fff;
+            }
+
+            main {
+                width: 100%;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p class="etiqueta">Atividade pr&aacute;tica</p>
+        <h1>Documenta&ccedil;&atilde;o simples - To-Do List</h1>
+
+        <section>
+            <h2>Funcionalidades implementadas</h2>
+            <ul>
+                <li>Cadastro de tarefas com nome, categoria, prioridade e data limite.</li>
+                <li>Exibi&ccedil;&atilde;o das tarefas em cards com destaque visual por prioridade.</li>
+                <li>Filtro por categoria e ordena&ccedil;&atilde;o por prioridade, data limite ou ordem de cadastro.</li>
+                <li>Bot&otilde;es para concluir, reabrir e excluir tarefas.</li>
+                <li>Contador de tarefas pendentes e conclu&iacute;das.</li>
+                <li>Mensagem de lista vazia quando n&atilde;o houver tarefas para mostrar.</li>
+                <li>Modo claro e modo escuro.</li>
+                <li>Salvamento das tarefas e do tema com localStorage.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Tecnologias utilizadas</h2>
+            <ul>
+                <li>HTML5 para a estrutura da p&aacute;gina.</li>
+                <li>CSS3 para o layout, a responsividade e a identidade visual.</li>
+                <li>JavaScript para valida&ccedil;&atilde;o, manipula&ccedil;&atilde;o do DOM, filtros e armazenamento local.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Melhorias futuras</h2>
+            <ul>
+                <li>Adicionar edi&ccedil;&atilde;o de tarefas.</li>
+                <li>Criar filtro por status.</li>
+                <li>Incluir busca por texto.</li>
+                <li>Adicionar confirma&ccedil;&atilde;o antes da exclus&atilde;o.</li>
+                <li>Integrar a aplica&ccedil;&atilde;o com um backend.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

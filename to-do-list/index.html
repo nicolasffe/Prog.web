@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Tarefas Inteligente</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/script.js" defer></script>
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho">
+            <!-- deixei esse topo mais direto porque ele já apresenta -->
+            <div class="intro">
+                <h1>Agenda de Tarefas Inteligente</h1>
+            </div>
+
+            <button class="botao-tema" id="alternarTema" type="button" aria-label="Alternar tema">
+                Ativar modo escuro
+            </button>
+        </header>
+
+        <!-- cadastrar novas tarefas -->
+        <section class="painel-principal">
+            <aside class="coluna-lateral">
+                <section class="caixa">
+                    <div class="topo-secao">
+                        <p class="mini-titulo">Cadastro</p>
+                        <h2>Nova Tarefa</h2>
+                    </div>
+
+                    <form id="formTarefa" class="formulario" novalidate>
+                        <label for="nomeTarefa">Nome da tarefa</label>
+                        <input id="nomeTarefa" name="nomeTarefa" type="text" placeholder="Ex.: Revisar atividade de Web">
+
+                        <label for="categoriaTarefa">Categoria</label>
+                        <select id="categoriaTarefa" name="categoriaTarefa">
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Trabalho">Trabalho</option>
+                            <option value="Estudos">Estudos</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Casa">Casa</option>
+                            <option value="Saúde">Saúde</option>
+                        </select>
+
+                        <label for="prioridadeTarefa">Prioridade</label>
+                        <select id="prioridadeTarefa" name="prioridadeTarefa">
+                            <option value="">Selecione a prioridade</option>
+                            <option value="alta">Alta</option>
+                            <option value="media">Média</option>
+                            <option value="baixa">Baixa</option>
+                        </select>
+
+                        <label for="dataTarefa">Data limite</label>
+                        <input id="dataTarefa" name="dataTarefa" type="date">
+
+                        <button class="botao-principal" type="submit">Adicionar tarefa</button>
+                        <p id="mensagemFormulario" class="mensagem-formulario" role="alert" aria-live="polite"></p>
+                    </form>
+                </section>
+
+                <section class="caixa resumo">
+                    <div class="topo-secao">
+                        <p class="mini-titulo">Resumo</p>
+                        <h2>Como anda a lista</h2>
+                    </div>
+
+                    <div class="cards-resumo">
+                        <article class="card-resumo card-resumo-pendente">
+                            <strong id="totalPendentes">0</strong>
+                            <span>Pendentes</span>
+                        </article>
+
+                        <article class="card-resumo card-resumo-concluida">
+                            <strong id="totalConcluidas">0</strong>
+                            <span>Concluídas</span>
+                        </article>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="coluna-conteudo">
+                <section class="caixa">
+                    <div class="topo-lista">
+                        <div class="topo-secao">
+                            <p class="mini-titulo">Organização</p>
+                            <h2>Suas tarefas</h2>
+                            <p class="texto-apoio">
+                                Filtre por categoria e organize por prioridade ou data limite.
+                            </p>
+                        </div>
+
+                        <div class="filtros">
+                            <div class="campo-filtro">
+                                <label for="filtroCategoria">Categoria</label>
+                                <select id="filtroCategoria" name="filtroCategoria">
+                                    <option value="todas">Todas</option>
+                                    <option value="Trabalho">Trabalho</option>
+                                    <option value="Estudos">Estudos</option>
+                                    <option value="Pessoal">Pessoal</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Saúde">Saúde</option>
+                                </select>
+                            </div>
+
+                            <div class="campo-filtro">
+                                <label for="ordenacaoTarefas">Ordenar por</label>
+                                <select id="ordenacaoTarefas" name="ordenacaoTarefas">
+                                    <option value="recentes">Mais recentes</option>
+                                    <option value="prioridade">Prioridade</option>
+                                    <option value="data">Data limite</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- os cards vão sendo renderizados aqui conforme a pessoa cadastra, filtra ou ordena -->
+                <section id="listaTarefas" class="lista-tarefas" aria-live="polite"></section>
+            </section>
+        </section>
+    </main>
+</body>
+</html>
