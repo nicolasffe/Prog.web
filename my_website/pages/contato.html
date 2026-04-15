@@ -4,7 +4,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Entre em contato com Nicolas para projetos, freelas e oportunidades em desenvolvimento web."
+    />
     <title>Contato | Meu Portfólio</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="stylesheet" href="../css/styles.css" />
     <link
       rel="stylesheet"
@@ -79,7 +84,7 @@
             ></a>
             <a
               class="nav-icon-btn"
-              href="https://www.linkedin.com/in/nicolasffe/"
+              href="https://www.linkedin.com/in/nicolas-ferreira-fernandes/"
               title="LinkedIn"
               target="_blank"
               rel="noopener"
@@ -107,17 +112,41 @@
         <!--
           nome, e-mail e mensagem.
         -->
-        <form>
+        <form id="contact-form" novalidate>
           <label for="nome">Nome</label>
-          <input id="nome" type="text" placeholder="Seu nome" />
+          <input
+            id="nome"
+            name="nome"
+            type="text"
+            placeholder="Seu nome"
+            autocomplete="name"
+            required
+          />
 
           <label for="email">E-mail</label>
-          <input id="email" type="email" placeholder="seuemail@exemplo.com" />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="seuemail@exemplo.com"
+            autocomplete="email"
+            inputmode="email"
+            required
+          />
 
           <label for="mensagem">Mensagem</label>
-          <textarea id="mensagem" placeholder="Escreva sua mensagem"></textarea>
+          <textarea
+            id="mensagem"
+            name="mensagem"
+            placeholder="Escreva sua mensagem"
+            rows="6"
+            minlength="20"
+            spellcheck="true"
+            required
+          ></textarea>
 
-          <button class="button" type="submit">Enviar</button>
+          <button class="button" type="submit">Enviar por e-mail</button>
+          <p id="contact-feedback" class="form-feedback" aria-live="polite"></p>
         </form>
       </div>
     </main>
@@ -141,26 +170,29 @@
             <div class="footer-socials">
               <a
                 class="footer-social-link"
-                href="#"
+                href="https://github.com/nicolasffe"
                 title="GitHub"
                 target="_blank"
                 rel="noopener"
+                aria-label="GitHub"
                 ><i class="fa-brands fa-github"></i
               ></a>
               <a
                 class="footer-social-link"
-                href="#"
+                href="https://www.linkedin.com/in/nicolas-ferreira-fernandes/"
                 title="LinkedIn"
                 target="_blank"
                 rel="noopener"
+                aria-label="LinkedIn"
                 ><i class="fa-brands fa-linkedin-in"></i
               ></a>
               <a
                 class="footer-social-link"
-                href="#"
+                href="https://instagram.com/nic0fernandes"
                 title="Instagram"
                 target="_blank"
                 rel="noopener"
+                aria-label="Instagram"
                 ><i class="fa-brands fa-instagram"></i
               ></a>
             </div>
@@ -188,10 +220,12 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <span>© 2026 Nicolas. Todos os direitos reservados.</span>
+          <span>© <span data-current-year>2026</span> Nicolas. Todos os direitos reservados.</span>
           <span class="footer-bottom__made">Feito em HTML &amp; CSS</span>
         </div>
       </div>
     </footer>
+
+    <script src="../js/main.js" defer></script>
   </body>
 </html>
