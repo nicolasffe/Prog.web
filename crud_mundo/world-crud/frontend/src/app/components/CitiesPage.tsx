@@ -1,0 +1,291 @@
+import { useState } from 'react';
+import { Plus, Search, Pencil, Trash2, Building2, ChevronLeft, ChevronRight, Eye, Filter, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useApp } from '../context/AppContext';
+import { City } from '../data/types';
+import { Modal, Field, Input, Select, FormActions } from './ui/Modal';
+import { DeleteDialog } from './ui/DeleteDialog';
+import { toast } from 'sonner';
+
+const PAGE_SIZE = 10;
+
+const emptyForm = (): Omit<City, 'id'> => ({
+  name: '', countryId: '', population: 0, lat: 0, lng: 0, isCapital: false,
+});
+
+export default function CitiesPage() {
+  const { cities, countries, continents, addCity, updateCity, deleteCity } = useApp();
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+  const [countryFilter, setCountryFilter] = useState('');
+  const [continentFilter, setContinentFilter] = useState('');
+  const [page, setPage] = useState(0);
+  const [modal, setModal] = useState<'create' | 'edit' | null>(null);
+  const [form, setForm] = useState<Omit<City, 'id'>>(emptyForm());
+  const [editing, setEditing] = useState<City | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<City | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const filteredCountries = continentFilter
+    ? countries.filter(c => c.continentId === continentFilter)
+    : countries;
+
+  const filtered = cities.filter(city => {
+    const q = search.toLowerCase();
+    const country = countries.find(c => c.id === city.countryId);
+    const matchSearch = city.name.toLowerCase().includes(q) || (country?.name.toLowerCase().includes(q) ?? false);
+    const matchCountry = !countryFilter || city.countryId === countryFilter;
+    const matchContinent = !continentFilter || country?.continentId === continentFilter;
+    return matchSearch && matchCountry && matchContinent;
+  });
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  const openCreate = () => { setForm(emptyForm()); setEditing(null); setModal('create'); };
+  const openEdit = (c: City) => {
+    setForm({ name: c.name, countryId: c.countryId, population: c.population, lat: c.lat, lng: c.lng, isCapital: c.isCapital });
+    setEditing(c); setModal('edit');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 400));
+    if (editing && modal === 'edit') {
+      await updateCity(editing.id, form);
+      toast.success(`${form.name} updated`);
+    } else {
+      await addCity(form);
+      toast.success(`${form.name} created`);
+    }
+    setLoading(false);
+    setModal(null);
+  };
+
+  const handleDelete = () => {
+    if (!deleteTarget) return;
+    deleteCity(deleteTarget.id);
+    toast.success(`${deleteTarget.name} deleted`);
+    setDeleteTarget(null);
+  };
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 style={{ color: '#0f172a', fontSize: '1.4rem', fontWeight: 700 }}>Cities</h1>
+          <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: 2 }}>{cities.length} cities in database</p>
+        </div>
+        <button onClick={openCreate}
+          className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
+          style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
+          onMouseEnter={e => e.currentTarget.style.background = '#0d9488'}
+          onMouseLeave={e => e.currentTarget.style.background = '#14b8a6'}>
+          <Plus size={16} /> Add City
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-3 mb-5 flex-wrap">
+        <div className="relative">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#94a3b8' }} />
+          <input
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(0); }}
+            placeholder="Search cities..."
+            className="pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
+            style={{ background: 'white', border: '1px solid #e2e8f0', color: '#1e293b', fontSize: '0.875rem', width: 200 }}
+            onFocus={e => e.target.style.borderColor = '#14b8a6'}
+            onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+          />
+        </div>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+          <Filter size={14} style={{ color: '#94a3b8' }} />
+          <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setCountryFilter(''); setPage(0); }}
+            style={{ background: 'transparent', border: 'none', color: '#475569', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+            <option value="">All Continents</option>
+            {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+          <Filter size={14} style={{ color: '#94a3b8' }} />
+          <select value={countryFilter} onChange={e => { setCountryFilter(e.target.value); setPage(0); }}
+            style={{ background: 'transparent', border: 'none', color: '#475569', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+            <option value="">All Countries</option>
+            {filteredCountries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
+          </select>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="rounded-2xl overflow-hidden" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <table className="w-full" style={{ borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['#', 'City', 'Country', 'Population', 'Latitude', 'Longitude', 'Status', 'Actions'].map(h => (
+                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#f8fafc', whiteSpace: 'nowrap' }}>
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {paged.length === 0 ? (
+              <tr>
+                <td colSpan={8} style={{ padding: '48px 16px', textAlign: 'center', color: '#94a3b8' }}>
+                  <Building2 size={32} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
+                  <p>No cities found</p>
+                </td>
+              </tr>
+            ) : paged.map((city, idx) => {
+              const country = countries.find(c => c.id === city.countryId);
+              return (
+                <tr key={city.id}
+                  style={{ borderBottom: '1px solid #f8fafc' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: '0.8rem' }}>{page * PAGE_SIZE + idx + 1}</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#f1f5f9' }}>
+                        <Building2 size={13} style={{ color: '#64748b' }} />
+                      </div>
+                      <span style={{ color: '#1e293b', fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{city.name}</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: '12px 16px' }}>
+                    {country && (
+                      <div className="flex items-center gap-1.5">
+                        {country.flagUrl ? (
+                          <img src={country.flagUrl} alt="" aria-hidden="true" style={{ width: 22, height: 15, objectFit: 'cover', borderRadius: 3 }} />
+                        ) : (
+                          <span style={{ fontSize: '1rem' }}>{country.flag}</span>
+                        )}
+                        <span style={{ color: '#475569', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{country.name}</span>
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem' }}>{city.population.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <div className="flex items-center gap-1">
+                      <MapPin size={12} style={{ color: '#94a3b8' }} />
+                      <span style={{ color: '#475569', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lat.toFixed(2)}°</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lng.toFixed(2)}°</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    {city.isCapital ? (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6' }}>Capital</span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: '#f1f5f9', color: '#94a3b8' }}>City</span>
+                    )}
+                  </td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => navigate(`/app/cities/${city.id}`)} className="p-2 rounded-lg transition-colors" title="View"
+                        style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#475569'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
+                        <Eye size={15} />
+                      </button>
+                      <button onClick={() => openEdit(city)} className="p-2 rounded-lg transition-colors" title="Edit"
+                        style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#14b8a6'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
+                        <Pencil size={15} />
+                      </button>
+                      <button onClick={() => setDeleteTarget(city)} className="p-2 rounded-lg transition-colors" title="Delete"
+                        style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#ef4444'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4">
+          <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+            Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+          </p>
+          <div className="flex items-center gap-1.5">
+            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
+              className="p-2 rounded-lg"
+              style={{ background: page === 0 ? '#f1f5f9' : 'white', color: page === 0 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+              <ChevronLeft size={15} />
+            </button>
+            {Array.from({ length: Math.min(totalPages, 7) }).map((_, i) => (
+              <button key={i} onClick={() => setPage(i)}
+                className="w-8 h-8 rounded-lg"
+                style={{ background: page === i ? '#14b8a6' : 'white', color: page === i ? 'white' : '#475569', border: '1px solid #e2e8f0', cursor: 'pointer', fontWeight: page === i ? 700 : 400, fontSize: '0.8rem' }}>
+                {i + 1}
+              </button>
+            ))}
+            <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
+              className="p-2 rounded-lg"
+              style={{ background: page === totalPages - 1 ? '#f1f5f9' : 'white', color: page === totalPages - 1 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+              <ChevronRight size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create/Edit Modal */}
+      <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Add City' : 'Edit City'}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Name *">
+              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Porto" />
+            </Field>
+            <Field label="Country *">
+              <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))} required>
+                <option value="">Select country</option>
+                {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
+              </Select>
+            </Field>
+          </div>
+          <Field label="Population">
+            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" />
+          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Latitude">
+              <Input type="number" step="0.0001" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: Number(e.target.value) }))} placeholder="e.g. 41.15" />
+            </Field>
+            <Field label="Longitude">
+              <Input type="number" step="0.0001" value={form.lng} onChange={e => setForm(f => ({ ...f, lng: Number(e.target.value) }))} placeholder="e.g. -8.61" />
+            </Field>
+          </div>
+          <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+            <input
+              type="checkbox"
+              id="isCapital"
+              checked={form.isCapital}
+              onChange={e => setForm(f => ({ ...f, isCapital: e.target.checked }))}
+              style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
+            />
+            <label htmlFor="isCapital" style={{ color: '#1e293b', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
+              This is the country's capital city
+            </label>
+          </div>
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Create' : 'Save Changes'} />
+        </form>
+      </Modal>
+
+      <DeleteDialog
+        open={!!deleteTarget}
+        entityName={deleteTarget?.name ?? ''}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+    </div>
+  );
+}
