@@ -9,7 +9,7 @@ export class CityService {
     return cityRepository.create(data);
   }
 
-  list(filters: { search?: string; countryId?: string }) {
+  list(filters: { search?: string; countryId?: string; continentId?: string }) {
     return cityRepository.list(filters);
   }
 

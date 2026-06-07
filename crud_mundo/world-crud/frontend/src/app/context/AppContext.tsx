@@ -22,7 +22,9 @@ type ApiCountry = {
   capital?: string | null;
   region?: string | null;
   subregion?: string | null;
-  population?: number | null;
+  population: number;
+  language: string;
+  currency: string;
   area?: number | null;
   latitude?: number | null;
   longitude?: number | null;
@@ -59,7 +61,7 @@ type ApiCity = {
   countryId: string;
   latitude: number;
   longitude: number;
-  population?: number | null;
+  population: number;
   timezone?: string | null;
 };
 
@@ -156,10 +158,10 @@ function mapCountry(item: ApiCountry, external?: ExternalCountry): Country {
     name: item.name,
     officialName: item.officialName ?? external?.officialName ?? '',
     continentId: item.continentId,
-    population: item.population ?? 0,
-    language: languages.join(', ') || item.subregion || item.region || 'N/A',
+    population: item.population,
+    language: item.language || languages.join(', ') || item.subregion || item.region || 'N/A',
     languages,
-    currency: currencies.map(currency => currency.code).join(', ') || 'N/A',
+    currency: item.currency || currencies.map(currency => currency.code).join(', ') || 'N/A',
     currencies,
     capital: item.capital ?? '',
     flag: flagFromCode(code),
@@ -198,7 +200,9 @@ function toCountryPayload(country: Partial<Country>) {
     capital: country.capital || null,
     region: country.region || country.language || null,
     subregion: country.subregion || null,
-    population: country.population ?? null,
+    population: country.population ?? 0,
+    language: country.language ?? '',
+    currency: country.currency ?? '',
     area: country.area ?? null,
     latitude: country.lat ?? null,
     longitude: country.lng ?? null,
@@ -213,7 +217,7 @@ function toCityPayload(city: Partial<City>) {
     countryId: city.countryId ?? '',
     latitude: city.lat ?? 0,
     longitude: city.lng ?? 0,
-    population: city.population ?? null,
+    population: city.population ?? 0,
     timezone: null,
   };
 }

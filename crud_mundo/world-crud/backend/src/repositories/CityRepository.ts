@@ -4,6 +4,7 @@ import { prisma } from "../prisma/client";
 type CityFilters = {
   search?: string;
   countryId?: string;
+  continentId?: string;
 };
 
 export class CityRepository {
@@ -18,6 +19,9 @@ export class CityRepository {
     return prisma.city.findMany({
       where: {
         countryId: filters.countryId || undefined,
+        country: filters.continentId
+          ? { continentId: filters.continentId }
+          : undefined,
         OR: filters.search
           ? [
               { name: { contains: filters.search, mode: "insensitive" } },

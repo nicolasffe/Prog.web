@@ -457,9 +457,9 @@ export default function GlobeMain() {
           </Select>
         </Field>
         <Field label="Capital"><Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} /></Field>
-        <Field label="Population"><Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} /></Field>
-        <Field label="Language"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} /></Field>
-        <Field label="Currency"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} /></Field>
+        <Field label="Population *"><Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required /></Field>
+        <Field label="Language *"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required /></Field>
+        <Field label="Currency *"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.01" value={editForm.lat ?? 0} onChange={e => setEditForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.01" value={editForm.lng ?? 0} onChange={e => setEditForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
@@ -494,7 +494,7 @@ export default function GlobeMain() {
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
         <Field label="City Name *"><Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Porto" /></Field>
-        <Field label="Population"><Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" /></Field>
+        <Field label="Population *"><Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.0001" value={cityForm.lat} onChange={e => setCityForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.0001" value={cityForm.lng} onChange={e => setCityForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>

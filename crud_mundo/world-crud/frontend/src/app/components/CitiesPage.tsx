@@ -71,12 +71,12 @@ export default function CitiesPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 min-h-full" style={{ background: 'radial-gradient(circle at 18% 12%, rgba(56,189,248,0.14), transparent 28%), radial-gradient(circle at 82% 8%, rgba(45,212,191,0.1), transparent 24%), linear-gradient(180deg, #020617 0%, #07111f 54%, #020617 100%)' }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: '#0f172a', fontSize: '1.4rem', fontWeight: 700 }}>Cities</h1>
-          <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: 2 }}>{cities.length} cities in database</p>
+          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Cities</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{cities.length} cities in database</p>
         </div>
         <button onClick={openCreate}
           className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
@@ -96,23 +96,23 @@ export default function CitiesPage() {
             onChange={e => { setSearch(e.target.value); setPage(0); }}
             placeholder="Search cities..."
             className="pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
-            style={{ background: 'white', border: '1px solid #e2e8f0', color: '#1e293b', fontSize: '0.875rem', width: 200 }}
+            style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', color: '#e2e8f0', fontSize: '0.875rem', width: 200 }}
             onFocus={e => e.target.style.borderColor = '#14b8a6'}
             onBlur={e => e.target.style.borderColor = '#e2e8f0'}
           />
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setCountryFilter(''); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#475569', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
             <option value="">All Continents</option>
             {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={countryFilter} onChange={e => { setCountryFilter(e.target.value); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#475569', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
             <option value="">All Countries</option>
             {filteredCountries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
           </select>
@@ -120,12 +120,12 @@ export default function CitiesPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
               {['#', 'City', 'Country', 'Population', 'Latitude', 'Longitude', 'Status', 'Actions'].map(h => (
-                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#f8fafc', whiteSpace: 'nowrap' }}>
+                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
               ))}
@@ -143,16 +143,16 @@ export default function CitiesPage() {
               const country = countries.find(c => c.id === city.countryId);
               return (
                 <tr key={city.id}
-                  style={{ borderBottom: '1px solid #f8fafc' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+                  style={{ borderBottom: '1px solid rgba(148,163,184,0.12)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(30,41,59,0.62)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: '0.8rem' }}>{page * PAGE_SIZE + idx + 1}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#f1f5f9' }}>
-                        <Building2 size={13} style={{ color: '#64748b' }} />
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(30,41,59,0.72)' }}>
+                        <Building2 size={13} style={{ color: '#94a3b8' }} />
                       </div>
-                      <span style={{ color: '#1e293b', fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{city.name}</span>
+                      <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{city.name}</span>
                     </div>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
@@ -163,36 +163,36 @@ export default function CitiesPage() {
                         ) : (
                           <span style={{ fontSize: '1rem' }}>{country.flag}</span>
                         )}
-                        <span style={{ color: '#475569', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{country.name}</span>
+                        <span style={{ color: '#cbd5e1', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{country.name}</span>
                       </div>
                     )}
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem' }}>{city.population.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem' }}>{city.population.toLocaleString()}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-1">
                       <MapPin size={12} style={{ color: '#94a3b8' }} />
-                      <span style={{ color: '#475569', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lat.toFixed(2)}°</span>
+                      <span style={{ color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lat.toFixed(2)}°</span>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lng.toFixed(2)}°</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lng.toFixed(2)}°</td>
                   <td style={{ padding: '12px 16px' }}>
                     {city.isCapital ? (
                       <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6' }}>Capital</span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: '#f1f5f9', color: '#94a3b8' }}>City</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(30,41,59,0.72)', color: '#94a3b8' }}>City</span>
                     )}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-1">
                       <button onClick={() => navigate(`/app/cities/${city.id}`)} className="p-2 rounded-lg transition-colors" title="View"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#475569'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#475569'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Eye size={15} />
                       </button>
                       <button onClick={() => openEdit(city)} className="p-2 rounded-lg transition-colors" title="Edit"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#14b8a6'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#14b8a6'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Pencil size={15} />
                       </button>
@@ -220,19 +220,19 @@ export default function CitiesPage() {
           <div className="flex items-center gap-1.5">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
               className="p-2 rounded-lg"
-              style={{ background: page === 0 ? '#f1f5f9' : 'white', color: page === 0 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+              style={{ background: page === 0 ? '#f1f5f9' : 'white', color: page === 0 ? '#cbd5e1' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
               <ChevronLeft size={15} />
             </button>
             {Array.from({ length: Math.min(totalPages, 7) }).map((_, i) => (
               <button key={i} onClick={() => setPage(i)}
                 className="w-8 h-8 rounded-lg"
-                style={{ background: page === i ? '#14b8a6' : 'white', color: page === i ? 'white' : '#475569', border: '1px solid #e2e8f0', cursor: 'pointer', fontWeight: page === i ? 700 : 400, fontSize: '0.8rem' }}>
+                style={{ background: page === i ? '#14b8a6' : 'white', color: page === i ? 'white' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontWeight: page === i ? 700 : 400, fontSize: '0.8rem' }}>
                 {i + 1}
               </button>
             ))}
             <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
               className="p-2 rounded-lg"
-              style={{ background: page === totalPages - 1 ? '#f1f5f9' : 'white', color: page === totalPages - 1 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+              style={{ background: page === totalPages - 1 ? '#f1f5f9' : 'white', color: page === totalPages - 1 ? '#cbd5e1' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>
               <ChevronRight size={15} />
             </button>
           </div>
@@ -253,8 +253,8 @@ export default function CitiesPage() {
               </Select>
             </Field>
           </div>
-          <Field label="Population">
-            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" />
+          <Field label="Population *">
+            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" required />
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Latitude">
@@ -264,7 +264,7 @@ export default function CitiesPage() {
               <Input type="number" step="0.0001" value={form.lng} onChange={e => setForm(f => ({ ...f, lng: Number(e.target.value) }))} placeholder="e.g. -8.61" />
             </Field>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+          <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <input
               type="checkbox"
               id="isCapital"
@@ -272,7 +272,7 @@ export default function CitiesPage() {
               onChange={e => setForm(f => ({ ...f, isCapital: e.target.checked }))}
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
             />
-            <label htmlFor="isCapital" style={{ color: '#1e293b', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
+            <label htmlFor="isCapital" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
               This is the country's capital city
             </label>
           </div>
@@ -289,3 +289,4 @@ export default function CitiesPage() {
     </div>
   );
 }
+

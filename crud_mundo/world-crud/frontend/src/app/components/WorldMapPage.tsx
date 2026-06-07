@@ -364,13 +364,13 @@ export default function WorldMapPage() {
           <Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} />
         </Field>
         <Field label="Population">
-          <Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} />
+          <Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required />
         </Field>
         <Field label="Language">
-          <Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} />
+          <Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required />
         </Field>
         <Field label="Currency">
-          <Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} />
+          <Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required />
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude">
@@ -420,7 +420,7 @@ export default function WorldMapPage() {
           <Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Porto" />
         </Field>
         <Field label="Population">
-          <Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" />
+          <Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" required />
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude">

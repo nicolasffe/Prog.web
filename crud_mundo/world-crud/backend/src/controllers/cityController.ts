@@ -11,7 +11,8 @@ export const cityController = {
   list: asyncHandler(async (req: Request, res: Response) => {
     const cities = await cityService.list({
       search: req.query.search as string,
-      countryId: req.query.countryId as string
+      countryId: req.query.countryId as string,
+      continentId: req.query.continentId as string
     });
     return res.json(cities);
   }),

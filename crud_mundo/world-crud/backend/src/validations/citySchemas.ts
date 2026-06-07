@@ -7,7 +7,7 @@ export const cityBodySchema = z.object({
   countryId: z.string().min(1, "Cidade precisa pertencer a um pais."),
   latitude: latitudeSchema,
   longitude: longitudeSchema,
-  population: z.coerce.number().int().nonnegative().optional().nullable(),
+  population: z.coerce.number().int().nonnegative(),
   timezone: z.string().trim().optional().nullable()
 });
 

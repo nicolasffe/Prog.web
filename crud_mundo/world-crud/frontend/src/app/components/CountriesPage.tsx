@@ -64,12 +64,12 @@ export default function CountriesPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 min-h-full" style={{ background: 'radial-gradient(circle at 18% 12%, rgba(56,189,248,0.14), transparent 28%), radial-gradient(circle at 82% 8%, rgba(45,212,191,0.1), transparent 24%), linear-gradient(180deg, #020617 0%, #07111f 54%, #020617 100%)' }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: '#0f172a', fontSize: '1.4rem', fontWeight: 700 }}>Countries</h1>
-          <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: 2 }}>{countries.length} countries in database</p>
+          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Countries</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{countries.length} countries in database</p>
         </div>
         <button onClick={openCreate}
           className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
@@ -89,15 +89,15 @@ export default function CountriesPage() {
             onChange={e => { setSearch(e.target.value); setPage(0); }}
             placeholder="Search countries..."
             className="pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
-            style={{ background: 'white', border: '1px solid #e2e8f0', color: '#1e293b', fontSize: '0.875rem', width: 220 }}
+            style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', color: '#e2e8f0', fontSize: '0.875rem', width: 220 }}
             onFocus={e => e.target.style.borderColor = '#14b8a6'}
             onBlur={e => e.target.style.borderColor = '#e2e8f0'}
           />
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#475569', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
             <option value="">All Continents</option>
             {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -105,12 +105,12 @@ export default function CountriesPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
               {['#', 'Country', 'Continent', 'Capital', 'Population', 'Language', 'Currency', 'Actions'].map(h => (
-                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#f8fafc', whiteSpace: 'nowrap' }}>
+                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
               ))}
@@ -128,8 +128,8 @@ export default function CountriesPage() {
               const cont = continents.find(x => x.id === c.continentId);
               return (
                 <tr key={c.id}
-                  style={{ borderBottom: '1px solid #f8fafc' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+                  style={{ borderBottom: '1px solid rgba(148,163,184,0.12)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(30,41,59,0.62)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <td style={{ padding: '12px 16px', color: '#94a3b8', fontSize: '0.8rem' }}>{page * PAGE_SIZE + idx + 1}</td>
                   <td style={{ padding: '12px 16px' }}>
@@ -139,7 +139,7 @@ export default function CountriesPage() {
                       ) : (
                         <span style={{ fontSize: '1.3rem' }}>{c.flag}</span>
                       )}
-                      <span style={{ color: '#1e293b', fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{c.name}</span>
+                      <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{c.name}</span>
                     </div>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
@@ -149,23 +149,23 @@ export default function CountriesPage() {
                       </span>
                     )}
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{c.capital}</td>
-                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{(c.population / 1e6).toFixed(1)}M</td>
-                  <td style={{ padding: '12px 16px', color: '#475569', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{c.language}</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{c.capital}</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{(c.population / 1e6).toFixed(1)}M</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{c.language}</td>
                   <td style={{ padding: '12px 16px' }}>
-                    <span className="px-2 py-0.5 rounded-md text-xs font-medium" style={{ background: '#f1f5f9', color: '#475569' }}>{c.currency}</span>
+                    <span className="px-2 py-0.5 rounded-md text-xs font-medium" style={{ background: 'rgba(30,41,59,0.72)', color: '#cbd5e1' }}>{c.currency}</span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-1">
                       <button onClick={() => navigate(`/app/countries/${c.id}`)} className="p-2 rounded-lg transition-colors" title="View"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#475569'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#475569'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Eye size={15} />
                       </button>
                       <button onClick={() => openEdit(c)} className="p-2 rounded-lg transition-colors" title="Edit"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#14b8a6'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#14b8a6'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Pencil size={15} />
                       </button>
@@ -193,19 +193,19 @@ export default function CountriesPage() {
           <div className="flex items-center gap-1.5">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
               className="p-2 rounded-lg"
-              style={{ background: page === 0 ? '#f1f5f9' : 'white', color: page === 0 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+              style={{ background: page === 0 ? '#f1f5f9' : 'white', color: page === 0 ? '#cbd5e1' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
               <ChevronLeft size={15} />
             </button>
             {Array.from({ length: totalPages }).map((_, i) => (
               <button key={i} onClick={() => setPage(i)}
                 className="w-8 h-8 rounded-lg"
-                style={{ background: page === i ? '#14b8a6' : 'white', color: page === i ? 'white' : '#475569', border: '1px solid #e2e8f0', cursor: 'pointer', fontWeight: page === i ? 700 : 400, fontSize: '0.8rem' }}>
+                style={{ background: page === i ? '#14b8a6' : 'white', color: page === i ? 'white' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontWeight: page === i ? 700 : 400, fontSize: '0.8rem' }}>
                 {i + 1}
               </button>
             ))}
             <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
               className="p-2 rounded-lg"
-              style={{ background: page === totalPages - 1 ? '#f1f5f9' : 'white', color: page === totalPages - 1 ? '#cbd5e1' : '#475569', border: '1px solid #e2e8f0', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+              style={{ background: page === totalPages - 1 ? '#f1f5f9' : 'white', color: page === totalPages - 1 ? '#cbd5e1' : '#475569', border: '1px solid rgba(148,163,184,0.18)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>
               <ChevronRight size={15} />
             </button>
           </div>
@@ -235,19 +235,19 @@ export default function CountriesPage() {
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Population">
-              <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 10000000" />
+            <Field label="Population *">
+              <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 10000000" required />
             </Field>
             <Field label="Area (km²)">
               <Input type="number" value={form.area} onChange={e => setForm(f => ({ ...f, area: Number(e.target.value) }))} placeholder="e.g. 92212" />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Language">
-              <Input value={form.language} onChange={e => setForm(f => ({ ...f, language: e.target.value }))} placeholder="e.g. Portuguese" />
+            <Field label="Language *">
+              <Input value={form.language} onChange={e => setForm(f => ({ ...f, language: e.target.value }))} placeholder="e.g. Portuguese" required />
             </Field>
-            <Field label="Currency">
-              <Input value={form.currency} onChange={e => setForm(f => ({ ...f, currency: e.target.value }))} placeholder="e.g. EUR" />
+            <Field label="Currency *">
+              <Input value={form.currency} onChange={e => setForm(f => ({ ...f, currency: e.target.value }))} placeholder="e.g. EUR" required />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -280,3 +280,4 @@ export default function CountriesPage() {
     </div>
   );
 }
+
