@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
 import jwt, { SignOptions } from "jsonwebtoken";
 import { env } from "../config/env";
 import { userRepository } from "../repositories/UserRepository";
+import { criptografarSenha, verificarSenha } from "../utils/criptografia";
 import { HttpError } from "../utils/HttpError";
 
 type RegisterInput = {
@@ -23,7 +23,7 @@ export class AuthService {
       throw new HttpError(409, "Email ja cadastrado.");
     }
 
-    const passwordHash = await bcrypt.hash(input.password, 10);
+    const passwordHash = await criptografarSenha(input.password);
     const user = await userRepository.create({
       name: input.name,
       email: input.email,
@@ -40,7 +40,7 @@ export class AuthService {
       throw new HttpError(401, "Credenciais invalidas.");
     }
 
-    const passwordMatches = await bcrypt.compare(input.password, user.passwordHash);
+    const passwordMatches = await verificarSenha(input.password, user.passwordHash);
 
     if (!passwordMatches) {
       throw new HttpError(401, "Credenciais invalidas.");

@@ -1,0 +1,14 @@
+import bcrypt from "bcrypt";
+
+const SALT_ROUNDS = 10;
+
+export function criptografarSenha(senha: string): Promise<string> {
+  return bcrypt.hash(senha, SALT_ROUNDS);
+}
+
+export function verificarSenha(
+  senha: string,
+  senhaCriptografada: string
+): Promise<boolean> {
+  return bcrypt.compare(senha, senhaCriptografada);
+}
