@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Building2, ChevronLeft, ChevronRight, Eye, Filter, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useApp } from '../context/AppContext';
@@ -54,10 +54,10 @@ export default function CitiesPage() {
     await new Promise(r => setTimeout(r, 400));
     if (editing && modal === 'edit') {
       await updateCity(editing.id, form);
-      toast.success(`${form.name} updated`);
+      toast.success(`${form.name} atualizada`);
     } else {
       await addCity(form);
-      toast.success(`${form.name} created`);
+      toast.success(`${form.name} criada`);
     }
     setLoading(false);
     setModal(null);
@@ -66,7 +66,7 @@ export default function CitiesPage() {
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteCity(deleteTarget.id);
-    toast.success(`${deleteTarget.name} deleted`);
+    toast.success(`${deleteTarget.name} excluida`);
     setDeleteTarget(null);
   };
 
@@ -75,15 +75,15 @@ export default function CitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Cities</h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{cities.length} cities in database</p>
+          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Cidades</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{cities.length} cidades cadastradas</p>
         </div>
         <button onClick={openCreate}
           className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#0d9488'}
           onMouseLeave={e => e.currentTarget.style.background = '#14b8a6'}>
-          <Plus size={16} /> Add City
+          <Plus size={16} /> Adicionar cidade
         </button>
       </div>
 
@@ -94,7 +94,7 @@ export default function CitiesPage() {
           <input
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(0); }}
-            placeholder="Search cities..."
+            placeholder="Buscar cidades..."
             className="pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
             style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', color: '#e2e8f0', fontSize: '0.875rem', width: 200 }}
             onFocus={e => e.target.style.borderColor = '#14b8a6'}
@@ -105,7 +105,7 @@ export default function CitiesPage() {
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setCountryFilter(''); setPage(0); }}
             style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">All Continents</option>
+            <option value="">Todos os continentes</option>
             {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
@@ -113,7 +113,7 @@ export default function CitiesPage() {
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={countryFilter} onChange={e => { setCountryFilter(e.target.value); setPage(0); }}
             style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">All Countries</option>
+            <option value="">Todos os paises</option>
             {filteredCountries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
           </select>
         </div>
@@ -124,7 +124,7 @@ export default function CitiesPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'City', 'Country', 'Population', 'Latitude', 'Longitude', 'Status', 'Actions'].map(h => (
+              {['#', 'Cidade', 'Pais', 'Populacao', 'Latitude', 'Longitude', 'Status', 'Acoes'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
@@ -136,7 +136,7 @@ export default function CitiesPage() {
               <tr>
                 <td colSpan={8} style={{ padding: '48px 16px', textAlign: 'center', color: '#94a3b8' }}>
                   <Building2 size={32} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
-                  <p>No cities found</p>
+                  <p>Nenhuma cidade encontrada</p>
                 </td>
               </tr>
             ) : paged.map((city, idx) => {
@@ -171,32 +171,32 @@ export default function CitiesPage() {
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-1">
                       <MapPin size={12} style={{ color: '#94a3b8' }} />
-                      <span style={{ color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lat.toFixed(2)}°</span>
+                      <span style={{ color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lat.toFixed(2)} graus</span>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lng.toFixed(2)}°</td>
+                  <td style={{ padding: '12px 16px', color: '#cbd5e1', fontSize: '0.82rem', fontFamily: 'monospace' }}>{city.lng.toFixed(2)} graus</td>
                   <td style={{ padding: '12px 16px' }}>
                     {city.isCapital ? (
                       <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6' }}>Capital</span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(30,41,59,0.72)', color: '#94a3b8' }}>City</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(30,41,59,0.72)', color: '#94a3b8' }}>Cidade</span>
                     )}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <div className="flex items-center gap-1">
-                      <button onClick={() => navigate(`/app/cities/${city.id}`)} className="p-2 rounded-lg transition-colors" title="View"
+                      <button onClick={() => navigate(`/app/cities/${city.id}`)} className="p-2 rounded-lg transition-colors" title="Visualizar"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#475569'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Eye size={15} />
                       </button>
-                      <button onClick={() => openEdit(city)} className="p-2 rounded-lg transition-colors" title="Edit"
+                      <button onClick={() => openEdit(city)} className="p-2 rounded-lg transition-colors" title="Editar"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#14b8a6'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Pencil size={15} />
                       </button>
-                      <button onClick={() => setDeleteTarget(city)} className="p-2 rounded-lg transition-colors" title="Delete"
+                      <button onClick={() => setDeleteTarget(city)} className="p-2 rounded-lg transition-colors" title="Excluir"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#ef4444'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
@@ -215,7 +215,7 @@ export default function CitiesPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">
           <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-            Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+            Mostrando {page * PAGE_SIZE + 1}-{Math.min((page + 1) * PAGE_SIZE, filtered.length)} de {filtered.length}
           </p>
           <div className="flex items-center gap-1.5">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
@@ -240,21 +240,21 @@ export default function CitiesPage() {
       )}
 
       {/* Create/Edit Modal */}
-      <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Add City' : 'Edit City'}>
+      <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Adicionar cidade' : 'Editar cidade'}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Name *">
-              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Porto" />
+            <Field label="Nome *">
+              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" />
             </Field>
-            <Field label="Country *">
+            <Field label="Pais *">
               <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))} required>
-                <option value="">Select country</option>
+                <option value="">Selecione um pais</option>
                 {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
               </Select>
             </Field>
           </div>
-          <Field label="Population *">
-            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" required />
+          <Field label="Populacao *">
+            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required />
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Latitude">
@@ -273,10 +273,10 @@ export default function CitiesPage() {
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
             />
             <label htmlFor="isCapital" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              This is the country's capital city
+              Esta cidade e a capital do pais
             </label>
           </div>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Create' : 'Save Changes'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteracoes'} />
         </form>
       </Modal>
 
@@ -289,4 +289,5 @@ export default function CitiesPage() {
     </div>
   );
 }
+
 

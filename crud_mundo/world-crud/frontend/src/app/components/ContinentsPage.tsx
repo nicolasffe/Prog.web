@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Layers, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Continent } from '../data/types';
@@ -40,10 +40,10 @@ export default function ContinentsPage() {
     await new Promise(r => setTimeout(r, 400));
     if (editing && modal === 'edit') {
       updateContinent(editing.id, form);
-      toast.success(`${form.name} updated`);
+      toast.success(`${form.name} atualizado`);
     } else {
       addContinent(form);
-      toast.success(`${form.name} created`);
+      toast.success(`${form.name} criado`);
     }
     setLoading(false);
     setModal(null);
@@ -52,7 +52,7 @@ export default function ContinentsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteContinent(deleteTarget.id);
-    toast.success(`${deleteTarget.name} deleted`);
+    toast.success(`${deleteTarget.name} excluido`);
     setDeleteTarget(null);
   };
 
@@ -61,15 +61,15 @@ export default function ContinentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Continents</h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{continents.length} continents in database</p>
+          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Continentes</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{continents.length} continentes cadastrados</p>
         </div>
         <button onClick={openCreate}
           className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#0d9488'}
           onMouseLeave={e => e.currentTarget.style.background = '#14b8a6'}>
-          <Plus size={16} /> Add Continent
+          <Plus size={16} /> Adicionar continente
         </button>
       </div>
 
@@ -79,7 +79,7 @@ export default function ContinentsPage() {
         <input
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(0); }}
-          placeholder="Search continents..."
+          placeholder="Buscar continentes..."
           className="w-full pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
           style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', color: '#e2e8f0', fontSize: '0.875rem' }}
           onFocus={e => e.target.style.borderColor = '#14b8a6'}
@@ -92,7 +92,7 @@ export default function ContinentsPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'Name', 'Code', 'Countries', 'Description', 'Actions'].map(h => (
+              {['#', 'Nome', 'Codigo', 'Paises', 'Descricao', 'Acoes'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)' }}>
                   {h}
                 </th>
@@ -104,7 +104,7 @@ export default function ContinentsPage() {
               <tr>
                 <td colSpan={6} style={{ padding: '48px 16px', textAlign: 'center', color: '#94a3b8' }}>
                   <Layers size={32} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
-                  <p>No continents found</p>
+                  <p>Nenhum continente encontrado</p>
                 </td>
               </tr>
             ) : paged.map((c, idx) => {
@@ -130,23 +130,23 @@ export default function ContinentsPage() {
                   </td>
                   <td style={{ padding: '14px 16px', color: '#cbd5e1', fontSize: '0.875rem' }}>{cCount}</td>
                   <td style={{ padding: '14px 16px', color: '#94a3b8', fontSize: '0.82rem', maxWidth: 300 }}>
-                    <p style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.description || '—'}</p>
+                    <p style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.description || '-'}</p>
                   </td>
                   <td style={{ padding: '14px 16px' }}>
                     <div className="flex items-center gap-1">
-                      <button onClick={() => openView(c)} className="p-2 rounded-lg transition-colors" title="View"
+                      <button onClick={() => openView(c)} className="p-2 rounded-lg transition-colors" title="Visualizar"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#475569'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Eye size={15} />
                       </button>
-                      <button onClick={() => openEdit(c)} className="p-2 rounded-lg transition-colors" title="Edit"
+                      <button onClick={() => openEdit(c)} className="p-2 rounded-lg transition-colors" title="Editar"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.82)'; e.currentTarget.style.color = '#14b8a6'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
                         <Pencil size={15} />
                       </button>
-                      <button onClick={() => setDeleteTarget(c)} className="p-2 rounded-lg transition-colors" title="Delete"
+                      <button onClick={() => setDeleteTarget(c)} className="p-2 rounded-lg transition-colors" title="Excluir"
                         style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#ef4444'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
@@ -165,7 +165,7 @@ export default function ContinentsPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">
           <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-            Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+            Mostrando {page * PAGE_SIZE + 1}-{Math.min((page + 1) * PAGE_SIZE, filtered.length)} de {filtered.length}
           </p>
           <div className="flex items-center gap-1.5">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
@@ -191,20 +191,20 @@ export default function ContinentsPage() {
 
       {/* Create/Edit Modal */}
       <Modal open={modal === 'create' || modal === 'edit'} onClose={() => setModal(null)}
-        title={modal === 'create' ? 'Add Continent' : 'Edit Continent'}>
+        title={modal === 'create' ? 'Adicionar continente' : 'Editar continente'}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Name *">
-              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Antarctica" />
+            <Field label="Nome *">
+              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Antartida" />
             </Field>
-            <Field label="Code *">
-              <Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} required placeholder="e.g. AN" maxLength={3} />
+            <Field label="Codigo *">
+              <Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} required placeholder="Ex.: AN" maxLength={3} />
             </Field>
           </div>
-          <Field label="Description *">
-            <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Brief description of the continent..." required />
+          <Field label="Descricao *">
+            <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Breve descricao do continente..." required />
           </Field>
-          <Field label="Color">
+          <Field label="Cor">
             <div className="flex gap-2 flex-wrap">
               {COLORS.map(color => (
                 <button key={color} type="button" onClick={() => setForm(f => ({ ...f, color }))}
@@ -213,12 +213,12 @@ export default function ContinentsPage() {
               ))}
             </div>
           </Field>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Create' : 'Save Changes'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteracoes'} />
         </form>
       </Modal>
 
       {/* View Modal */}
-      <Modal open={modal === 'view'} onClose={() => setModal(null)} title="Continent Details">
+      <Modal open={modal === 'view'} onClose={() => setModal(null)} title="Detalhes do continente">
         {editing && (() => {
           const cCount = countries.filter(x => x.continentId === editing.id).length;
           return (
@@ -236,23 +236,23 @@ export default function ContinentsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Countries</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Paises</p>
                   <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.2rem', marginTop: 2 }}>{cCount}</p>
                 </div>
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Color</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Cor</p>
                   <div className="w-5 h-5 rounded mt-2" style={{ background: editing.color }} />
                 </div>
               </div>
               {editing.description && (
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: 4 }}>Description</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: 4 }}>Descricao</p>
                   <p style={{ color: '#cbd5e1', fontSize: '0.85rem', lineHeight: 1.5 }}>{editing.description}</p>
                 </div>
               )}
               <div className="flex gap-2 justify-end pt-2" style={{ borderTop: '1px solid rgba(148,163,184,0.18)' }}>
-                <button onClick={() => setModal(null)} className="rounded-xl px-4 py-2 text-sm" style={{ background: 'rgba(30,41,59,0.72)', color: '#cbd5e1', border: 'none', cursor: 'pointer' }}>Close</button>
-                <button onClick={() => openEdit(editing)} className="rounded-xl px-4 py-2 text-sm font-semibold" style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>Edit</button>
+                <button onClick={() => setModal(null)} className="rounded-xl px-4 py-2 text-sm" style={{ background: 'rgba(30,41,59,0.72)', color: '#cbd5e1', border: 'none', cursor: 'pointer' }}>Fechar</button>
+                <button onClick={() => openEdit(editing)} className="rounded-xl px-4 py-2 text-sm font-semibold" style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>Editar</button>
               </div>
             </div>
           );
@@ -262,11 +262,12 @@ export default function ContinentsPage() {
       <DeleteDialog
         open={!!deleteTarget}
         entityName={deleteTarget?.name ?? ''}
-        warning="This action cannot be undone."
+        warning="Esta acao nao pode ser desfeita."
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );
 }
+
 

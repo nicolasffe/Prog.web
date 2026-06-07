@@ -9,9 +9,9 @@ import { Toaster } from 'sonner';
 
 const navItems = [
   { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/app/continents', icon: Layers, label: 'Continents' },
-  { to: '/app/countries', icon: Flag, label: 'Countries' },
-  { to: '/app/cities', icon: Building2, label: 'Cities' },
+  { to: '/app/continents', icon: Layers, label: 'Continentes' },
+  { to: '/app/countries', icon: Flag, label: 'Paises' },
+  { to: '/app/cities', icon: Building2, label: 'Cidades' },
 ];
 
 export default function Layout() {
@@ -25,7 +25,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: '#f1f5f9' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: '#020617' }}>
       <Toaster position="top-right" richColors />
 
       {/* Sidebar */}
@@ -33,20 +33,21 @@ export default function Layout() {
         className="flex flex-col transition-all duration-300 shrink-0"
         style={{
           width: sidebarOpen ? 240 : 64,
-          background: '#0f172a',
-          borderRight: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(180deg, rgba(2,6,23,0.98), rgba(15,23,42,0.96))',
+          borderRight: '1px solid rgba(56,189,248,0.14)',
+          boxShadow: '18px 0 50px rgba(2,8,23,0.28)',
         }}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
           <Link to="/" className="flex items-center gap-2 shrink-0 group" style={{ textDecoration: 'none' }}>
             <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all"
-              style={{ background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)' }}>
+              style={{ background: 'linear-gradient(135deg, #38bdf8, #2dd4bf)' }}>
               <Globe size={16} className="text-white" />
             </div>
             {sidebarOpen && (
               <div>
                 <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.2 }}>GeoCRUD</p>
-                <p style={{ color: '#64748b', fontSize: '0.65rem', letterSpacing: '0.1em' }}>GLOBE VIEW</p>
+                <p style={{ color: '#38bdf8', fontSize: '0.65rem', letterSpacing: '0.1em' }}>GESTAO MUNDO</p>
               </div>
             )}
           </Link>
@@ -66,8 +67,8 @@ export default function Layout() {
             <NavLink key={to} to={to}
               className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-150 group"
               style={({ isActive }) => ({
-                background: isActive ? (i === 0 ? 'rgba(20,184,166,0.2)' : 'rgba(20,184,166,0.12)') : 'transparent',
-                color: isActive ? '#14b8a6' : '#94a3b8',
+                background: isActive ? (i === 0 ? 'rgba(56,189,248,0.18)' : 'rgba(45,212,191,0.12)') : 'transparent',
+                color: isActive ? '#67e8f9' : '#94a3b8',
                 fontWeight: isActive ? 600 : 400,
                 fontSize: '0.875rem',
                 textDecoration: 'none',
@@ -77,7 +78,7 @@ export default function Layout() {
               })}
               onMouseEnter={e => {
                 if (!e.currentTarget.classList.contains('active')) {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.background = 'rgba(56,189,248,0.08)';
                   e.currentTarget.style.color = '#e2e8f0';
                 }
               }}
@@ -96,12 +97,12 @@ export default function Layout() {
 
         {/* Stats mini */}
         {sidebarOpen && (
-          <div className="mx-3 mb-4 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <p style={{ color: '#64748b', fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Database</p>
+          <div className="mx-3 mb-4 rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.72)', border: '1px solid rgba(148,163,184,0.16)' }}>
+            <p style={{ color: '#38bdf8', fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Resumo</p>
             {[
-              { label: 'Continents', value: continents.length, color: '#8b5cf6' },
-              { label: 'Countries', value: countries.length, color: '#14b8a6' },
-              { label: 'Cities', value: cities.length, color: '#0ea5e9' },
+              { label: 'Continentes', value: continents.length, color: '#a78bfa' },
+              { label: 'Paises', value: countries.length, color: '#2dd4bf' },
+              { label: 'Cidades', value: cities.length, color: '#38bdf8' },
             ].map(s => (
               <div key={s.label} className="flex items-center justify-between py-1">
                 <span style={{ color: '#64748b', fontSize: '0.75rem' }}>{s.label}</span>
@@ -119,7 +120,7 @@ export default function Layout() {
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#64748b'; }}>
           <LogOut size={18} className="shrink-0" />
-          {sidebarOpen && <span>Sign Out</span>}
+          {sidebarOpen && <span>Sair</span>}
         </button>
       </aside>
 
@@ -127,49 +128,49 @@ export default function Layout() {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
         <header className="flex items-center gap-4 px-6 py-3.5 shrink-0"
-          style={{ background: 'white', borderBottom: '1px solid #e2e8f0', height: 60 }}>
+          style={{ background: 'rgba(2,6,23,0.94)', borderBottom: '1px solid rgba(148,163,184,0.16)', height: 60, boxShadow: '0 12px 40px rgba(2,8,23,0.22)' }}>
           <div className="flex-1 relative max-w-sm">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#94a3b8' }} />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search continents, countries, cities..."
+              placeholder="Buscar continentes, paises, cidades..."
               className="w-full pl-9 pr-4 py-2 rounded-lg outline-none transition-all"
               style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                color: '#1e293b',
+                background: 'rgba(15,23,42,0.78)',
+                border: '1px solid rgba(148,163,184,0.18)',
+                color: '#e2e8f0',
                 fontSize: '0.85rem',
               }}
-              onFocus={e => e.target.style.borderColor = '#14b8a6'}
-              onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+              onFocus={e => e.target.style.borderColor = '#38bdf8'}
+              onBlur={e => e.target.style.borderColor = 'rgba(148,163,184,0.18)'}
             />
           </div>
 
           <div className="flex items-center gap-3 ml-auto">
             <Link to="/"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
-              style={{ color: '#14b8a6', background: 'rgba(20,184,166,0.08)', border: '1px solid rgba(20,184,166,0.2)', fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(20,184,166,0.15)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(20,184,166,0.08)'; }}>
+              style={{ color: '#67e8f9', background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.24)', fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(56,189,248,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(56,189,248,0.1)'; }}>
               <Globe size={14} />
-              <span>Globe</span>
+              <span>Globo</span>
             </Link>
             <button className="relative p-2 rounded-lg transition-colors"
-              style={{ color: '#64748b', background: 'transparent', border: 'none', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+              style={{ color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,41,59,0.7)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
               <Bell size={18} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: '#14b8a6' }} />
             </button>
 
-            <div className="flex items-center gap-2 pl-3" style={{ borderLeft: '1px solid #e2e8f0' }}>
+            <div className="flex items-center gap-2 pl-3" style={{ borderLeft: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)' }}>
+                style={{ background: 'linear-gradient(135deg, #38bdf8, #2dd4bf)' }}>
                 <User size={15} className="text-white" />
               </div>
               <div>
-                <p style={{ color: '#1e293b', fontSize: '0.8rem', fontWeight: 500, lineHeight: 1.2 }}>Admin User</p>
+                <p style={{ color: '#e2e8f0', fontSize: '0.8rem', fontWeight: 500, lineHeight: 1.2 }}>Admin User</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.7rem' }}>admin@geocrud.app</p>
               </div>
             </div>
@@ -178,7 +179,7 @@ export default function Layout() {
 
         {/* Page content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-auto">
+          <div className="h-full overflow-auto" style={{ background: '#020617' }}>
             <Outlet />
           </div>
         </main>

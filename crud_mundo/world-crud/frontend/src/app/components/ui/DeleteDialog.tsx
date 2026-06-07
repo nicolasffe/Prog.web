@@ -12,30 +12,36 @@ export function DeleteDialog({ open, entityName, warning, onConfirm, onCancel }:
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}>
-      <div className="rounded-2xl p-6 w-full max-w-sm shadow-2xl" style={{ background: 'white', border: '1px solid #e2e8f0' }}>
-        <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239,68,68,0.1)' }}>
-          <Trash2 size={20} style={{ color: '#ef4444' }} />
+      style={{ background: 'rgba(2,6,23,0.72)', backdropFilter: 'blur(10px)' }}>
+      <div
+        className="rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+        style={{
+          background: 'linear-gradient(180deg, rgba(15,23,42,0.98), rgba(2,6,23,0.98))',
+          border: '1px solid rgba(248,113,113,0.24)',
+          boxShadow: '0 28px 90px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.04)',
+        }}>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(248,113,113,0.13)', border: '1px solid rgba(248,113,113,0.24)' }}>
+          <Trash2 size={20} style={{ color: '#f87171' }} />
         </div>
-        <h3 style={{ color: '#0f172a', fontWeight: 700, fontSize: '1.05rem', textAlign: 'center' }}>Confirm Delete</h3>
-        <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
-          Are you sure you want to delete <strong style={{ color: '#1e293b' }}>{entityName}</strong>?
-          {warning && <><br /><span style={{ color: '#ef4444' }}>{warning}</span></>}
+        <h3 style={{ color: '#f8fafc', fontWeight: 700, fontSize: '1.05rem', textAlign: 'center' }}>Confirmar exclusao</h3>
+        <p style={{ color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
+          Tem certeza que deseja excluir <strong style={{ color: '#e2e8f0' }}>{entityName}</strong>?
+          {warning && <><br /><span style={{ color: '#f87171' }}>{warning}</span></>}
         </p>
         <div className="flex gap-3 mt-6">
           <button onClick={onCancel}
             className="flex-1 rounded-xl py-2.5 transition-colors"
-            style={{ background: '#f1f5f9', color: '#475569', border: 'none', cursor: 'pointer', fontWeight: 500 }}
-            onMouseEnter={e => e.currentTarget.style.background = '#e2e8f0'}
-            onMouseLeave={e => e.currentTarget.style.background = '#f1f5f9'}>
-            Cancel
+            style={{ background: 'rgba(30,41,59,0.82)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.16)', cursor: 'pointer', fontWeight: 500 }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(51,65,85,0.9)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(30,41,59,0.82)'}>
+            Cancelar
           </button>
           <button onClick={onConfirm}
             className="flex-1 rounded-xl py-2.5 transition-colors"
-            style={{ background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}
-            onMouseEnter={e => e.currentTarget.style.background = '#dc2626'}
-            onMouseLeave={e => e.currentTarget.style.background = '#ef4444'}>
-            Delete
+            style={{ background: '#f87171', color: '#020617', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+            onMouseEnter={e => e.currentTarget.style.background = '#fb7185'}
+            onMouseLeave={e => e.currentTarget.style.background = '#f87171'}>
+            Excluir
           </button>
         </div>
       </div>

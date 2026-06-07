@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+﻿import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import Globe from 'react-globe.gl';
 import { feature } from 'topojson-client';
 import { Link } from 'react-router';
@@ -235,7 +235,7 @@ export default function GlobeMain() {
     await new Promise(r => setTimeout(r, 600));
     const ok = await login(loginEmail, loginPassword);
     setLoginLoading(false);
-    if (!ok) setLoginError('Use a valid email and a password with at least 6 characters.');
+    if (!ok) setLoginError('Use um email valido e uma senha com pelo menos 6 caracteres.');
   };
 
   // Country CRUD
@@ -245,7 +245,7 @@ export default function GlobeMain() {
     setSaving(true);
     await new Promise(r => setTimeout(r, 400));
     updateCountry(selected.id, editForm);
-    toast.success(`${editForm.name ?? selected.name} updated`);
+    toast.success(`${editForm.name ?? selected.name} atualizado`);
     setSelected(prev => prev ? { ...prev, ...editForm } as Country : null);
     setSaving(false);
     setMode('view');
@@ -258,10 +258,10 @@ export default function GlobeMain() {
     await new Promise(r => setTimeout(r, 400));
     if (editingCity) {
       updateCity(editingCity.id, cityForm);
-      toast.success(`${cityForm.name} updated`);
+      toast.success(`${cityForm.name} atualizada`);
     } else {
       addCity({ ...cityForm, countryId: selected.id });
-      toast.success(`${cityForm.name} added`);
+      toast.success(`${cityForm.name} adicionada`);
     }
     setSaving(false);
     setEditingCity(null);
@@ -271,7 +271,7 @@ export default function GlobeMain() {
   const handleDeleteCountry = () => {
     if (!selected) return;
     deleteCountry(selected.id);
-    toast.success(`${selected.name} deleted`);
+    toast.success(`${selected.name} removido`);
     setSelected(null);
     setDeleteType(null);
   };
@@ -279,7 +279,7 @@ export default function GlobeMain() {
   const handleDeleteCity = () => {
     if (!deleteCityTarget) return;
     deleteCity(deleteCityTarget.id);
-    toast.success(`${deleteCityTarget.name} deleted`);
+    toast.success(`${deleteCityTarget.name} removida`);
     setDeleteCityTarget(null);
     setDeleteType(null);
   };
@@ -309,7 +309,7 @@ export default function GlobeMain() {
     return () => document.removeEventListener('mousedown', handler);
   }, [menuOpen]);
 
-  // ─── Panel sections ───────────────────────────────────────────────────────
+  // --- Panel sections -------------------------------------------------------
   const ViewMode = () => (
     <>
       {/* Hero */}
@@ -327,7 +327,7 @@ export default function GlobeMain() {
                   {continent.name}
                 </span>
               )}
-              <span style={{ color: '#334155', fontSize: '0.7rem' }}>{selected?.isoCode} · {selected?.timezone}</span>
+              <span style={{ color: '#334155', fontSize: '0.7rem' }}>{selected?.isoCode} - {selected?.timezone}</span>
             </div>
           </div>
           <button onClick={closePanel}
@@ -345,14 +345,14 @@ export default function GlobeMain() {
             style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6', border: '1px solid rgba(20,184,166,0.2)', cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(20,184,166,0.2)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,184,166,0.1)'}>
-            <Pencil size={11} /> Edit
+            <Pencil size={11} /> Editar
           </button>
           <button onClick={openAddCity}
             className="flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold transition-colors"
             style={{ background: 'rgba(14,165,233,0.1)', color: '#0ea5e9', border: '1px solid rgba(14,165,233,0.2)', cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(14,165,233,0.2)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(14,165,233,0.1)'}>
-            <Plus size={11} /> City
+            <Plus size={11} /> Cidade
           </button>
           <button onClick={() => setDeleteType('country')}
             className="rounded-xl px-3 py-2 transition-colors"
@@ -368,12 +368,12 @@ export default function GlobeMain() {
       <div className="px-5 py-4 shrink-0" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="grid grid-cols-2 gap-2">
           {selected && ([
-            { label: 'Population', value: (selected.population / 1e6).toFixed(1) + 'M', color: '#14b8a6' },
+            { label: 'Populacao', value: (selected.population / 1e6).toFixed(1) + 'M', color: '#14b8a6' },
             { label: 'Capital', value: selected.capital, color: '#0ea5e9' },
-            { label: 'Currency', value: selected.currency, color: '#f59e0b' },
-            { label: 'Language', value: selected.language.split('/')[0].trim(), color: '#8b5cf6' },
-            { label: 'Area', value: (selected.area / 1000).toFixed(0) + 'k km²', color: '#10b981' },
-            { label: 'Coords', value: `${selected.lat.toFixed(1)}°, ${selected.lng.toFixed(1)}°`, color: '#6366f1' },
+            { label: 'Moeda', value: selected.currency, color: '#f59e0b' },
+            { label: 'Idioma', value: selected.language.split('/')[0].trim(), color: '#8b5cf6' },
+            { label: 'Area', value: (selected.area / 1000).toFixed(0) + 'k km2', color: '#10b981' },
+            { label: 'Coordenadas', value: `${selected.lat.toFixed(1)} graus, ${selected.lng.toFixed(1)} graus`, color: '#6366f1' },
           ] as const).map(row => (
             <div key={row.label} className="rounded-xl p-2.5"
               style={{ background: `${row.color}08`, border: `1px solid ${row.color}14` }}>
@@ -390,11 +390,11 @@ export default function GlobeMain() {
           <div className="flex items-center gap-3 rounded-xl p-3"
             style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.12)' }}>
             <span style={{ fontSize: '1.4rem' }}>
-              {/Sunny|Clear/.test(weather.condition) ? '☀️' : /Rain/.test(weather.condition) ? '🌧️' : /Snow/.test(weather.condition) ? '❄️' : /Cloud|Overcast|Hazy/.test(weather.condition) ? '⛅' : '🌤️'}
+              {/Sunny|Clear/.test(weather.condition) ? 'Sol' : /Rain/.test(weather.condition) ? 'Chuva' : /Snow/.test(weather.condition) ? 'Neve' : /Cloud|Overcast|Hazy/.test(weather.condition) ? 'Nublado' : 'Tempo'}
             </span>
             <div className="flex-1">
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 700 }}>{weather.temp}°C <span style={{ color: '#475569', fontWeight: 400, fontSize: '0.78rem' }}>— {weather.condition}</span></p>
-              <p style={{ color: '#334155', fontSize: '0.68rem', marginTop: 1 }}>💧 {weather.humidity}% &nbsp; 💨 {weather.wind} km/h</p>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 700 }}>{weather.temp} grausC <span style={{ color: '#475569', fontWeight: 400, fontSize: '0.78rem' }}>- {weather.condition}</span></p>
+              <p style={{ color: '#334155', fontSize: '0.68rem', marginTop: 1 }}>Umidade {weather.humidity}% | Vento {weather.wind} km/h</p>
             </div>
           </div>
         </div>
@@ -404,25 +404,25 @@ export default function GlobeMain() {
       <div className="px-5 py-4">
         <div className="flex items-center justify-between mb-2.5">
           <p style={{ color: '#334155', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.09em' }}>
-            Cities ({countryCities.length})
+            Cidades ({countryCities.length})
           </p>
           <button onClick={openAddCity}
             className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold transition-colors"
             style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6', border: 'none', cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(20,184,166,0.2)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,184,166,0.1)'}>
-            <Plus size={10} /> Add
+            <Plus size={10} /> Adicionar
           </button>
         </div>
 
         {countryCities.length === 0 ? (
           <div className="text-center py-5 rounded-xl"
             style={{ background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.06)' }}>
-            <p style={{ color: '#1e293b', fontSize: '0.75rem' }}>No cities tracked</p>
+            <p style={{ color: '#1e293b', fontSize: '0.75rem' }}>Nenhuma cidade cadastrada</p>
             <button onClick={openAddCity}
               className="mt-2 px-3 py-1.5 rounded-lg text-xs font-semibold"
               style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6', border: 'none', cursor: 'pointer' }}>
-              Add first city
+              Adicionar primeira cidade
             </button>
           </div>
         ) : (
@@ -445,37 +445,37 @@ export default function GlobeMain() {
           style={{ color: '#475569', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, padding: '5px', cursor: 'pointer' }}>
           <ChevronLeft size={14} />
         </button>
-        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Edit Country</span>
+        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Editar pais</span>
         <span style={{ fontSize: '1.1rem' }}>{selected?.flag}</span>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
-        <Field label="Name"><Input value={editForm.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} required /></Field>
-        <Field label="Flag Emoji"><Input value={editForm.flag ?? ''} onChange={e => setEditForm(f => ({ ...f, flag: e.target.value }))} /></Field>
-        <Field label="Continent">
+        <Field label="Nome"><Input value={editForm.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} required /></Field>
+        <Field label="Bandeira"><Input value={editForm.flag ?? ''} onChange={e => setEditForm(f => ({ ...f, flag: e.target.value }))} /></Field>
+        <Field label="Continente">
           <Select value={editForm.continentId ?? ''} onChange={e => setEditForm(f => ({ ...f, continentId: e.target.value }))}>
             {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </Select>
         </Field>
         <Field label="Capital"><Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} /></Field>
-        <Field label="Population *"><Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required /></Field>
-        <Field label="Language *"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required /></Field>
-        <Field label="Currency *"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required /></Field>
+        <Field label="Populacao *"><Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required /></Field>
+        <Field label="Idioma *"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required /></Field>
+        <Field label="Moeda *"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.01" value={editForm.lat ?? 0} onChange={e => setEditForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.01" value={editForm.lng ?? 0} onChange={e => setEditForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
         </div>
-        <Field label="Timezone"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
+        <Field label="Fuso horario"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
       </div>
       <div className="flex gap-2 p-4 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button type="button" onClick={() => setMode('view')}
           className="flex-1 rounded-xl py-2.5 text-sm"
           style={{ background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
-          Cancel
+          Cancelar
         </button>
         <button type="submit" disabled={saving}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold"
           style={{ background: saving ? 'rgba(20,184,166,0.3)' : '#14b8a6', color: 'white', border: 'none', cursor: saving ? 'not-allowed' : 'pointer' }}>
-          <Save size={13} /> {saving ? 'Saving…' : 'Save'}
+          <Save size={13} /> {saving ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
     </form>
@@ -489,12 +489,12 @@ export default function GlobeMain() {
           <ChevronLeft size={14} />
         </button>
         <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>
-          {editingCity ? 'Edit City' : `Add City · ${selected?.flag} ${selected?.name}`}
+          {editingCity ? 'Editar cidade' : `Adicionar cidade - ${selected?.flag} ${selected?.name}`}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
-        <Field label="City Name *"><Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="e.g. Porto" /></Field>
-        <Field label="Population *"><Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="e.g. 250000" required /></Field>
+        <Field label="Nome da cidade *"><Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" /></Field>
+        <Field label="Populacao *"><Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.0001" value={cityForm.lat} onChange={e => setCityForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.0001" value={cityForm.lng} onChange={e => setCityForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
@@ -504,19 +504,19 @@ export default function GlobeMain() {
           <input type="checkbox" id="capCb" checked={cityForm.isCapital}
             onChange={e => setCityForm(f => ({ ...f, isCapital: e.target.checked }))}
             style={{ width: 14, height: 14, accentColor: '#14b8a6', cursor: 'pointer' }} />
-          <label htmlFor="capCb" style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer' }}>Capital city</label>
+          <label htmlFor="capCb" style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer' }}>Cidade capital</label>
         </div>
       </div>
       <div className="flex gap-2 p-4 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button type="button" onClick={() => { setMode('view'); setEditingCity(null); }}
           className="flex-1 rounded-xl py-2.5 text-sm"
           style={{ background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
-          Cancel
+          Cancelar
         </button>
         <button type="submit" disabled={saving}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold"
           style={{ background: saving ? 'rgba(20,184,166,0.3)' : '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
-          <Save size={13} /> {saving ? 'Saving…' : editingCity ? 'Save' : 'Add City'}
+          <Save size={13} /> {saving ? 'Salvando...' : editingCity ? 'Salvar' : 'Adicionar cidade'}
         </button>
       </div>
     </form>
@@ -526,21 +526,21 @@ export default function GlobeMain() {
     <div ref={containerRef} style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: SPACE_BACKGROUND, backgroundSize: '260px 260px, 340px 340px, 420px 420px, 520px 520px, 620px 620px, 100% 100%, 100% 100%', display: 'flex', position: 'fixed', inset: 0 }}>
       <Toaster position="top-right" richColors />
 
-      {/* ── Globe ──────────────────────────────────────────────── */}
+      {/* -- Globe ------------------------------------------------ */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
 
         {/* Loading */}
         {loading && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 30, background: 'rgba(2,10,24,0.7)', backdropFilter: 'blur(6px)' }}>
             <div style={{ width: 44, height: 44, borderRadius: '50%', border: `2px solid ${OCEAN.aqua}`, borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', marginBottom: 14 }} />
-            <p style={{ color: '#8bd8dd', fontSize: '0.85rem' }}>Loading globe…</p>
+            <p style={{ color: '#8bd8dd', fontSize: '0.85rem' }}>Carregando globo...</p>
           </div>
         )}
 
-        {/* ── HUD: Top bar ────────────────────────────────────── */}
+        {/* -- HUD: Top bar -------------------------------------- */}
         {isAuthenticated && (
           <>
-            {/* Logo — top left */}
+            {/* Logo - top left */}
             <div style={{ position: 'absolute', top: 16, left: 16, zIndex: 10 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '7px 12px' }}>
                 <GlobeIcon size={14} style={{ color: OCEAN.aqua }} />
@@ -548,7 +548,7 @@ export default function GlobeMain() {
               </div>
             </div>
 
-            {/* Search — top center */}
+            {/* Search - top center */}
             <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 20, width: 380 }}>
               <div style={{ position: 'relative' }}>
                 <Search size={14} style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', color: '#334155', pointerEvents: 'none' }} />
@@ -557,7 +557,7 @@ export default function GlobeMain() {
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
-                  placeholder="Search countries, capitals…"
+                  placeholder="Buscar paises, capitais..."
                   style={{
                     width: '100%', paddingLeft: 38, paddingRight: 14, paddingTop: 9, paddingBottom: 9,
                     background: 'rgba(2,8,20,0.72)', backdropFilter: 'blur(16px)',
@@ -580,7 +580,7 @@ export default function GlobeMain() {
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ color: '#f1f5f9', fontSize: '0.85rem', fontWeight: 600 }}>{c.name}</p>
                             <p style={{ color: '#334155', fontSize: '0.7rem', marginTop: 1 }}>
-                              {c.capital}{cont ? ` · ${cont.name}` : ''}
+                              {c.capital}{cont ? ` - ${cont.name}` : ''}
                             </p>
                           </div>
                           <MapPin size={12} style={{ color: '#334155', flexShrink: 0 }} />
@@ -592,7 +592,7 @@ export default function GlobeMain() {
               </div>
             </div>
 
-            {/* User menu — top right */}
+            {/* User menu - top right */}
             <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 20 }} onMouseDown={e => e.stopPropagation()}>
               <button onClick={() => setMenuOpen(m => !m)}
                 style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '7px 12px', cursor: 'pointer', color: '#64748b' }}
@@ -612,9 +612,9 @@ export default function GlobeMain() {
                   </div>
                   {([
                     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-                    { to: '/app/continents', icon: Layers, label: 'Continents', count: continents.length },
-                    { to: '/app/countries', icon: Flag, label: 'Countries', count: countries.length },
-                    { to: '/app/cities', icon: Building2, label: 'Cities', count: cities.length },
+                    { to: '/app/continents', icon: Layers, label: 'Continentes', count: continents.length },
+                    { to: '/app/countries', icon: Flag, label: 'Paises', count: countries.length },
+                    { to: '/app/cities', icon: Building2, label: 'Cidades', count: cities.length },
                   ] as const).map(item => (
                     <Link key={item.to} to={item.to}
                       style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', color: '#64748b', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '0.82rem', fontWeight: 500 }}
@@ -630,13 +630,13 @@ export default function GlobeMain() {
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; e.currentTarget.style.color = '#f87171'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#475569'; }}>
                     <LogOut size={14} />
-                    <span>Sign Out</span>
+                    <span>Sair</span>
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Continent pills — bottom center */}
+            {/* Continent pills - bottom center */}
             <div style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
               {CONTINENTS_NAV.map(c => (
                 <button key={c.name} onClick={() => flyToContinent(c.lat, c.lng)}
@@ -648,12 +648,12 @@ export default function GlobeMain() {
               ))}
             </div>
 
-            {/* Zoom controls — bottom right */}
+            {/* Zoom controls - bottom right */}
             <div style={{ position: 'absolute', bottom: 24, right: 16, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {([
-                { icon: ZoomIn, action: zoomIn, title: 'Zoom in' },
-                { icon: ZoomOut, action: zoomOut, title: 'Zoom out' },
-                { icon: RotateCcw, action: resetView, title: 'Reset view' },
+                { icon: ZoomIn, action: zoomIn, title: 'Aproximar' },
+                { icon: ZoomOut, action: zoomOut, title: 'Afastar' },
+                { icon: RotateCcw, action: resetView, title: 'Redefinir visualizacao' },
               ] as const).map(({ icon: Icon, action, title }) => (
                 <button key={title} onClick={action} title={title}
                   style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.07)', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
@@ -664,12 +664,12 @@ export default function GlobeMain() {
               ))}
             </div>
 
-            {/* Hint — only when nothing selected */}
+            {/* Hint - only when nothing selected */}
             {!selected && !loading && (
               <div style={{ position: 'absolute', bottom: 24, left: 16, zIndex: 10 }}>
                 <div style={{ background: 'rgba(2,8,20,0.55)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 10, padding: '6px 12px' }}>
                   <p style={{ color: '#1e293b', fontSize: '0.7rem' }}>
-                    <span style={{ color: OCEAN.mint }}>Drag</span> · <span style={{ color: OCEAN.mint }}>Scroll</span> · <span style={{ color: OCEAN.mint }}>Click</span> country
+                    <span style={{ color: OCEAN.mint }}>Arraste</span> - <span style={{ color: OCEAN.mint }}>Role</span> - <span style={{ color: OCEAN.mint }}>Clique</span> no pais
                   </p>
                 </div>
               </div>
@@ -705,7 +705,7 @@ export default function GlobeMain() {
           />
         )}
 
-        {/* ── Login overlay ──────────────────────────────────── */}
+        {/* -- Login overlay ------------------------------------ */}
         {!isAuthenticated && !loading && (
           <div style={{ position: 'absolute', inset: 0, zIndex: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(2,8,20,0.25)', backdropFilter: 'blur(3px)' }}>
             <div style={{ width: 320, borderRadius: 20, background: 'rgba(3,10,26,0.93)', backdropFilter: 'blur(24px)', border: '1px solid rgba(20,184,166,0.12)', boxShadow: '0 30px 80px rgba(0,0,0,0.6)', padding: '28px 28px 24px' }}>
@@ -718,8 +718,8 @@ export default function GlobeMain() {
                 <span style={{ color: '#475569', fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.08em' }}>GeoCRUD</span>
               </div>
 
-              <p style={{ color: 'white', fontSize: '1.05rem', fontWeight: 800, marginBottom: 4 }}>Sign in</p>
-              <p style={{ color: '#1e293b', fontSize: '0.75rem', marginBottom: 18 }}>to access the geographic database</p>
+              <p style={{ color: 'white', fontSize: '1.05rem', fontWeight: 800, marginBottom: 4 }}>Entrar</p>
+              <p style={{ color: '#1e293b', fontSize: '0.75rem', marginBottom: 18 }}>para acessar o banco de dados geografico</p>
 
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {/* Email */}
@@ -733,11 +733,11 @@ export default function GlobeMain() {
                   />
                 </div>
 
-                {/* Password */}
+                {/* Senha */}
                 <div style={{ position: 'relative' }}>
                   <Lock size={13} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#1e293b', pointerEvents: 'none' }} />
                   <input type={showPw ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)}
-                    placeholder="Password" required
+                    placeholder="Senha" required
                     style={{ width: '100%', paddingLeft: 32, paddingRight: 36, paddingTop: 9, paddingBottom: 9, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, color: '#e2e8f0', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                     onFocus={e => e.target.style.borderColor = 'rgba(20,184,166,0.35)'}
                     onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
@@ -757,17 +757,17 @@ export default function GlobeMain() {
 
                 <button type="submit" disabled={loginLoading}
                   style={{ marginTop: 4, background: loginLoading ? 'rgba(20,184,166,0.35)' : 'linear-gradient(135deg,#14b8a6,#0ea5e9)', color: 'white', border: 'none', borderRadius: 12, padding: '10px', fontWeight: 700, fontSize: '0.875rem', cursor: loginLoading ? 'not-allowed' : 'pointer', transition: 'opacity 0.2s' }}>
-                  {loginLoading ? 'Signing in…' : 'Sign In →'}
+                  {loginLoading ? 'Entrando...' : 'Entrar'}
                 </button>
               </form>
 
-              <p style={{ color: '#0f172a', fontSize: '0.68rem', textAlign: 'center', marginTop: 14 }}>Use any email + 6+ char password to create or enter an account</p>
+              <p style={{ color: '#0f172a', fontSize: '0.68rem', textAlign: 'center', marginTop: 14 }}>Use uma conta cadastrada para acessar o sistema.</p>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── Country side panel ─────────────────────────────────────────── */}
+      {/* -- Country side panel ------------------------------------------- */}
       <div style={{
         width: selected ? 320 : 0,
         minWidth: selected ? 320 : 0,
@@ -788,7 +788,7 @@ export default function GlobeMain() {
       </div>
 
       {/* Dialogs */}
-      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="All associated cities will also be deleted." onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
+      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades associadas tambem serao excluidas." onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
       <DeleteDialog open={deleteType === 'city'} entityName={deleteCityTarget?.name ?? ''} onConfirm={handleDeleteCity} onCancel={() => setDeleteType(null)} />
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -809,9 +809,9 @@ function CityRow({ city, onEdit, onDelete }: { city: City; onEdit: (c: City) => 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 600 }}>{city.name}</span>
-          {city.isCapital && <span style={{ background: 'rgba(20,184,166,0.12)', color: '#14b8a6', fontSize: '0.58rem', fontWeight: 700, padding: '1px 5px', borderRadius: 5 }}>★</span>}
+          {city.isCapital && <span style={{ background: 'rgba(20,184,166,0.12)', color: '#14b8a6', fontSize: '0.58rem', fontWeight: 700, padding: '1px 5px', borderRadius: 5 }}>CAP</span>}
         </div>
-        <p style={{ color: '#1e293b', fontSize: '0.67rem', marginTop: 1 }}>{city.population.toLocaleString()} · {city.lat.toFixed(1)}°, {city.lng.toFixed(1)}°</p>
+        <p style={{ color: '#1e293b', fontSize: '0.67rem', marginTop: 1 }}>{city.population.toLocaleString()} - {city.lat.toFixed(1)} graus, {city.lng.toFixed(1)} graus</p>
       </div>
       {hov && (
         <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
@@ -832,3 +832,4 @@ function CityRow({ city, onEdit, onDelete }: { city: City; onEdit: (c: City) => 
     </div>
   );
 }
+

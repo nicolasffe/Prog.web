@@ -1,78 +1,127 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Globe, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Globe, Lock, Mail, Eye, EyeOff, AlertCircle, User } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { toast } from 'sonner';
 
+type AuthMode = 'login' | 'register';
+
 export default function Login() {
-  const { login } = useApp();
+  const { login, register } = useApp();
   const navigate = useNavigate();
+  const [mode, setMode] = useState<AuthMode>('login');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('admin@geocrud.app');
   const [password, setPassword] = useState('admin123');
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const isRegister = mode === 'register';
+
+  const switchMode = (nextMode: AuthMode) => {
+    setMode(nextMode);
+    setError('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 800));
-    const ok = await login(email, password);
-    setLoading(false);
-    if (ok) {
-      toast.success('Welcome back!');
-      navigate('/app/dashboard');
-    } else {
-      setError('Use a valid email and a password with at least 6 characters.');
+
+    if (isRegister && !name.trim()) {
+      setError('Informe seu nome para criar a conta.');
+      return;
     }
+
+    setLoading(true);
+    const ok = isRegister
+      ? await register(name.trim(), email, password)
+      : await login(email, password);
+    setLoading(false);
+
+    if (ok) {
+      toast.success(isRegister ? 'Conta criada com sucesso!' : 'Login realizado com sucesso!');
+      navigate('/app/dashboard');
+      return;
+    }
+
+    setError(
+      isRegister
+        ? 'Nao foi possivel criar a conta. Verifique os dados informados.'
+        : 'Email ou senha invalidos.'
+    );
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f2744 100%)' }}>
-      {/* Animated background grid */}
       <div className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(6,182,212,0.4) 1px, transparent 0)',
           backgroundSize: '40px 40px',
         }} />
 
-      {/* Floating orbs */}
-      <div className="absolute top-1/4 left-1/6 w-64 h-64 rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, #14b8a6, transparent)', filter: 'blur(40px)' }} />
-      <div className="absolute bottom-1/4 right-1/6 w-80 h-80 rounded-full opacity-8"
-        style={{ background: 'radial-gradient(circle, #3b82f6, transparent)', filter: 'blur(60px)' }} />
-
-      {/* Globe decoration */}
       <div className="absolute top-8 left-8 flex items-center gap-2 text-slate-400">
         <Globe size={20} className="text-teal-400" />
         <span className="text-sm tracking-widest uppercase" style={{ color: '#94a3b8' }}>GeoCRUD</span>
       </div>
 
-      {/* Login card */}
       <div className="relative z-10 w-full max-w-md mx-4">
         <div className="rounded-2xl p-8 shadow-2xl border border-white/10"
           style={{ background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(24px)' }}>
-
-          {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
               style={{ background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)' }}>
               <Globe size={32} className="text-white" />
             </div>
             <h1 className="text-white" style={{ fontSize: '1.5rem', fontWeight: 700, lineHeight: 1.2 }}>
-              Welcome to GeoCRUD
+              {isRegister ? 'Criar conta' : 'Entrar no GeoCRUD'}
             </h1>
             <p className="mt-1" style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
-              Sign in to manage your geographic data
+              {isRegister ? 'Cadastre-se para gerenciar os dados geograficos.' : 'Acesse para gerenciar continentes, paises e cidades.'}
             </p>
           </div>
 
+          <div className="grid grid-cols-2 gap-2 mb-6 rounded-xl p-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <button type="button" onClick={() => switchMode('login')}
+              className="rounded-lg py-2 transition-colors"
+              style={{ background: !isRegister ? '#14b8a6' : 'transparent', color: !isRegister ? 'white' : '#94a3b8', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+              Entrar
+            </button>
+            <button type="button" onClick={() => switchMode('register')}
+              className="rounded-lg py-2 transition-colors"
+              style={{ background: isRegister ? '#14b8a6' : 'transparent', color: isRegister ? 'white' : '#94a3b8', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+              Criar conta
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
+            {isRegister && (
+              <div>
+                <label style={{ color: '#cbd5e1', fontSize: '0.875rem', fontWeight: 500 }}>Nome</label>
+                <div className="relative mt-1.5">
+                  <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748b' }} />
+                  <input
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    className="w-full rounded-xl pl-10 pr-4 py-3 outline-none transition-all"
+                    style={{
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#f1f5f9',
+                      fontSize: '0.9rem',
+                    }}
+                    placeholder="Seu nome"
+                    required
+                    onFocus={e => e.target.style.borderColor = '#14b8a6'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                  />
+                </div>
+              </div>
+            )}
+
             <div>
-              <label style={{ color: '#cbd5e1', fontSize: '0.875rem', fontWeight: 500 }}>Email Address</label>
+              <label style={{ color: '#cbd5e1', fontSize: '0.875rem', fontWeight: 500 }}>Email</label>
               <div className="relative mt-1.5">
                 <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748b' }} />
                 <input
@@ -94,9 +143,8 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
-              <label style={{ color: '#cbd5e1', fontSize: '0.875rem', fontWeight: 500 }}>Password</label>
+              <label style={{ color: '#cbd5e1', fontSize: '0.875rem', fontWeight: 500 }}>Senha</label>
               <div className="relative mt-1.5">
                 <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748b' }} />
                 <input
@@ -110,19 +158,19 @@ export default function Login() {
                     color: '#f1f5f9',
                     fontSize: '0.9rem',
                   }}
-                  placeholder="••••••••"
+                  placeholder="********"
+                  minLength={6}
                   required
                   onFocus={e => e.target.style.borderColor = '#14b8a6'}
                   onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 />
                 <button type="button" onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748b' }}>
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748b', background: 'transparent', border: 'none', cursor: 'pointer' }}>
                   {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Error */}
             {error && (
               <div className="flex items-center gap-2 rounded-lg px-3 py-2.5"
                 style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)' }}>
@@ -131,7 +179,6 @@ export default function Login() {
               </div>
             )}
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -147,22 +194,21 @@ export default function Login() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
+                  {isRegister ? 'Criando conta...' : 'Entrando...'}
                 </span>
-              ) : 'Sign In'}
+              ) : isRegister ? 'Criar conta' : 'Entrar'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p style={{ color: '#475569', fontSize: '0.75rem' }}>
-              Use any email and a password with 6+ characters to create or enter an account.
+            <p style={{ color: '#64748b', fontSize: '0.75rem' }}>
+              {isRegister ? 'A senha deve ter pelo menos 6 caracteres.' : 'Ainda nao tem conta? Use a aba Criar conta.'}
             </p>
           </div>
         </div>
 
-        {/* Bottom stats */}
         <div className="flex items-center justify-center gap-8 mt-6">
-          {[{ label: 'Continents', value: '6' }, { label: 'Countries', value: '20+' }, { label: 'Cities', value: '50+' }].map(s => (
+          {[{ label: 'Continentes', value: '6' }, { label: 'Paises', value: '20+' }, { label: 'Cidades', value: '50+' }].map(s => (
             <div key={s.label} className="text-center">
               <p style={{ color: '#14b8a6', fontSize: '1.1rem', fontWeight: 700 }}>{s.value}</p>
               <p style={{ color: '#64748b', fontSize: '0.75rem' }}>{s.label}</p>

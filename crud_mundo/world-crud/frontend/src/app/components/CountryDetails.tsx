@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router';
 import {
   ArrowLeft, Globe, Users, DollarSign, Languages, MapPin, Thermometer,
@@ -30,10 +30,10 @@ export default function CountryDetails() {
     return (
       <div className="flex flex-col items-center justify-center h-full" style={{ color: '#94a3b8' }}>
         <Globe size={48} style={{ opacity: 0.3, marginBottom: 12 }} />
-        <p>Country not found.</p>
+        <p>Pais nao encontrado.</p>
         <button onClick={() => navigate('/app/countries')} className="mt-4 px-4 py-2 rounded-xl"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Back to Countries
+          Voltar para paises
         </button>
       </div>
     );
@@ -48,14 +48,14 @@ export default function CountryDetails() {
     setSaving(true);
     await new Promise(r => setTimeout(r, 500));
     await updateCountry(country.id, form);
-    toast.success(`${form.name} updated successfully`);
+    toast.success(`${form.name} atualizado com sucesso`);
     setSaving(false);
     setEditing(false);
   };
 
   const handleDelete = () => {
     deleteCountry(country.id);
-    toast.success(`${country.name} deleted`);
+    toast.success(`${country.name} excluido`);
     navigate('/app/countries');
   };
 
@@ -68,7 +68,7 @@ export default function CountryDetails() {
           style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,41,59,0.82)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(15,23,42,0.78)'}>
-          <ArrowLeft size={16} /> Back to Countries
+          <ArrowLeft size={16} /> Voltar para paises
         </button>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -76,12 +76,12 @@ export default function CountryDetails() {
               <button type="button" onClick={() => { setForm({ ...country }); setEditing(false); }}
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: 'rgba(30,41,59,0.72)', color: '#cbd5e1', border: 'none', cursor: 'pointer', fontWeight: 500 }}>
-                <X size={15} /> Cancel
+                <X size={15} /> Cancelar
               </button>
               <button type="submit" form="countryForm"
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                <Save size={15} /> {saving ? 'Saving...' : 'Save Changes'}
+                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar alteracoes'}
               </button>
             </>
           ) : (
@@ -89,12 +89,12 @@ export default function CountryDetails() {
               <button onClick={() => setEditing(true)}
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontWeight: 500 }}>
-                <Pencil size={15} /> Edit
+                <Pencil size={15} /> Editar
               </button>
               <button onClick={() => setDeleteOpen(true)}
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 500 }}>
-                <Trash2 size={15} /> Delete
+                <Trash2 size={15} /> Excluir
               </button>
             </>
           )}
@@ -127,7 +127,7 @@ export default function CountryDetails() {
                     {continent.name}
                   </span>
                 )}
-                <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{country.isoCode} · {country.timezone}</span>
+                <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{country.isoCode} - {country.timezone}</span>
               </div>
               {country.officialName && (
                 <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 8 }}>{country.officialName}</p>
@@ -141,13 +141,13 @@ export default function CountryDetails() {
       {editing ? (
         <form id="countryForm" onSubmit={handleSave} className="rounded-2xl p-6 mb-6 space-y-4"
           style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
-          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Edit Country Details</h3>
+          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Editar detalhes do pais</h3>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Name"><Input value={form.name} onChange={e => setForm(f => ({ ...f!, name: e.target.value }))} required /></Field>
             <Field label="Flag Emoji"><Input value={form.flag} onChange={e => setForm(f => ({ ...f!, flag: e.target.value }))} /></Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Continent">
+            <Field label="Continente">
               <Select value={form.continentId} onChange={e => setForm(f => ({ ...f!, continentId: e.target.value }))}>
                 {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </Select>
@@ -155,9 +155,9 @@ export default function CountryDetails() {
             <Field label="Capital"><Input value={form.capital} onChange={e => setForm(f => ({ ...f!, capital: e.target.value }))} /></Field>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <Field label="Population *"><Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f!, population: Number(e.target.value) }))} required /></Field>
-            <Field label="Currency *"><Input value={form.currency} onChange={e => setForm(f => ({ ...f!, currency: e.target.value }))} required /></Field>
-            <Field label="Language *"><Input value={form.language} onChange={e => setForm(f => ({ ...f!, language: e.target.value }))} required /></Field>
+            <Field label="Populacao *"><Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f!, population: Number(e.target.value) }))} required /></Field>
+            <Field label="Moeda *"><Input value={form.currency} onChange={e => setForm(f => ({ ...f!, currency: e.target.value }))} required /></Field>
+            <Field label="Idioma *"><Input value={form.language} onChange={e => setForm(f => ({ ...f!, language: e.target.value }))} required /></Field>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <Field label="Latitude"><Input type="number" step="0.01" value={form.lat} onChange={e => setForm(f => ({ ...f!, lat: Number(e.target.value) }))} /></Field>
@@ -168,10 +168,10 @@ export default function CountryDetails() {
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { icon: Users, label: 'Population', value: country.population.toLocaleString(), color: '#14b8a6' },
-            { icon: DollarSign, label: 'Currency', value: country.currency, color: '#f59e0b' },
-            { icon: Languages, label: 'Language', value: country.language, color: '#8b5cf6' },
-            { icon: MapPin, label: 'Area', value: `${country.area.toLocaleString()} km²`, color: '#0ea5e9' },
+            { icon: Users, label: 'Populacao', value: country.population.toLocaleString(), color: '#14b8a6' },
+            { icon: DollarSign, label: 'Moeda', value: country.currency, color: '#f59e0b' },
+            { icon: Languages, label: 'Idioma', value: country.language, color: '#8b5cf6' },
+            { icon: MapPin, label: 'Area', value: `${country.area.toLocaleString()} km2`, color: '#0ea5e9' },
           ].map(card => (
             <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}15` }}>
@@ -187,13 +187,13 @@ export default function CountryDetails() {
       {(country.region || country.subregion || country.timezones?.length || country.maps?.googleMaps || country.maps?.openStreetMaps) && (
         <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="flex items-center justify-between mb-4">
-            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>External Country Data</p>
+            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Dados externos do pais</p>
             <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>REST Countries</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Region</p>
-              <p style={{ color: '#e2e8f0', fontWeight: 700, marginTop: 4 }}>{[country.region, country.subregion].filter(Boolean).join(' · ') || 'N/A'}</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 700, marginTop: 4 }}>{[country.region, country.subregion].filter(Boolean).join(' - ') || 'N/A'}</p>
             </div>
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Timezones</p>
@@ -232,7 +232,7 @@ export default function CountryDetails() {
                   </div>
                   <p style={{ color: '#14b8a6', fontWeight: 600, fontSize: '0.9rem' }}>{country.capital}</p>
                   <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontFamily: 'monospace' }}>
-                    {country.lat.toFixed(4)}°, {country.lng.toFixed(4)}°
+                    {country.lat.toFixed(4)} graus, {country.lng.toFixed(4)} graus
                   </p>
                 </div>
               </div>
@@ -241,11 +241,11 @@ export default function CountryDetails() {
           <div className="px-5 pb-5 grid grid-cols-2 gap-3">
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <p style={{ color: '#94a3b8', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Latitude</p>
-              <p style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'monospace', marginTop: 2 }}>{country.lat.toFixed(4)}°N</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'monospace', marginTop: 2 }}>{country.lat.toFixed(4)} grausN</p>
             </div>
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <p style={{ color: '#94a3b8', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Longitude</p>
-              <p style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'monospace', marginTop: 2 }}>{country.lng.toFixed(4)}°E</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 700, fontFamily: 'monospace', marginTop: 2 }}>{country.lng.toFixed(4)} grausE</p>
             </div>
           </div>
         </div>
@@ -256,26 +256,26 @@ export default function CountryDetails() {
           {weather && (
             <div className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="flex items-center justify-between mb-3">
-                <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Current Weather</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Clima atual</p>
                 <Thermometer size={16} style={{ color: '#0ea5e9' }} />
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
                   style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.15), rgba(20,184,166,0.15))', border: '1px solid rgba(14,165,233,0.2)' }}>
                   <span style={{ fontSize: '1.5rem' }}>
-                    {weather.condition.includes('Sunny') || weather.condition.includes('Clear') ? '☀️' :
-                      weather.condition.includes('Rain') ? '🌧️' :
-                        weather.condition.includes('Cloud') ? '⛅' :
-                          weather.condition.includes('Snow') ? '❄️' : '🌤️'}
+                    {weather.condition.includes('Sunny') || weather.condition.includes('Clear') ? 'Sol' :
+                      weather.condition.includes('Rain') ? 'Chuva' :
+                        weather.condition.includes('Cloud') ? 'Nublado' :
+                          weather.condition.includes('Snow') ? 'Neve' : 'Tempo'}
                   </span>
                 </div>
                 <div>
-                  <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{weather.temp}°C</p>
+                  <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{weather.temp} grausC</p>
                   <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{weather.condition}</p>
                 </div>
                 <div className="ml-auto space-y-1">
                   <div className="flex items-center gap-2">
-                    <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>💧 Humidity</span>
+                    <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Umidade</span>
                     <span style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600 }}>{weather.humidity}%</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -290,17 +290,17 @@ export default function CountryDetails() {
           {/* Cities */}
           <div className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="flex items-center justify-between mb-4">
-              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Cities ({countryCities.length})</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Cidades ({countryCities.length})</p>
               <button onClick={() => navigate('/app/cities')}
                 className="flex items-center gap-1 text-sm transition-colors"
                 style={{ color: '#14b8a6', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500 }}>
-                <Plus size={14} /> Add City
+                <Plus size={14} /> Adicionar cidade
               </button>
             </div>
             {countryCities.length === 0 ? (
               <div className="text-center py-6" style={{ color: '#94a3b8' }}>
                 <Building2 size={28} style={{ margin: '0 auto 8px', opacity: 0.3 }} />
-                <p style={{ fontSize: '0.85rem' }}>No cities tracked for this country</p>
+                <p style={{ fontSize: '0.85rem' }}>Nenhuma cidade cadastrada para este pais</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -319,7 +319,7 @@ export default function CountryDetails() {
                           <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.875rem' }}>{city.name}</span>
                           {city.isCapital && <span style={{ background: 'rgba(20,184,166,0.1)', color: '#14b8a6', fontSize: '0.65rem', fontWeight: 600, padding: '1px 6px', borderRadius: 6 }}>Capital</span>}
                         </div>
-                        <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{city.population.toLocaleString()} · {city.lat.toFixed(2)}°, {city.lng.toFixed(2)}°</p>
+                        <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>{city.population.toLocaleString()} - {city.lat.toFixed(2)} graus, {city.lng.toFixed(2)} graus</p>
                       </div>
                     </div>
                     <CheckCircle size={14} style={{ color: '#14b8a6' }} />
@@ -334,11 +334,12 @@ export default function CountryDetails() {
       <DeleteDialog
         open={deleteOpen}
         entityName={country.name}
-        warning="All associated cities will also be deleted."
+        warning="Todas as cidades associadas tambem serao excluidas."
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}
       />
     </div>
   );
 }
+
 

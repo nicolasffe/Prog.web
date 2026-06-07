@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Building2, Users, MapPin, Thermometer, Wind, Pencil, Trash2, Save, X, Flag } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -41,10 +41,10 @@ export default function CityDetails() {
     return (
       <div className="flex flex-col items-center justify-center h-full" style={{ color: '#94a3b8' }}>
         <Building2 size={48} style={{ opacity: 0.3, marginBottom: 12 }} />
-        <p>City not found.</p>
+        <p>Cidade nao encontrada.</p>
         <button onClick={() => navigate('/app/cities')} className="mt-4 px-4 py-2 rounded-xl"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Back to Cities
+          Voltar para cidades
         </button>
       </div>
     );
@@ -82,14 +82,14 @@ export default function CityDetails() {
     setSaving(true);
     await new Promise(r => setTimeout(r, 500));
     await updateCity(city.id, form);
-    toast.success(`${form.name} updated successfully`);
+    toast.success(`${form.name} atualizada com sucesso`);
     setSaving(false);
     setEditing(false);
   };
 
   const handleDelete = () => {
     deleteCity(city.id);
-    toast.success(`${city.name} deleted`);
+    toast.success(`${city.name} excluida`);
     navigate('/app/cities');
   };
 
@@ -102,7 +102,7 @@ export default function CityDetails() {
           style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,41,59,0.82)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(15,23,42,0.78)'}>
-          <ArrowLeft size={16} /> Back to Cities
+          <ArrowLeft size={16} /> Voltar para cidades
         </button>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -110,12 +110,12 @@ export default function CityDetails() {
               <button onClick={() => { setForm({ ...city }); setEditing(false); }}
                 className="flex items-center gap-2 rounded-xl px-4 py-2"
                 style={{ background: 'rgba(30,41,59,0.72)', color: '#cbd5e1', border: 'none', cursor: 'pointer', fontWeight: 500 }}>
-                <X size={15} /> Cancel
+                <X size={15} /> Cancelar
               </button>
               <button type="submit" form="cityForm"
                 className="flex items-center gap-2 rounded-xl px-4 py-2"
                 style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                <Save size={15} /> {saving ? 'Saving...' : 'Save'}
+                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar'}
               </button>
             </>
           ) : (
@@ -123,12 +123,12 @@ export default function CityDetails() {
               <button onClick={() => setEditing(true)}
                 className="flex items-center gap-2 rounded-xl px-4 py-2"
                 style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontWeight: 500 }}>
-                <Pencil size={15} /> Edit
+                <Pencil size={15} /> Editar
               </button>
               <button onClick={() => setDeleteOpen(true)}
                 className="flex items-center gap-2 rounded-xl px-4 py-2"
                 style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontWeight: 500 }}>
-                <Trash2 size={15} /> Delete
+                <Trash2 size={15} /> Excluir
               </button>
             </>
           )}
@@ -172,7 +172,7 @@ export default function CityDetails() {
               )}
               {city.isCapital && (
                 <span className="px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(20,184,166,0.2)', color: '#14b8a6', fontSize: '0.78rem', fontWeight: 600 }}>
-                  ★ Capital
+                  Capital
                 </span>
               )}
             </div>
@@ -184,16 +184,16 @@ export default function CityDetails() {
       {editing && (
         <form id="cityForm" onSubmit={handleSave} className="rounded-2xl p-6 mb-6 space-y-4"
           style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
-          <h3 style={{ color: '#f8fafc', fontWeight: 700 }}>Edit City Details</h3>
+          <h3 style={{ color: '#f8fafc', fontWeight: 700 }}>Editar detalhes da cidade</h3>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Name"><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required /></Field>
-            <Field label="Country">
+            <Field label="Nome"><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required /></Field>
+            <Field label="Pais">
               <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))}>
                 {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
               </Select>
             </Field>
           </div>
-          <Field label="Population">
+          <Field label="Populacao">
             <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} />
           </Field>
           <div className="grid grid-cols-2 gap-4">
@@ -204,7 +204,7 @@ export default function CityDetails() {
             <input type="checkbox" id="capEdit" checked={form.isCapital} onChange={e => setForm(f => ({ ...f, isCapital: e.target.checked }))}
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }} />
             <label htmlFor="capEdit" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              This is the country's capital city
+              Esta cidade e a capital do pais
             </label>
           </div>
         </form>
@@ -213,10 +213,10 @@ export default function CityDetails() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { icon: Users, label: 'Population', value: city.population.toLocaleString(), color: '#14b8a6' },
-          { icon: MapPin, label: 'Latitude', value: `${city.lat.toFixed(4)}°`, color: '#0ea5e9' },
-          { icon: MapPin, label: 'Longitude', value: `${city.lng.toFixed(4)}°`, color: '#8b5cf6' },
-          { icon: Flag, label: 'Country', value: country?.name ?? '—', color: '#f59e0b' },
+          { icon: Users, label: 'Populacao', value: city.population.toLocaleString(), color: '#14b8a6' },
+          { icon: MapPin, label: 'Latitude', value: `${city.lat.toFixed(4)} graus`, color: '#0ea5e9' },
+          { icon: MapPin, label: 'Longitude', value: `${city.lng.toFixed(4)} graus`, color: '#8b5cf6' },
+          { icon: Flag, label: 'Pais', value: country?.name ?? '-', color: '#f59e0b' },
         ].map(card => (
           <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}15` }}>
@@ -233,7 +233,7 @@ export default function CityDetails() {
         {/* Location preview */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="p-5 pb-0">
-            <p style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>Location Preview</p>
+            <p style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>Previa da localizacao</p>
           </div>
           <div className="mx-5 mb-5 rounded-xl overflow-hidden" style={{ background: '#0f172a' }}>
             <div className="relative" style={{ height: 180 }}>
@@ -250,7 +250,7 @@ export default function CityDetails() {
                 </div>
                 <p style={{ color: '#14b8a6', fontWeight: 700, fontSize: '1rem', marginTop: 12 }}>{city.name}</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontFamily: 'monospace', marginTop: 4 }}>
-                  {city.lat.toFixed(6)}°, {city.lng.toFixed(6)}°
+                  {city.lat.toFixed(6)} graus, {city.lng.toFixed(6)} graus
                 </p>
               </div>
             </div>
@@ -261,35 +261,35 @@ export default function CityDetails() {
         {weather ? (
           <div className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="flex items-center justify-between mb-4">
-              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Current Weather</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Clima atual</p>
               <Thermometer size={16} style={{ color: '#0ea5e9' }} />
             </div>
             <div className="flex items-center gap-4 mb-5">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
                 style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.1), rgba(20,184,166,0.1))', border: '1px solid rgba(14,165,233,0.2)' }}>
                 <span style={{ fontSize: '1.8rem' }}>
-                  {/sun|clear/i.test(weather.description ?? '') ? '☀️' :
-                    /rain/i.test(weather.description ?? '') ? '🌧️' :
-                      /cloud|overcast/i.test(weather.description ?? '') ? '⛅' :
-                        /snow/i.test(weather.description ?? '') ? '❄️' : '🌤️'}
+                  {/sun|clear/i.test(weather.description ?? '') ? 'Sol' :
+                    /rain/i.test(weather.description ?? '') ? 'Chuva' :
+                      /cloud|overcast/i.test(weather.description ?? '') ? 'Nublado' :
+                        /snow/i.test(weather.description ?? '') ? 'Neve' : 'Tempo'}
                 </span>
               </div>
               <div>
-                <p style={{ color: '#f8fafc', fontSize: '2rem', fontWeight: 800 }}>{Math.round(weather.temperature)}°C</p>
+                <p style={{ color: '#f8fafc', fontSize: '2rem', fontWeight: 800 }}>{Math.round(weather.temperature)} grausC</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>{weather.description ?? weather.provider}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Humidity</p>
-                <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.1rem', marginTop: 4 }}>{weather.humidity ?? '—'}%</p>
+                <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Umidade</p>
+                <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.1rem', marginTop: 4 }}>{weather.humidity ?? '-'}%</p>
               </div>
               <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
                 <div className="flex items-center gap-1.5 mb-1">
                   <Wind size={12} style={{ color: '#94a3b8' }} />
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Wind</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Vento</p>
                 </div>
-                <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.1rem' }}>{weather.windSpeed ?? '—'} <span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#94a3b8' }}>km/h</span></p>
+                <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.1rem' }}>{weather.windSpeed ?? '-'} <span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#94a3b8' }}>km/h</span></p>
               </div>
             </div>
           </div>
@@ -297,7 +297,7 @@ export default function CityDetails() {
           <div className="rounded-2xl p-5 flex items-center justify-center" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="text-center" style={{ color: '#94a3b8' }}>
               <Thermometer size={32} style={{ margin: '0 auto 8px', opacity: 0.3 }} />
-              <p style={{ fontSize: '0.85rem' }}>{weatherLoading ? 'Loading weather...' : 'Weather data unavailable'}</p>
+              <p style={{ fontSize: '0.85rem' }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}</p>
             </div>
           </div>
         )}
@@ -312,4 +312,5 @@ export default function CityDetails() {
     </div>
   );
 }
+
 

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+﻿import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ActivityItem, City, Continent, Country } from '../data/types';
 
 type User = {
@@ -74,6 +74,7 @@ interface AppContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   addContinent: (c: Omit<Continent, 'id'>) => Promise<void>;
   updateContinent: (id: string, c: Partial<Continent>) => Promise<void>;
@@ -100,7 +101,7 @@ const ISO_NUMERIC: Record<string, number> = {
 
 function flagFromCode(code: string) {
   const clean = code.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2);
-  if (clean.length !== 2) return '🏳️';
+  if (clean.length !== 2) return 'Bandeira';
   return clean
     .split('')
     .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
@@ -309,20 +310,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     try {
-      let result: { token: string; user: User };
-      try {
-        result = await request<{ token: string; user: User }>('/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({ email, password }),
-        }, null);
-      } catch (error) {
-        if (password.length < 6) throw error;
-        const name = email.split('@')[0] || 'Admin User';
-        result = await request<{ token: string; user: User }>('/auth/register', {
-          method: 'POST',
-          body: JSON.stringify({ name, email, password }),
-        }, null);
-      }
+      const result = await request<{ token: string; user: User }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      }, null);
+
+      saveSession(result.token, result.user);
+      await refreshData(result.token);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }, [refreshData, saveSession]);
+
+  const register = useCallback(async (name: string, email: string, password: string) => {
+    try {
+      const result = await request<{ token: string; user: User }>('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+      }, null);
 
       saveSession(result.token, result.user);
       await refreshData(result.token);
@@ -451,6 +458,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: Boolean(token && user),
     isLoading,
     login,
+    register,
     logout,
     addContinent,
     updateContinent,
@@ -462,7 +470,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     updateCity,
     deleteCity,
   }), [
-    continents, countries, cities, activity, user, token, isLoading, login, logout,
+    continents, countries, cities, activity, user, token, isLoading, login, register, logout,
     addContinent, updateContinent, deleteContinent, addCountry, updateCountry,
     deleteCountry, addCity, updateCity, deleteCity,
   ]);
