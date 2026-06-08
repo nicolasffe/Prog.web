@@ -78,6 +78,38 @@ const countries = [
         longitude: -47.8828,
         population: 2817381,
         timezone: "America/Sao_Paulo"
+      },
+      {
+        name: "Manaus",
+        state: "Amazonas",
+        latitude: -3.119,
+        longitude: -60.0217,
+        population: 2063689,
+        timezone: "America/Manaus"
+      },
+      {
+        name: "Salvador",
+        state: "Bahia",
+        latitude: -12.9777,
+        longitude: -38.5016,
+        population: 2417678,
+        timezone: "America/Bahia"
+      },
+      {
+        name: "Recife",
+        state: "Pernambuco",
+        latitude: -8.0476,
+        longitude: -34.877,
+        population: 1488920,
+        timezone: "America/Recife"
+      },
+      {
+        name: "Porto Alegre",
+        state: "Rio Grande do Sul",
+        latitude: -30.0346,
+        longitude: -51.2177,
+        population: 1332845,
+        timezone: "America/Sao_Paulo"
       }
     ]
   },
@@ -120,6 +152,38 @@ const countries = [
         longitude: -77.0369,
         population: 689545,
         timezone: "America/New_York"
+      },
+      {
+        name: "Chicago",
+        state: "Illinois",
+        latitude: 41.8781,
+        longitude: -87.6298,
+        population: 2746388,
+        timezone: "America/Chicago"
+      },
+      {
+        name: "Houston",
+        state: "Texas",
+        latitude: 29.7604,
+        longitude: -95.3698,
+        population: 2304580,
+        timezone: "America/Chicago"
+      },
+      {
+        name: "Miami",
+        state: "Florida",
+        latitude: 25.7617,
+        longitude: -80.1918,
+        population: 442241,
+        timezone: "America/New_York"
+      },
+      {
+        name: "Seattle",
+        state: "Washington",
+        latitude: 47.6062,
+        longitude: -122.3321,
+        population: 737015,
+        timezone: "America/Los_Angeles"
       }
     ]
   },
@@ -153,6 +217,38 @@ const countries = [
         latitude: 45.764,
         longitude: 4.8357,
         population: 522969,
+        timezone: "Europe/Paris"
+      },
+      {
+        name: "Marseille",
+        state: "Provence-Alpes-Cote d'Azur",
+        latitude: 43.2965,
+        longitude: 5.3698,
+        population: 873076,
+        timezone: "Europe/Paris"
+      },
+      {
+        name: "Nice",
+        state: "Provence-Alpes-Cote d'Azur",
+        latitude: 43.7102,
+        longitude: 7.262,
+        population: 343477,
+        timezone: "Europe/Paris"
+      },
+      {
+        name: "Toulouse",
+        state: "Occitanie",
+        latitude: 43.6047,
+        longitude: 1.4442,
+        population: 504078,
+        timezone: "Europe/Paris"
+      },
+      {
+        name: "Lille",
+        state: "Hauts-de-France",
+        latitude: 50.6292,
+        longitude: 3.0573,
+        population: 236234,
         timezone: "Europe/Paris"
       }
     ]
@@ -188,6 +284,38 @@ const countries = [
         longitude: 135.5023,
         population: 2752000,
         timezone: "Asia/Tokyo"
+      },
+      {
+        name: "Sapporo",
+        state: "Hokkaido",
+        latitude: 43.0618,
+        longitude: 141.3545,
+        population: 1973395,
+        timezone: "Asia/Tokyo"
+      },
+      {
+        name: "Kyoto",
+        state: "Kyoto",
+        latitude: 35.0116,
+        longitude: 135.7681,
+        population: 1463723,
+        timezone: "Asia/Tokyo"
+      },
+      {
+        name: "Fukuoka",
+        state: "Fukuoka",
+        latitude: 33.5902,
+        longitude: 130.4017,
+        population: 1612392,
+        timezone: "Asia/Tokyo"
+      },
+      {
+        name: "Naha",
+        state: "Okinawa",
+        latitude: 26.2124,
+        longitude: 127.6792,
+        population: 317625,
+        timezone: "Asia/Tokyo"
       }
     ]
   },
@@ -214,6 +342,38 @@ const countries = [
         longitude: -58.3816,
         population: 3120612,
         timezone: "America/Argentina/Buenos_Aires"
+      },
+      {
+        name: "Cordoba",
+        state: "Cordoba",
+        latitude: -31.4201,
+        longitude: -64.1888,
+        population: 1565112,
+        timezone: "America/Argentina/Cordoba"
+      },
+      {
+        name: "Rosario",
+        state: "Santa Fe",
+        latitude: -32.9442,
+        longitude: -60.6505,
+        population: 1342369,
+        timezone: "America/Argentina/Cordoba"
+      },
+      {
+        name: "Mendoza",
+        state: "Mendoza",
+        latitude: -32.8895,
+        longitude: -68.8458,
+        population: 115041,
+        timezone: "America/Argentina/Mendoza"
+      },
+      {
+        name: "Ushuaia",
+        state: "Tierra del Fuego",
+        latitude: -54.8019,
+        longitude: -68.303,
+        population: 82000,
+        timezone: "America/Argentina/Ushuaia"
       }
     ]
   },
@@ -239,6 +399,38 @@ const countries = [
         latitude: 52.52,
         longitude: 13.405,
         population: 3850809,
+        timezone: "Europe/Berlin"
+      },
+      {
+        name: "Hamburg",
+        state: "Hamburg",
+        latitude: 53.5511,
+        longitude: 9.9937,
+        population: 1892122,
+        timezone: "Europe/Berlin"
+      },
+      {
+        name: "Munich",
+        state: "Bavaria",
+        latitude: 48.1351,
+        longitude: 11.582,
+        population: 1512491,
+        timezone: "Europe/Berlin"
+      },
+      {
+        name: "Cologne",
+        state: "North Rhine-Westphalia",
+        latitude: 50.9375,
+        longitude: 6.9603,
+        population: 1084831,
+        timezone: "Europe/Berlin"
+      },
+      {
+        name: "Frankfurt",
+        state: "Hesse",
+        latitude: 50.1109,
+        longitude: 8.6821,
+        population: 773068,
         timezone: "Europe/Berlin"
       }
     ]

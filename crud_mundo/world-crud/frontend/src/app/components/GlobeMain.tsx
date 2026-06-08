@@ -4,16 +4,16 @@ import { feature } from 'topojson-client';
 import { Link } from 'react-router';
 import { Toaster, toast } from 'sonner';
 import { useApp } from '../context/AppContext';
-import { mockWeather } from '../data/mockData';
 import { Country, City } from '../data/types';
 import { DeleteDialog } from './ui/DeleteDialog';
 import { Field, Input, Select } from './ui/Modal';
+import { getCountryWeatherCity, getWeatherLabel, useCitiesWeather, useCityWeather } from '../hooks/useCityWeather';
 import {
   Globe as GlobeIcon, Search, User, LogOut, LayoutDashboard,
   Flag, Layers, Building2, Users, DollarSign, Languages, MapPin,
   Thermometer, Wind, Pencil, Trash2, Plus, X, ChevronLeft,
   Save, ZoomIn, ZoomOut, RotateCcw, Lock, Mail, Eye, EyeOff,
-  AlertCircle, ChevronDown,
+  AlertCircle, ChevronDown, RefreshCw,
 } from 'lucide-react';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -37,16 +37,33 @@ const SPACE_BACKGROUND = `
 `;
 
 const CONTINENTS_NAV = [
-  { name: 'Africa', lat: 3, lng: 22, color: '#14b8a6' },
-  { name: 'Asia', lat: 34, lng: 100, color: '#22d3ee' },
-  { name: 'Europe', lat: 52, lng: 15, color: '#38bdf8' },
-  { name: 'N. America', lat: 46, lng: -100, color: '#2dd4bf' },
-  { name: 'S. America', lat: -14, lng: -57, color: '#34d399' },
+  { name: 'Africa', lat: 3, lng: 22, color: '#8bc6b2' },
+  { name: 'Asia', lat: 34, lng: 100, color: '#8fbfd4' },
+  { name: 'Europa', lat: 52, lng: 15, color: '#9cb7d8' },
+  { name: 'America N.', lat: 46, lng: -100, color: '#8fc9c1' },
+  { name: 'America S.', lat: -14, lng: -57, color: '#9dc58b' },
   { name: 'Oceania', lat: -24, lng: 134, color: '#67e8f9' },
 ];
 
+const temperatureColor = (temperature: number) => {
+  if (temperature >= 32) return 'rgba(205, 154, 92, 0.34)';
+  if (temperature >= 24) return 'rgba(213, 196, 121, 0.32)';
+  if (temperature >= 16) return 'rgba(142, 181, 136, 0.3)';
+  if (temperature >= 6) return 'rgba(142, 190, 199, 0.3)';
+  return 'rgba(176, 188, 211, 0.32)';
+};
+
+const temperatureAccent = (temperature: number) => {
+  if (temperature >= 32) return '#c99a63';
+  if (temperature >= 24) return '#c8bc7e';
+  if (temperature >= 16) return '#91ad8c';
+  if (temperature >= 6) return '#90b8c0';
+  return '#b4bfd2';
+};
+
 type GeoFeature = { id: string; type: string; geometry: object; properties: Record<string, unknown> };
 type PanelMode = 'view' | 'editCountry' | 'cityForm';
+type GlobeLayer = 'countries' | 'weather';
 const mkEmptyCity = (lat = 0, lng = 0) => ({ name: '', population: 0, lat, lng, isCapital: false, countryId: '' });
 
 export default function GlobeMain() {
@@ -89,6 +106,11 @@ export default function GlobeMain() {
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
+  const [globeLayer, setGlobeLayer] = useState<GlobeLayer>('weather');
+  const [tempMin, setTempMin] = useState(-10);
+  const [tempMax, setTempMax] = useState(45);
+  const [showExtremes, setShowExtremes] = useState(true);
+  const { citiesWeather, citiesWeatherLoading, citiesWeatherRefreshing, refreshCitiesWeather } = useCitiesWeather(isAuthenticated);
 
   // Resize observer
   useEffect(() => {
@@ -126,34 +148,62 @@ export default function GlobeMain() {
     ctrl.enablePan = false;
   }, [selected, isAuthenticated]);
 
-  const isoMap = useMemo(() =>
-    Object.fromEntries(countries.map(c => [String(c.isoNumeric), c])),
-    [countries],
+  const isoMap = useMemo(() => {
+    const entries = countries.flatMap(c => [
+      [String(c.isoNumeric), c],
+      [String(c.isoNumeric).padStart(3, '0'), c],
+    ]);
+    return Object.fromEntries(entries);
+  }, [countries]);
+
+  const cityWeatherMarkers = useMemo(() => citiesWeather.filter(item =>
+    Number.isFinite(item.city.latitude) &&
+    Number.isFinite(item.city.longitude) &&
+    item.temperature >= tempMin &&
+    item.temperature <= tempMax
+  ), [citiesWeather, tempMin, tempMax]);
+
+  const allWeatherMarkers = useMemo(() => citiesWeather.filter(item =>
+    Number.isFinite(item.city.latitude) && Number.isFinite(item.city.longitude)
+  ), [citiesWeather]);
+
+  const rankedWeather = useMemo(
+    () => [...cityWeatherMarkers].sort((a, b) => b.temperature - a.temperature),
+    [cityWeatherMarkers]
   );
+  const hottestCity = rankedWeather[0] ?? null;
+  const coldestCity = rankedWeather[rankedWeather.length - 1] ?? null;
 
   // Globe color/altitude callbacks
   const getCapColor = useCallback((d: object) => {
     const { id } = d as GeoFeature;
     const c = isoMap[id];
-    if (!c) return 'rgba(5,46,54,0.42)';
-    if (selected?.id === c.id) return 'rgba(34,211,238,0.98)';
-    if (hovered === id) return 'rgba(110,231,183,0.94)';
-    return 'rgba(16,185,129,0.62)';
-  }, [isoMap, selected, hovered]);
+    if (!c) return 'rgba(7, 25, 34, 0.12)';
+    if (globeLayer === 'weather') {
+      if (selected?.id === c.id) return 'rgba(170, 218, 213, 0.26)';
+      if (hovered === id) return 'rgba(170, 218, 213, 0.2)';
+      return 'rgba(190, 215, 202, 0.13)';
+    }
+    if (selected?.id === c.id) return 'rgba(132, 202, 214, 0.58)';
+    if (hovered === id) return 'rgba(154, 210, 186, 0.5)';
+    return 'rgba(92, 151, 133, 0.34)';
+  }, [isoMap, selected, hovered, globeLayer]);
 
   const getAlt = useCallback((d: object) => {
     const { id } = d as GeoFeature;
     const c = isoMap[id];
-    if (!c) return 0.003;
-    if (selected?.id === c.id) return 0.032;
-    if (hovered === id) return 0.022;
-    return 0.013;
-  }, [isoMap, selected, hovered]);
+    if (!c) return 0.002;
+    if (globeLayer === 'weather') return selected?.id === c.id || hovered === id ? 0.011 : 0.006;
+    if (selected?.id === c.id) return 0.026;
+    if (hovered === id) return 0.018;
+    return 0.01;
+  }, [isoMap, selected, hovered, globeLayer]);
 
   const getStroke = useCallback((d: object) => {
     const c = isoMap[(d as GeoFeature).id];
-    return c ? 'rgba(103,232,249,0.52)' : 'rgba(8,145,178,0.22)';
-  }, [isoMap]);
+    if (!c) return 'rgba(8,145,178,0.12)';
+    return globeLayer === 'weather' ? 'rgba(167, 218, 218, 0.36)' : 'rgba(103,232,249,0.42)';
+  }, [isoMap, globeLayer]);
 
   const getLabel = useCallback((d: object) => {
     if (!isAuthenticated) return '';
@@ -224,7 +274,8 @@ export default function GlobeMain() {
 
   // Derived panel data
   const countryCities = selected ? cities.filter(c => c.countryId === selected.id) : [];
-  const weather = selected ? mockWeather[selected.id] : null;
+  const weatherCity = getCountryWeatherCity(selected, cities);
+  const { weather, weatherLoading } = useCityWeather(weatherCity?.id);
   const continent = selected ? continents.find(c => c.id === selected.continentId) : null;
 
   // Login
@@ -299,6 +350,16 @@ export default function GlobeMain() {
     setEditingCity(city);
     setCityForm({ name: city.name, population: city.population, lat: city.lat, lng: city.lng, isCapital: city.isCapital, countryId: city.countryId });
     setMode('cityForm');
+  };
+
+  const flyToWeatherCity = (countryId: string) => {
+    const country = countries.find(item => item.id === countryId);
+    if (country) flyToCountry(country);
+  };
+
+  const handleRefreshWeather = async () => {
+    await refreshCitiesWeather();
+    toast.success('Temperaturas atualizadas');
   };
 
   // Close menu on outside click
@@ -385,17 +446,25 @@ export default function GlobeMain() {
       </div>
 
       {/* Weather */}
-      {weather && (
+      {(weather || weatherLoading || weatherCity) && (
         <div className="px-5 py-3 shrink-0" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
           <div className="flex items-center gap-3 rounded-xl p-3"
             style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.12)' }}>
-            <span style={{ fontSize: '1.4rem' }}>
-              {/Sunny|Clear/.test(weather.condition) ? 'Sol' : /Rain/.test(weather.condition) ? 'Chuva' : /Snow/.test(weather.condition) ? 'Neve' : /Cloud|Overcast|Hazy/.test(weather.condition) ? 'Nublado' : 'Tempo'}
-            </span>
-            <div className="flex-1">
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 700 }}>{weather.temp} grausC <span style={{ color: '#475569', fontWeight: 400, fontSize: '0.78rem' }}>- {weather.condition}</span></p>
-              <p style={{ color: '#334155', fontSize: '0.68rem', marginTop: 1 }}>Umidade {weather.humidity}% | Vento {weather.wind} km/h</p>
-            </div>
+            {weather ? (
+              <>
+                <span style={{ fontSize: '1.4rem' }}>{getWeatherLabel(weather.description)}</span>
+                <div className="flex-1">
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 700 }}>
+                    {Math.round(weather.temperature)} grausC <span style={{ color: '#475569', fontWeight: 400, fontSize: '0.78rem' }}>- {weather.description ?? weather.provider}</span>
+                  </p>
+                  <p style={{ color: '#334155', fontSize: '0.68rem', marginTop: 1 }}>Umidade {weather.humidity ?? '-'}% | Vento {weather.windSpeed ?? '-'} km/h</p>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1" style={{ color: '#334155', fontSize: '0.72rem' }}>
+                {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -542,9 +611,92 @@ export default function GlobeMain() {
           <>
             {/* Logo - top left */}
             <div style={{ position: 'absolute', top: 16, left: 16, zIndex: 10 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '7px 12px' }}>
-                <GlobeIcon size={14} style={{ color: OCEAN.aqua }} />
-                <span style={{ color: '#9bdfe5', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.07em' }}>GeoCRUD</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '7px 12px' }}>
+                  <GlobeIcon size={14} style={{ color: OCEAN.aqua }} />
+                  <span style={{ color: '#9bdfe5', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.07em' }}>GeoCRUD</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(34,211,238,0.16)', borderRadius: 12, padding: '7px 10px' }}>
+                  <Thermometer size={13} style={{ color: OCEAN.aqua }} />
+                  <span style={{ color: '#67e8f9', fontSize: '0.72rem', fontWeight: 700 }}>
+                    {citiesWeatherLoading ? 'Clima...' : `${allWeatherMarkers.length} temperaturas`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Weather controls */}
+            <div style={{ position: 'absolute', top: 58, left: 16, zIndex: 10, width: 282, background: 'rgba(2,8,20,0.72)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: 12 }}>
+              <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+                {([
+                  { value: 'weather', label: 'Clima', icon: Thermometer },
+                  { value: 'countries', label: 'Paises', icon: Flag },
+                ] as const).map(({ value, label, icon: Icon }) => (
+                  <button key={value} type="button" onClick={() => setGlobeLayer(value)}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 8px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', background: globeLayer === value ? 'rgba(34,211,238,0.18)' : 'rgba(255,255,255,0.03)', color: globeLayer === value ? OCEAN.aqua : '#64748b', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
+                    <Icon size={12} /> {label}
+                  </button>
+                ))}
+                <button type="button" onClick={handleRefreshWeather} disabled={citiesWeatherRefreshing}
+                  title="Atualizar clima"
+                  style={{ width: 34, borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.03)', color: citiesWeatherRefreshing ? '#334155' : OCEAN.aqua, cursor: citiesWeatherRefreshing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <RefreshCw size={13} style={{ animation: citiesWeatherRefreshing ? 'spin 0.8s linear infinite' : 'none' }} />
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+                <label style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700 }}>
+                  Min {tempMin}C
+                  <input type="range" min="-20" max="50" value={tempMin}
+                    onChange={e => setTempMin(Math.min(Number(e.target.value), tempMax))}
+                    style={{ width: '100%', accentColor: OCEAN.aqua }} />
+                </label>
+                <label style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700 }}>
+                  Max {tempMax}C
+                  <input type="range" min="-20" max="50" value={tempMax}
+                    onChange={e => setTempMax(Math.max(Number(e.target.value), tempMin))}
+                    style={{ width: '100%', accentColor: OCEAN.aqua }} />
+                </label>
+              </div>
+
+              <p style={{ color: '#64748b', fontSize: '0.68rem', lineHeight: 1.35, marginBottom: 10 }}>
+                Temperaturas exibidas por cidade. Os paises ficam neutros para evitar leitura de clima uniforme.
+              </p>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#64748b', fontSize: '0.72rem', fontWeight: 700, marginBottom: 10, cursor: 'pointer' }}>
+                <input type="checkbox" checked={showExtremes} onChange={e => setShowExtremes(e.target.checked)}
+                  style={{ accentColor: OCEAN.aqua }} />
+                Destacar mais quente e mais fria
+              </label>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 10 }}>
+                {hottestCity && (
+                  <button type="button" onClick={() => flyToWeatherCity(hottestCity.city.countryId)}
+                    style={{ textAlign: 'left', border: '1px solid rgba(205,154,92,0.22)', background: 'rgba(205,154,92,0.07)', borderRadius: 10, padding: 8, cursor: 'pointer' }}>
+                    <p style={{ color: '#d7a96d', fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase' }}>Mais quente</p>
+                    <p style={{ color: '#f8fafc', fontSize: '0.74rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{hottestCity.city.name}</p>
+                    <p style={{ color: '#d7a96d', fontSize: '0.78rem', fontWeight: 800 }}>{Math.round(hottestCity.temperature)}C</p>
+                  </button>
+                )}
+                {coldestCity && (
+                  <button type="button" onClick={() => flyToWeatherCity(coldestCity.city.countryId)}
+                    style={{ textAlign: 'left', border: '1px solid rgba(142,190,199,0.22)', background: 'rgba(142,190,199,0.07)', borderRadius: 10, padding: 8, cursor: 'pointer' }}>
+                    <p style={{ color: '#9ecbd2', fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase' }}>Mais fria</p>
+                    <p style={{ color: '#f8fafc', fontSize: '0.74rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{coldestCity.city.name}</p>
+                    <p style={{ color: '#9ecbd2', fontSize: '0.78rem', fontWeight: 800 }}>{Math.round(coldestCity.temperature)}C</p>
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {rankedWeather.slice(0, 5).map((item, index) => (
+                  <button key={item.city.id} type="button" onClick={() => flyToWeatherCity(item.city.countryId)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 8, padding: '6px 8px', cursor: 'pointer', textAlign: 'left' }}>
+                    <span style={{ color: '#334155', fontSize: '0.68rem', width: 16, fontWeight: 800 }}>{index + 1}</span>
+                    <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.city.name}</span>
+                    <span style={{ color: temperatureAccent(item.temperature), fontSize: '0.74rem', fontWeight: 800 }}>{Math.round(item.temperature)}C</span>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -636,16 +788,19 @@ export default function GlobeMain() {
               )}
             </div>
 
-            {/* Continent pills - bottom center */}
-            <div style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {CONTINENTS_NAV.map(c => (
-                <button key={c.name} onClick={() => flyToContinent(c.lat, c.lng)}
-                  style={{ background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(14px)', border: `1px solid ${c.color}28`, borderRadius: 20, padding: '6px 14px', color: c.color, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.18s', letterSpacing: '0.03em' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = `${c.color}18`; e.currentTarget.style.borderColor = `${c.color}55`; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(2,8,20,0.65)'; e.currentTarget.style.borderColor = `${c.color}28`; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                  {c.name}
-                </button>
-              ))}
+            {/* Continent navigator */}
+            <div style={{ position: 'absolute', bottom: 22, left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: 'min(720px, calc(100vw - 420px))', minWidth: 460 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: 5, borderRadius: 16, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', boxShadow: '0 14px 40px rgba(0,0,0,0.24)' }}>
+                {CONTINENTS_NAV.map(c => (
+                  <button key={c.name} onClick={() => flyToContinent(c.lat, c.lng)}
+                    style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(148,163,184,0.1)', borderRadius: 12, padding: '8px 11px', color: '#d5e4ea', fontSize: '0.74rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.18s', letterSpacing: '0.01em', whiteSpace: 'nowrap' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.72)'; e.currentTarget.style.borderColor = `${c.color}66`; e.currentTarget.style.color = c.color; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(15,23,42,0.5)'; e.currentTarget.style.borderColor = 'rgba(148,163,184,0.1)'; e.currentTarget.style.color = '#d5e4ea'; }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.color, boxShadow: `0 0 12px ${c.color}55`, flexShrink: 0 }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Zoom controls - bottom right */}
@@ -666,11 +821,18 @@ export default function GlobeMain() {
 
             {/* Hint - only when nothing selected */}
             {!selected && !loading && (
-              <div style={{ position: 'absolute', bottom: 24, left: 16, zIndex: 10 }}>
-                <div style={{ background: 'rgba(2,8,20,0.55)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 10, padding: '6px 12px' }}>
-                  <p style={{ color: '#1e293b', fontSize: '0.7rem' }}>
-                    <span style={{ color: OCEAN.mint }}>Arraste</span> - <span style={{ color: OCEAN.mint }}>Role</span> - <span style={{ color: OCEAN.mint }}>Clique</span> no pais
-                  </p>
+              <div style={{ position: 'absolute', bottom: 22, left: 16, zIndex: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 14, padding: '7px 10px', boxShadow: '0 14px 40px rgba(0,0,0,0.22)' }}>
+                  {[
+                    ['Arraste', 'girar'],
+                    ['Role', 'zoom'],
+                    ['Clique', 'abrir pais'],
+                  ].map(([action, detail]) => (
+                    <div key={action} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ color: '#d5e4ea', fontSize: '0.7rem', fontWeight: 800 }}>{action}</span>
+                      <span style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 600 }}>{detail}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -692,16 +854,44 @@ export default function GlobeMain() {
             polygonsData={features}
             polygonAltitude={getAlt}
             polygonCapColor={getCapColor}
-            polygonSideColor={() => 'rgba(34,211,238,0.07)'}
+            polygonSideColor={() => globeLayer === 'weather' ? 'rgba(90, 126, 122, 0.1)' : 'rgba(34,211,238,0.07)'}
             polygonStrokeColor={getStroke}
             polygonLabel={getLabel}
             onPolygonClick={handlePolygonClick}
             onPolygonHover={(d: object | null) => setHovered(d ? (d as GeoFeature).id : null)}
-            ringsData={isAuthenticated ? ringsData : []}
+            ringsData={isAuthenticated && globeLayer === 'countries' ? ringsData : []}
             ringColor={(d: object) => (d as any).color}
             ringMaxRadius={(d: object) => (d as any).maxR}
             ringPropagationSpeed={(d: object) => (d as any).propagationSpeed}
             ringRepeatPeriod={(d: object) => (d as any).repeatPeriod}
+            labelsData={isAuthenticated && globeLayer === 'weather' ? cityWeatherMarkers : []}
+            labelLat={(d: object) => (d as any).city.latitude}
+            labelLng={(d: object) => (d as any).city.longitude}
+            labelAltitude={0.014}
+            labelText={(d: object) => {
+              const item = d as any;
+              return `${item.city.name} ${Math.round(item.temperature)} grausC`;
+            }}
+            labelSize={0.56}
+            labelDotRadius={0.16}
+            labelColor={(d: object) => temperatureAccent((d as any).temperature)}
+            labelResolution={2}
+            labelLabel={(d: object) => {
+              const item = d as any;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,211,238,0.24);font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>${Math.round(item.temperature)} grausC - ${item.description ?? item.provider}<br/>Umidade ${item.humidity ?? '-'}% | Vento ${item.windSpeed ?? '-'} km/h</div>`;
+            }}
+            onLabelClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
+            pointsData={isAuthenticated && globeLayer === 'weather' && showExtremes ? [hottestCity, coldestCity].filter(Boolean) : []}
+            pointLat={(d: object) => (d as any).city.latitude}
+            pointLng={(d: object) => (d as any).city.longitude}
+            pointAltitude={0.02}
+            pointRadius={0.32}
+            pointColor={(d: object) => temperatureColor((d as any).temperature)}
+            pointLabel={(d: object) => {
+              const item = d as any;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid ${temperatureAccent(item.temperature)};font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>Destaque: ${Math.round(item.temperature)} grausC</div>`;
+            }}
+            onPointClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
           />
         )}
 

@@ -33,7 +33,34 @@ type OpenMeteoResponse = {
 };
 
 export class WeatherService {
-  async getByCityId(cityId: string) {
+  async listCitiesWeather(forceRefresh = false) {
+    const cities = await cityRepository.list();
+
+    const results = await Promise.allSettled(
+      cities.map(city => this.getByCityId(city.id, forceRefresh))
+    );
+
+    const weatherByCity = [];
+
+    for (const [index, result] of results.entries()) {
+      if (result.status === "fulfilled") {
+        weatherByCity.push(result.value);
+        continue;
+      }
+
+      weatherByCity.push({
+        city: cities[index],
+        weather: null,
+        error: result.reason instanceof Error
+          ? result.reason.message
+          : "Nao foi possivel carregar o clima."
+      });
+    }
+
+    return weatherByCity;
+  }
+
+  async getByCityId(cityId: string, forceRefresh = false) {
     const city = await cityRepository.findById(cityId);
 
     if (!city) {
@@ -43,7 +70,7 @@ export class WeatherService {
     const cached = await weatherRepository.findByCityId(cityId);
     const cacheTtlMs = externalProviders.weatherCacheMinutes * 60 * 1000;
 
-    if (cached && Date.now() - cached.fetchedAt.getTime() < cacheTtlMs) {
+    if (!forceRefresh && cached && Date.now() - cached.fetchedAt.getTime() < cacheTtlMs) {
       return { ...cached, city, cached: true };
     }
 

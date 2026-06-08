@@ -5,10 +5,10 @@ import {
   Wind, Pencil, Trash2, Plus, Building2, CheckCircle, X, Save
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { mockWeather } from '../data/mockData';
 import { DeleteDialog } from './ui/DeleteDialog';
 import { Field, Input, Select, FormActions } from './ui/Modal';
 import { toast } from 'sonner';
+import { getCountryWeatherCity, getWeatherLabel, useCityWeather } from '../hooks/useCityWeather';
 
 export default function CountryDetails() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +21,8 @@ export default function CountryDetails() {
   const [form, setForm] = useState(country ? { ...country } : null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const weatherCity = getCountryWeatherCity(country, cities);
+  const { weather, weatherLoading } = useCityWeather(weatherCity?.id);
 
   useEffect(() => {
     if (country) setForm({ ...country });
@@ -41,7 +43,6 @@ export default function CountryDetails() {
 
   const continent = continents.find(c => c.id === country.continentId);
   const countryCities = cities.filter(c => c.countryId === country.id);
-  const weather = mockWeather[country.id];
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,37 +254,38 @@ export default function CountryDetails() {
         {/* Weather + cities */}
         <div className="space-y-4">
           {/* Weather */}
-          {weather && (
+          {(weather || weatherLoading || weatherCity) && (
             <div className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="flex items-center justify-between mb-3">
-              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Clima atual</p>
+                <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Clima atual{weatherCity ? ` - ${weatherCity.name}` : ''}</p>
                 <Thermometer size={16} style={{ color: '#0ea5e9' }} />
               </div>
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.15), rgba(20,184,166,0.15))', border: '1px solid rgba(14,165,233,0.2)' }}>
-                  <span style={{ fontSize: '1.5rem' }}>
-                    {weather.condition.includes('Sunny') || weather.condition.includes('Clear') ? 'Sol' :
-                      weather.condition.includes('Rain') ? 'Chuva' :
-                        weather.condition.includes('Cloud') ? 'Nublado' :
-                          weather.condition.includes('Snow') ? 'Neve' : 'Tempo'}
-                  </span>
-                </div>
-                <div>
-                  <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{weather.temp} grausC</p>
-                  <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{weather.condition}</p>
-                </div>
-                <div className="ml-auto space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Umidade</span>
-                    <span style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600 }}>{weather.humidity}%</span>
+              {weather ? (
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.15), rgba(20,184,166,0.15))', border: '1px solid rgba(14,165,233,0.2)' }}>
+                    <span style={{ fontSize: '1.5rem' }}>{getWeatherLabel(weather.description)}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Wind size={12} style={{ color: '#94a3b8' }} />
-                    <span style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600 }}>{weather.wind} km/h</span>
+                  <div>
+                    <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{Math.round(weather.temperature)} grausC</p>
+                    <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{weather.description ?? weather.provider}</p>
+                  </div>
+                  <div className="ml-auto space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Umidade</span>
+                      <span style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600 }}>{weather.humidity ?? '-'}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Wind size={12} style={{ color: '#94a3b8' }} />
+                      <span style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600 }}>{weather.windSpeed ?? '-'} km/h</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="py-4 text-center" style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+                  {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}
+                </div>
+              )}
             </div>
           )}
 

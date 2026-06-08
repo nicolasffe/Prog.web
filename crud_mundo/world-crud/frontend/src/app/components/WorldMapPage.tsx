@@ -2,11 +2,11 @@
 import Globe from 'react-globe.gl';
 import { feature } from 'topojson-client';
 import { useApp } from '../context/AppContext';
-import { mockWeather } from '../data/mockData';
 import { Country, City } from '../data/types';
 import { DeleteDialog } from './ui/DeleteDialog';
 import { Field, Input, Select } from './ui/Modal';
 import { toast } from 'sonner';
+import { getCountryWeatherCity, getWeatherLabel, useCityWeather } from '../hooks/useCityWeather';
 import {
   Globe as GlobeIcon, Users, DollarSign, Languages, MapPin,
   Thermometer, Pencil, Trash2, Plus, X, ChevronLeft,
@@ -74,7 +74,10 @@ export default function WorldMapPage() {
     ctrl.maxDistance = 700;
   }, [selected]);
 
-  const isoMap = Object.fromEntries(countries.map(c => [String(c.isoNumeric), c]));
+  const isoMap = Object.fromEntries(countries.flatMap(c => [
+    [String(c.isoNumeric), c],
+    [String(c.isoNumeric).padStart(3, '0'), c],
+  ]));
 
   const getCapColor = useCallback((d: object) => {
     const { id } = d as GeoFeature;
@@ -128,7 +131,8 @@ export default function WorldMapPage() {
   }));
 
   const countryCities = selected ? cities.filter(c => c.countryId === selected.id) : [];
-  const weather = selected ? mockWeather[selected.id] : null;
+  const weatherCity = getCountryWeatherCity(selected, cities);
+  const { weather, weatherLoading } = useCityWeather(weatherCity?.id);
   const continent = selected ? continents.find(c => c.id === selected.continentId) : null;
 
   // --- Handlers ---
@@ -276,22 +280,32 @@ export default function WorldMapPage() {
       </div>
 
       {/* Weather */}
-      {weather && (
+      {(weather || weatherLoading || weatherCity) && (
         <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', flexShrink: 0 }}>
-          <p style={{ color: '#475569', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Clima atual</p>
+          <p style={{ color: '#475569', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+            Clima atual{weatherCity ? ` - ${weatherCity.name}` : ''}
+          </p>
           <div className="flex items-center gap-3 rounded-xl p-3" style={{ background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.14)' }}>
-            <span style={{ fontSize: '1.6rem' }}>
-              {weather.condition.match(/Sunny|Clear/) ? 'Sol' : weather.condition.match(/Rain/) ? 'Chuva' : weather.condition.match(/Snow/) ? 'Neve' : weather.condition.match(/Cloud|Overcast|Hazy/) ? 'Nublado' : 'Tempo'}
-            </span>
-            <div className="flex-1">
-              <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '1rem' }}>{weather.temp} grausC - {weather.condition}</p>
-              <div className="flex items-center gap-3 mt-0.5">
-                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>Umidade {weather.humidity}%</span>
-                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>
-                  <Wind size={10} style={{ display: 'inline', verticalAlign: 'middle' }} /> {weather.wind} km/h
-                </span>
+            {weather ? (
+              <>
+                <span style={{ fontSize: '1.6rem' }}>{getWeatherLabel(weather.description)}</span>
+                <div className="flex-1">
+                  <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '1rem' }}>
+                    {Math.round(weather.temperature)} grausC - {weather.description ?? weather.provider}
+                  </p>
+                  <div className="flex items-center gap-3 mt-0.5">
+                    <span style={{ color: '#64748b', fontSize: '0.72rem' }}>Umidade {weather.humidity ?? '-'}%</span>
+                    <span style={{ color: '#64748b', fontSize: '0.72rem' }}>
+                      <Wind size={10} style={{ display: 'inline', verticalAlign: 'middle' }} /> {weather.windSpeed ?? '-'} km/h
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1" style={{ color: '#64748b', fontSize: '0.78rem' }}>
+                {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

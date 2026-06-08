@@ -111,26 +111,3 @@ export const cities: City[] = [
   { id: 'auc', name: 'Auckland', countryId: 'nz', population: 1657000, lat: -36.86, lng: 174.76, isCapital: false },
   { id: 'wel', name: 'Wellington', countryId: 'nz', population: 215000, lat: -41.29, lng: 174.78, isCapital: true },
 ];
-
-export const mockWeather: Record<string, { temp: number; condition: string; humidity: number; wind: number }> = {
-  us: { temp: 18, condition: 'Partly Cloudy', humidity: 62, wind: 14 },
-  ca: { temp: 5, condition: 'Snowy', humidity: 75, wind: 20 },
-  mx: { temp: 26, condition: 'Sunny', humidity: 45, wind: 10 },
-  br: { temp: 30, condition: 'Tropical', humidity: 80, wind: 8 },
-  ar: { temp: 16, condition: 'Windy', humidity: 55, wind: 28 },
-  co: { temp: 18, condition: 'Partly Cloudy', humidity: 70, wind: 12 },
-  fr: { temp: 14, condition: 'Cloudy', humidity: 68, wind: 16 },
-  de: { temp: 10, condition: 'Overcast', humidity: 72, wind: 18 },
-  gb: { temp: 12, condition: 'Rainy', humidity: 78, wind: 22 },
-  it: { temp: 20, condition: 'Sunny', humidity: 50, wind: 11 },
-  es: { temp: 22, condition: 'Clear', humidity: 45, wind: 13 },
-  cn: { temp: 17, condition: 'Hazy', humidity: 65, wind: 12 },
-  jp: { temp: 19, condition: 'Clear', humidity: 58, wind: 14 },
-  in: { temp: 33, condition: 'Hot & Humid', humidity: 82, wind: 9 },
-  kr: { temp: 15, condition: 'Clear', humidity: 55, wind: 17 },
-  ng: { temp: 32, condition: 'Humid', humidity: 85, wind: 7 },
-  eg: { temp: 35, condition: 'Sunny & Hot', humidity: 25, wind: 15 },
-  za: { temp: 22, condition: 'Partly Cloudy', humidity: 52, wind: 16 },
-  au: { temp: 24, condition: 'Sunny', humidity: 40, wind: 19 },
-  nz: { temp: 16, condition: 'Breezy', humidity: 65, wind: 25 },
-};
