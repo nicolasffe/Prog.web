@@ -18,7 +18,7 @@ export class ContinentService {
     const continent = await continentRepository.findById(id);
 
     if (!continent) {
-      throw new HttpError(404, "Continente nao encontrado.");
+      throw new HttpError(404, "Continente não encontrado.");
     }
 
     return continent;
@@ -37,7 +37,7 @@ export class ContinentService {
     if (countriesCount > 0) {
       throw new HttpError(
         409,
-        "Nao e possivel excluir continente com paises vinculados."
+        "Não é possível excluir continente com países vinculados."
       );
     }
 

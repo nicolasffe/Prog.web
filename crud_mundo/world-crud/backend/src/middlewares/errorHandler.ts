@@ -15,7 +15,7 @@ export function errorHandler(
 
   if (error instanceof ZodError) {
     return res.status(400).json({
-      message: "Dados invalidos.",
+      message: "Dados inválidos.",
       issues: error.flatten()
     });
   }
@@ -26,7 +26,7 @@ export function errorHandler(
     }
 
     if (error.code === "P2025") {
-      return res.status(404).json({ message: "Registro nao encontrado." });
+      return res.status(404).json({ message: "Registro não encontrado." });
     }
   }
 

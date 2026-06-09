@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Layers, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Continent } from '../data/types';
@@ -52,7 +52,7 @@ export default function ContinentsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteContinent(deleteTarget.id);
-    toast.success(`${deleteTarget.name} excluido`);
+    toast.success(`${deleteTarget.name} excluído`);
     setDeleteTarget(null);
   };
 
@@ -92,7 +92,7 @@ export default function ContinentsPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'Nome', 'Codigo', 'Paises', 'Descricao', 'Acoes'].map(h => (
+              {['#', 'Nome', 'Código', 'Países', 'Descrição', 'Ações'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)' }}>
                   {h}
                 </th>
@@ -195,14 +195,14 @@ export default function ContinentsPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <Field label="Nome *">
-              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Antartida" />
+              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Antártida" />
             </Field>
-            <Field label="Codigo *">
+            <Field label="Código *">
               <Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} required placeholder="Ex.: AN" maxLength={3} />
             </Field>
           </div>
-          <Field label="Descricao *">
-            <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Breve descricao do continente..." required />
+          <Field label="Descrição *">
+            <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Breve descrição do continente..." required />
           </Field>
           <Field label="Cor">
             <div className="flex gap-2 flex-wrap">
@@ -213,7 +213,7 @@ export default function ContinentsPage() {
               ))}
             </div>
           </Field>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteracoes'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alterações'} />
         </form>
       </Modal>
 
@@ -236,7 +236,7 @@ export default function ContinentsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Paises</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Países</p>
                   <p style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '1.2rem', marginTop: 2 }}>{cCount}</p>
                 </div>
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
@@ -246,7 +246,7 @@ export default function ContinentsPage() {
               </div>
               {editing.description && (
                 <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: 4 }}>Descricao</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', marginBottom: 4 }}>Descrição</p>
                   <p style={{ color: '#cbd5e1', fontSize: '0.85rem', lineHeight: 1.5 }}>{editing.description}</p>
                 </div>
               )}
@@ -262,7 +262,7 @@ export default function ContinentsPage() {
       <DeleteDialog
         open={!!deleteTarget}
         entityName={deleteTarget?.name ?? ''}
-        warning="Esta acao nao pode ser desfeita."
+        warning="Esta ação não pode ser desfeita."
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />

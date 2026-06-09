@@ -13,7 +13,7 @@ export const externalController = {
     const query = String(req.query.q ?? "").trim();
 
     if (!query) {
-      throw new HttpError(400, "Informe o parametro q para buscar cidades.");
+      throw new HttpError(400, "Informe o parâmetro q para buscar cidades.");
     }
 
     const cities = await externalGeoService.searchCities(

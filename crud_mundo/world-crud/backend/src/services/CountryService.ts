@@ -17,7 +17,7 @@ export class CountryService {
     const country = await countryRepository.findById(id);
 
     if (!country) {
-      throw new HttpError(404, "Pais nao encontrado.");
+      throw new HttpError(404, "País não encontrado.");
     }
 
     return country;
@@ -39,7 +39,7 @@ export class CountryService {
     const continent = await continentRepository.findById(continentId);
 
     if (!continent) {
-      throw new HttpError(400, "Continente informado nao existe.");
+      throw new HttpError(400, "Continente informado não existe.");
     }
   }
 

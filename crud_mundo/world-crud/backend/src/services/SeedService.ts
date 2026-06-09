@@ -2,52 +2,52 @@ import { prisma } from "../prisma/client";
 
 const continents = [
   {
-    name: "America do Sul",
+    name: "América do Sul",
     code: "SA",
-    description: "Continente ao sul das Americas, com grande diversidade natural."
+    description: "Continente ao sul das Américas, com grande diversidade natural."
   },
   {
-    name: "America do Norte",
+    name: "América do Norte",
     code: "NA",
-    description: "Regiao continental com Canada, Estados Unidos, Mexico e territorios."
+    description: "Região continental com Canadá, Estados Unidos, México e territórios."
   },
   {
     name: "Europa",
     code: "EU",
-    description: "Continente historico com alta densidade urbana e cultural."
+    description: "Continente histórico com alta densidade urbana e cultural."
   },
   {
-    name: "Asia",
+    name: "Ásia",
     code: "AS",
-    description: "Maior continente do planeta em area e populacao."
+    description: "Maior continente do planeta em área e população."
   },
   {
-    name: "Africa",
+    name: "África",
     code: "AF",
-    description: "Continente de enorme diversidade geografica, cultural e climatica."
+    description: "Continente de enorme diversidade geográfica, cultural e climática."
   },
   {
     name: "Oceania",
     code: "OC",
-    description: "Regiao formada por Australia, Nova Zelandia e ilhas do Pacifico."
+    description: "Região formada por Austrália, Nova Zelândia e ilhas do Pacífico."
   },
   {
-    name: "Antartida",
+    name: "Antártida",
     code: "AN",
-    description: "Continente polar dedicado majoritariamente a pesquisa cientifica."
+    description: "Continente polar dedicado majoritariamente a pesquisa científica."
   }
 ];
 
 const countries = [
   {
     name: "Brasil",
-    officialName: "Republica Federativa do Brasil",
+    officialName: "República Federativa do Brasil",
     code: "BR",
-    capital: "Brasilia",
+    capital: "Brasília",
     region: "Americas",
     subregion: "South America",
     population: 203080756,
-    language: "Portugues",
+    language: "Português",
     currency: "BRL",
     area: 8515767,
     latitude: -10,
@@ -121,7 +121,7 @@ const countries = [
     region: "Americas",
     subregion: "North America",
     population: 334914895,
-    language: "Ingles",
+    language: "Inglês",
     currency: "USD",
     area: 9833517,
     latitude: 38,
@@ -188,8 +188,8 @@ const countries = [
     ]
   },
   {
-    name: "Franca",
-    officialName: "Republique francaise",
+    name: "França",
+    officialName: "République française",
     code: "FR",
     capital: "Paris",
     region: "Europe",
@@ -254,14 +254,14 @@ const countries = [
     ]
   },
   {
-    name: "Japao",
+    name: "Japão",
     officialName: "Japan",
     code: "JP",
     capital: "Tokyo",
-    region: "Asia",
+    region: "Ásia",
     subregion: "Eastern Asia",
     population: 124516650,
-    language: "Japones",
+    language: "Japonês",
     currency: "JPY",
     area: 377975,
     latitude: 36.2048,
@@ -321,7 +321,7 @@ const countries = [
   },
   {
     name: "Argentina",
-    officialName: "Republica Argentina",
+    officialName: "República Argentina",
     code: "AR",
     capital: "Buenos Aires",
     region: "Americas",
@@ -385,7 +385,7 @@ const countries = [
     region: "Europe",
     subregion: "Western Europe",
     population: 84482267,
-    language: "Alemao",
+    language: "Alemão",
     currency: "EUR",
     area: 357114,
     latitude: 51.1657,

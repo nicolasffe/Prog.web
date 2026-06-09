@@ -13,7 +13,7 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
   const authorization = req.headers.authorization;
 
   if (!authorization?.startsWith("Bearer ")) {
-    throw new HttpError(401, "Token de autenticacao nao informado.");
+    throw new HttpError(401, "Token de autenticação não informado.");
   }
 
   const token = authorization.replace("Bearer ", "").trim();
@@ -27,6 +27,6 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
     };
     next();
   } catch {
-    throw new HttpError(401, "Token invalido ou expirado.");
+    throw new HttpError(401, "Token inválido ou expirado.");
   }
 }

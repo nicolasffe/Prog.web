@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router';
 import {
   ArrowLeft, Globe, Users, DollarSign, Languages, MapPin, Thermometer,
@@ -32,10 +32,10 @@ export default function CountryDetails() {
     return (
       <div className="flex flex-col items-center justify-center h-full" style={{ color: '#94a3b8' }}>
         <Globe size={48} style={{ opacity: 0.3, marginBottom: 12 }} />
-        <p>Pais nao encontrado.</p>
+        <p>País não encontrado.</p>
         <button onClick={() => navigate('/app/countries')} className="mt-4 px-4 py-2 rounded-xl"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Voltar para paises
+          Voltar para países
         </button>
       </div>
     );
@@ -56,7 +56,7 @@ export default function CountryDetails() {
 
   const handleDelete = () => {
     deleteCountry(country.id);
-    toast.success(`${country.name} excluido`);
+    toast.success(`${country.name} excluído`);
     navigate('/app/countries');
   };
 
@@ -69,7 +69,7 @@ export default function CountryDetails() {
           style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,41,59,0.82)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(15,23,42,0.78)'}>
-          <ArrowLeft size={16} /> Voltar para paises
+          <ArrowLeft size={16} /> Voltar para países
         </button>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -82,7 +82,7 @@ export default function CountryDetails() {
               <button type="submit" form="countryForm"
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar alteracoes'}
+                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar alterações'}
               </button>
             </>
           ) : (
@@ -142,7 +142,7 @@ export default function CountryDetails() {
       {editing ? (
         <form id="countryForm" onSubmit={handleSave} className="rounded-2xl p-6 mb-6 space-y-4"
           style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
-          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Editar detalhes do pais</h3>
+          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Editar detalhes do país</h3>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Name"><Input value={form.name} onChange={e => setForm(f => ({ ...f!, name: e.target.value }))} required /></Field>
             <Field label="Flag Emoji"><Input value={form.flag} onChange={e => setForm(f => ({ ...f!, flag: e.target.value }))} /></Field>
@@ -156,7 +156,7 @@ export default function CountryDetails() {
             <Field label="Capital"><Input value={form.capital} onChange={e => setForm(f => ({ ...f!, capital: e.target.value }))} /></Field>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <Field label="Populacao *"><Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f!, population: Number(e.target.value) }))} required /></Field>
+            <Field label="População *"><Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f!, population: Number(e.target.value) }))} required /></Field>
             <Field label="Moeda *"><Input value={form.currency} onChange={e => setForm(f => ({ ...f!, currency: e.target.value }))} required /></Field>
             <Field label="Idioma *"><Input value={form.language} onChange={e => setForm(f => ({ ...f!, language: e.target.value }))} required /></Field>
           </div>
@@ -169,10 +169,10 @@ export default function CountryDetails() {
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { icon: Users, label: 'Populacao', value: country.population.toLocaleString(), color: '#14b8a6' },
+            { icon: Users, label: 'População', value: country.population.toLocaleString(), color: '#14b8a6' },
             { icon: DollarSign, label: 'Moeda', value: country.currency, color: '#f59e0b' },
             { icon: Languages, label: 'Idioma', value: country.language, color: '#8b5cf6' },
-            { icon: MapPin, label: 'Area', value: `${country.area.toLocaleString()} km2`, color: '#0ea5e9' },
+            { icon: MapPin, label: 'Área', value: `${country.area.toLocaleString('pt-BR')} km²`, color: '#0ea5e9' },
           ].map(card => (
             <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}15` }}>
@@ -188,7 +188,7 @@ export default function CountryDetails() {
       {(country.region || country.subregion || country.timezones?.length || country.maps?.googleMaps || country.maps?.openStreetMaps) && (
         <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="flex items-center justify-between mb-4">
-            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Dados externos do pais</p>
+            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Dados externos do país</p>
             <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>REST Countries</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -267,7 +267,7 @@ export default function CountryDetails() {
                     <span style={{ fontSize: '1.5rem' }}>{getWeatherLabel(weather.description)}</span>
                   </div>
                   <div>
-                    <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{Math.round(weather.temperature)} grausC</p>
+                    <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{Math.round(weather.temperature)}°C</p>
                     <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{weather.description ?? weather.provider}</p>
                   </div>
                   <div className="ml-auto space-y-1">
@@ -283,7 +283,7 @@ export default function CountryDetails() {
                 </div>
               ) : (
                 <div className="py-4 text-center" style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-                  {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}
+                  {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}
                 </div>
               )}
             </div>
@@ -302,7 +302,7 @@ export default function CountryDetails() {
             {countryCities.length === 0 ? (
               <div className="text-center py-6" style={{ color: '#94a3b8' }}>
                 <Building2 size={28} style={{ margin: '0 auto 8px', opacity: 0.3 }} />
-                <p style={{ fontSize: '0.85rem' }}>Nenhuma cidade cadastrada para este pais</p>
+                <p style={{ fontSize: '0.85rem' }}>Nenhuma cidade cadastrada para este país</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -336,7 +336,7 @@ export default function CountryDetails() {
       <DeleteDialog
         open={deleteOpen}
         entityName={country.name}
-        warning="Todas as cidades associadas tambem serao excluidas."
+        warning="Todas as cidades associadas também serão excluídas."
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}
       />

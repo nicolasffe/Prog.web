@@ -89,7 +89,7 @@ export class ExternalGeoService {
     if (!externalProviders.geonamesUsername) {
       throw new HttpError(
         400,
-        "GEONAMES_USERNAME nao configurado no backend."
+        "GEONAMES_USERNAME não configurado no backend."
       );
     }
 

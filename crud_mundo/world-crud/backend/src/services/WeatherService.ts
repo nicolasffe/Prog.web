@@ -53,7 +53,7 @@ export class WeatherService {
         weather: null,
         error: result.reason instanceof Error
           ? result.reason.message
-          : "Nao foi possivel carregar o clima."
+          : "Não foi possível carregar o clima."
       });
     }
 
@@ -64,7 +64,7 @@ export class WeatherService {
     const city = await cityRepository.findById(cityId);
 
     if (!city) {
-      throw new HttpError(404, "Cidade nao encontrada.");
+      throw new HttpError(404, "Cidade não encontrada.");
     }
 
     const cached = await weatherRepository.findByCityId(cityId);

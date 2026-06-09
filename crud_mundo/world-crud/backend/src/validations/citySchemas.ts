@@ -2,9 +2,9 @@ import { z } from "zod";
 import { latitudeSchema, longitudeSchema } from "./commonSchemas";
 
 export const cityBodySchema = z.object({
-  name: z.string().trim().min(1, "Nome e obrigatorio."),
+  name: z.string().trim().min(1, "Nome e obrigatório."),
   state: z.string().trim().optional().nullable(),
-  countryId: z.string().min(1, "Cidade precisa pertencer a um pais."),
+  countryId: z.string().min(1, "Cidade precisa pertencer a um país."),
   latitude: latitudeSchema,
   longitude: longitudeSchema,
   population: z.coerce.number().int().nonnegative(),

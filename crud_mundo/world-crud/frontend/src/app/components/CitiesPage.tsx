@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Building2, ChevronLeft, ChevronRight, Eye, Filter, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useApp } from '../context/AppContext';
@@ -66,7 +66,7 @@ export default function CitiesPage() {
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteCity(deleteTarget.id);
-    toast.success(`${deleteTarget.name} excluida`);
+    toast.success(`${deleteTarget.name} excluída`);
     setDeleteTarget(null);
   };
 
@@ -113,7 +113,7 @@ export default function CitiesPage() {
           <Filter size={14} style={{ color: '#94a3b8' }} />
           <select value={countryFilter} onChange={e => { setCountryFilter(e.target.value); setPage(0); }}
             style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">Todos os paises</option>
+            <option value="">Todos os países</option>
             {filteredCountries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
           </select>
         </div>
@@ -124,7 +124,7 @@ export default function CitiesPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'Cidade', 'Pais', 'Populacao', 'Latitude', 'Longitude', 'Status', 'Acoes'].map(h => (
+              {['#', 'Cidade', 'País', 'População', 'Latitude', 'Longitude', 'Status', 'Ações'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
@@ -246,14 +246,14 @@ export default function CitiesPage() {
             <Field label="Nome *">
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" />
             </Field>
-            <Field label="Pais *">
+            <Field label="País *">
               <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))} required>
-                <option value="">Selecione um pais</option>
+                <option value="">Selecione um país</option>
                 {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
               </Select>
             </Field>
           </div>
-          <Field label="Populacao *">
+          <Field label="População *">
             <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required />
           </Field>
           <div className="grid grid-cols-2 gap-4">
@@ -273,10 +273,10 @@ export default function CitiesPage() {
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
             />
             <label htmlFor="isCapital" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              Esta cidade e a capital do pais
+              Esta cidade é a capital do país
             </label>
           </div>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteracoes'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alterações'} />
         </form>
       </Modal>
 

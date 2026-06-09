@@ -10,7 +10,7 @@ import { Toaster } from 'sonner';
 const navItems = [
   { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/app/continents', icon: Layers, label: 'Continentes' },
-  { to: '/app/countries', icon: Flag, label: 'Paises' },
+  { to: '/app/countries', icon: Flag, label: 'Países' },
   { to: '/app/cities', icon: Building2, label: 'Cidades' },
 ];
 
@@ -101,7 +101,7 @@ export default function Layout() {
             <p style={{ color: '#38bdf8', fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Resumo</p>
             {[
               { label: 'Continentes', value: continents.length, color: '#a78bfa' },
-              { label: 'Paises', value: countries.length, color: '#2dd4bf' },
+              { label: 'Países', value: countries.length, color: '#2dd4bf' },
               { label: 'Cidades', value: cities.length, color: '#38bdf8' },
             ].map(s => (
               <div key={s.label} className="flex items-center justify-between py-1">
@@ -134,7 +134,7 @@ export default function Layout() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Buscar continentes, paises, cidades..."
+              placeholder="Buscar continentes, países, cidades..."
               className="w-full pl-9 pr-4 py-2 rounded-lg outline-none transition-all"
               style={{
                 background: 'rgba(15,23,42,0.78)',

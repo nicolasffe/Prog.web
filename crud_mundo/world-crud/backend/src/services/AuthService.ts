@@ -37,13 +37,13 @@ export class AuthService {
     const user = await userRepository.findByEmail(input.email);
 
     if (!user) {
-      throw new HttpError(401, "Credenciais invalidas.");
+      throw new HttpError(401, "Credenciais inválidas.");
     }
 
     const passwordMatches = await verificarSenha(input.password, user.passwordHash);
 
     if (!passwordMatches) {
-      throw new HttpError(401, "Credenciais invalidas.");
+      throw new HttpError(401, "Credenciais inválidas.");
     }
 
     return this.authResponse(user);

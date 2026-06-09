@@ -15,7 +15,7 @@ export const seedController = {
   countries: asyncHandler(async (_req: Request, res: Response) => {
     const countries = await seedService.seedCountries();
     return res.status(201).json({
-      message: "Paises e cidades populados com sucesso.",
+      message: "Países e cidades populados com sucesso.",
       count: countries.length,
       data: countries
     });

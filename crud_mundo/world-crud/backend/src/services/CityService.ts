@@ -21,7 +21,7 @@ export class CityService {
     const city = await cityRepository.findById(id);
 
     if (!city) {
-      throw new HttpError(404, "Cidade nao encontrada.");
+      throw new HttpError(404, "Cidade não encontrada.");
     }
 
     return city;
@@ -43,7 +43,7 @@ export class CityService {
     const country = await countryRepository.findById(countryId);
 
     if (!country) {
-      throw new HttpError(400, "Pais informado nao existe.");
+      throw new HttpError(400, "País informado não existe.");
     }
   }
 }

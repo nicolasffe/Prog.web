@@ -72,7 +72,7 @@ function EmptyActivity() {
     <div className="rounded-2xl p-5 text-center" style={{ background: 'rgba(15,23,42,0.5)', border: '1px dashed rgba(148,163,184,0.2)' }}>
       <Activity size={24} style={{ color: '#38bdf8', margin: '0 auto 10px' }} />
       <p style={{ color: '#cbd5e1', fontWeight: 700 }}>Nenhuma atividade recente</p>
-      <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 4 }}>Alteracoes feitas nesta sessao aparecerao aqui.</p>
+      <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 4 }}>Alterações feitas nesta sessão aparecerao aqui.</p>
     </div>
   );
 }
@@ -110,7 +110,7 @@ export default function Dashboard() {
       <div className="p-6 min-h-full" style={{ background: '#020617' }}>
         <div className="rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.82)', border: '1px solid rgba(148,163,184,0.2)' }}>
           <p style={{ color: '#f8fafc', fontWeight: 800 }}>Carregando painel...</p>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 4 }}>Buscando dados geograficos no backend.</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 4 }}>Buscando dados geográficos no backend.</p>
         </div>
       </div>
     );
@@ -130,13 +130,13 @@ export default function Dashboard() {
             <span style={{ color: '#bae6fd', fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em' }}>PAINEL DE CONTROLE</span>
           </div>
           <h1 style={{ color: '#f8fafc', fontSize: '1.9rem', fontWeight: 900, letterSpacing: 0 }}>Painel GeoCRUD</h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginTop: 4 }}>Monitore continentes, paises, cidades e dados externos em um unico painel.</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginTop: 4 }}>Monitore continentes, países, cidades e dados externos em um único painel.</p>
         </div>
 
         <div className="flex items-center gap-2">
           {[
             { label: 'Continente', to: '/app/continents', icon: Layers },
-            { label: 'Pais', to: '/app/countries', icon: Flag },
+            { label: 'País', to: '/app/countries', icon: Flag },
             { label: 'Cidade', to: '/app/cities', icon: Building2 },
           ].map(({ label, to, icon: Icon }) => (
             <button
@@ -156,16 +156,16 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <MetricCard icon={Globe} label="Continentes" value={continents.length} sub="Regioes mapeadas" color="#38bdf8" onClick={() => navigate('/app/continents')} />
-        <MetricCard icon={Flag} label="Paises" value={countries.length} sub="Dados enriquecidos por APIs" color="#2dd4bf" onClick={() => navigate('/app/countries')} />
+        <MetricCard icon={Flag} label="Países" value={countries.length} sub="Dados enriquecidos por APIs" color="#2dd4bf" onClick={() => navigate('/app/countries')} />
         <MetricCard icon={Building2} label="Cidades" value={cities.length} sub="Coordenadas cadastradas" color="#a78bfa" onClick={() => navigate('/app/cities')} />
-        <MetricCard icon={Users} label="Populacao" value={formatNumber(populationTotal)} sub="Populacao total cadastrada" color="#facc15" />
+        <MetricCard icon={Users} label="População" value={formatNumber(populationTotal)} sub="População total cadastrada" color="#facc15" />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <section className="xl:col-span-2 rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 24px 70px rgba(2,8,23,0.28)' }}>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>Resumo geografico</p>
+              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>Resumo geográfico</p>
               <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Projecao baseada nos registros atuais.</p>
             </div>
             <div className="flex items-center gap-2 rounded-full px-3 py-1.5" style={{ background: 'rgba(45,212,191,0.12)', color: '#99f6e4', fontSize: '0.75rem', fontWeight: 800 }}>
@@ -199,8 +199,8 @@ export default function Dashboard() {
         <section className="rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 24px 70px rgba(2,8,23,0.28)' }}>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>Pais em destaque</p>
-              <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Principal pais monitorado.</p>
+              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>País em destaque</p>
+              <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Principal país monitorado.</p>
             </div>
             <Compass size={18} style={{ color: '#38bdf8' }} />
           </div>
@@ -219,7 +219,7 @@ export default function Dashboard() {
                   )}
                   <div>
                     <p style={{ color: '#f8fafc', fontSize: '1.2rem', fontWeight: 900 }}>{featuredCountry.name}</p>
-                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2 }}>{featuredCountry.region || featuredCountry.subregion || 'Regiao desconhecida'}</p>
+                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2 }}>{featuredCountry.region || featuredCountry.subregion || 'Região desconhecida'}</p>
                   </div>
                 </div>
               </button>
@@ -239,7 +239,7 @@ export default function Dashboard() {
               </div>
             </div>
           ) : (
-            <p style={{ color: '#94a3b8' }}>Cadastre um pais para ativar este painel.</p>
+            <p style={{ color: '#94a3b8' }}>Cadastre um país para ativar este painel.</p>
           )}
         </section>
       </div>
@@ -247,7 +247,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <section className="rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="flex items-center justify-between mb-5">
-            <p style={{ color: '#f8fafc', fontWeight: 800 }}>Maiores populacoes</p>
+            <p style={{ color: '#f8fafc', fontWeight: 800 }}>Maiores populações</p>
             <TrendingUp size={18} style={{ color: '#facc15' }} />
           </div>
           <div className="space-y-4">
@@ -283,7 +283,7 @@ export default function Dashboard() {
                   className="rounded-2xl p-3 text-left transition-colors"
                   style={{ background: `${continent.color}12`, border: `1px solid ${continent.color}35`, cursor: 'pointer' }}>
                   <p style={{ color: '#f8fafc', fontWeight: 800, fontSize: '0.82rem' }}>{continent.name}</p>
-                  <p style={{ color: continent.color, fontSize: '0.78rem', marginTop: 4, fontWeight: 800 }}>{countryCount} paises</p>
+                  <p style={{ color: continent.color, fontSize: '0.78rem', marginTop: 4, fontWeight: 800 }}>{countryCount} países</p>
                 </button>
               );
             })}

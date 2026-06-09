@@ -1,41 +1,41 @@
 import { Continent, Country, City } from './types';
 
 export const continents: Continent[] = [
-  { id: 'af', name: 'Africa', code: 'AF', description: "The world's second-largest and second-most populous continent, home to 54 countries.", color: '#f59e0b' },
-  { id: 'as', name: 'Asia', code: 'AS', description: "Earth's largest and most populous continent, covering 30% of the world's total land area.", color: '#0ea5e9' },
-  { id: 'eu', name: 'Europe', code: 'EU', description: 'A continent in the Northern and Eastern Hemispheres, home to 44 sovereign states.', color: '#8b5cf6' },
-  { id: 'na', name: 'North America', code: 'NA', description: 'A continent in the Northern and Western Hemispheres, the third-largest by area.', color: '#10b981' },
-  { id: 'sa', name: 'South America', code: 'SA', description: 'A continent in the Western Hemisphere, predominantly in the Southern Hemisphere.', color: '#ef4444' },
+  { id: 'af', name: 'África', code: 'AF', description: "The world's second-largest and second-most populous continent, home to 54 countries.", color: '#f59e0b' },
+  { id: 'as', name: 'Ásia', code: 'AS', description: "Earth's largest and most populous continent, covering 30% of the world's total land area.", color: '#0ea5e9' },
+  { id: 'eu', name: 'Europa', code: 'EU', description: 'Continente no hemisfério norte, com grande diversidade histórica e cultural.', color: '#8b5cf6' },
+  { id: 'na', name: 'América do Norte', code: 'NA', description: 'Continente formado por Canadá, Estados Unidos, México e territórios.', color: '#10b981' },
+  { id: 'sa', name: 'América do Sul', code: 'SA', description: 'Continente no hemisfério sul, com ampla diversidade natural e cultural.', color: '#ef4444' },
   { id: 'oc', name: 'Oceania', code: 'OC', description: 'A geographic region comprising Australasia, Melanesia, Micronesia, and Polynesia.', color: '#06b6d4' },
 ];
 
 export const countries: Country[] = [
   // North America
-  { id: 'us', name: 'United States', continentId: 'na', population: 331000000, language: 'English', currency: 'USD', capital: 'Washington D.C.', flag: '🇺🇸', lat: 37.09, lng: -95.71, area: 9833520, timezone: 'UTC-5', isoCode: 'US', isoNumeric: 840 },
-  { id: 'ca', name: 'Canada', continentId: 'na', population: 38000000, language: 'English / French', currency: 'CAD', capital: 'Ottawa', flag: '🇨🇦', lat: 56.13, lng: -106.35, area: 9984670, timezone: 'UTC-5', isoCode: 'CA', isoNumeric: 124 },
-  { id: 'mx', name: 'Mexico', continentId: 'na', population: 128000000, language: 'Spanish', currency: 'MXN', capital: 'Mexico City', flag: '🇲🇽', lat: 23.63, lng: -102.55, area: 1964375, timezone: 'UTC-6', isoCode: 'MX', isoNumeric: 484 },
+  { id: 'us', name: 'Estados Unidos', continentId: 'na', population: 331000000, language: 'Inglês', currency: 'USD', capital: 'Washington D.C.', flag: '🇺🇸', lat: 37.09, lng: -95.71, area: 9833520, timezone: 'UTC-5', isoCode: 'US', isoNumeric: 840 },
+  { id: 'ca', name: 'Canadá', continentId: 'na', population: 38000000, language: 'Inglês / Francês', currency: 'CAD', capital: 'Ottawa', flag: '🇨🇦', lat: 56.13, lng: -106.35, area: 9984670, timezone: 'UTC-5', isoCode: 'CA', isoNumeric: 124 },
+  { id: 'mx', name: 'México', continentId: 'na', population: 128000000, language: 'Espanhol', currency: 'MXN', capital: 'Cidade do México', flag: '🇲🇽', lat: 23.63, lng: -102.55, area: 1964375, timezone: 'UTC-6', isoCode: 'MX', isoNumeric: 484 },
   // South America
-  { id: 'br', name: 'Brazil', continentId: 'sa', population: 214000000, language: 'Portuguese', currency: 'BRL', capital: 'Brasília', flag: '🇧🇷', lat: -14.24, lng: -51.93, area: 8515767, timezone: 'UTC-3', isoCode: 'BR', isoNumeric: 76 },
-  { id: 'ar', name: 'Argentina', continentId: 'sa', population: 45000000, language: 'Spanish', currency: 'ARS', capital: 'Buenos Aires', flag: '🇦🇷', lat: -38.42, lng: -63.62, area: 2780400, timezone: 'UTC-3', isoCode: 'AR', isoNumeric: 32 },
-  { id: 'co', name: 'Colombia', continentId: 'sa', population: 51000000, language: 'Spanish', currency: 'COP', capital: 'Bogotá', flag: '🇨🇴', lat: 4.57, lng: -74.30, area: 1141748, timezone: 'UTC-5', isoCode: 'CO', isoNumeric: 170 },
+  { id: 'br', name: 'Brasil', continentId: 'sa', population: 214000000, language: 'Português', currency: 'BRL', capital: 'Brasília', flag: '🇧🇷', lat: -14.24, lng: -51.93, area: 8515767, timezone: 'UTC-3', isoCode: 'BR', isoNumeric: 76 },
+  { id: 'ar', name: 'Argentina', continentId: 'sa', population: 45000000, language: 'Espanhol', currency: 'ARS', capital: 'Buenos Aires', flag: '🇦🇷', lat: -38.42, lng: -63.62, area: 2780400, timezone: 'UTC-3', isoCode: 'AR', isoNumeric: 32 },
+  { id: 'co', name: 'Colômbia', continentId: 'sa', population: 51000000, language: 'Espanhol', currency: 'COP', capital: 'Bogotá', flag: '🇨🇴', lat: 4.57, lng: -74.30, area: 1141748, timezone: 'UTC-5', isoCode: 'CO', isoNumeric: 170 },
   // Europe
-  { id: 'fr', name: 'France', continentId: 'eu', population: 67000000, language: 'French', currency: 'EUR', capital: 'Paris', flag: '🇫🇷', lat: 46.23, lng: 2.21, area: 551695, timezone: 'UTC+1', isoCode: 'FR', isoNumeric: 250 },
-  { id: 'de', name: 'Germany', continentId: 'eu', population: 83000000, language: 'German', currency: 'EUR', capital: 'Berlin', flag: '🇩🇪', lat: 51.17, lng: 10.45, area: 357114, timezone: 'UTC+1', isoCode: 'DE', isoNumeric: 276 },
-  { id: 'gb', name: 'United Kingdom', continentId: 'eu', population: 67000000, language: 'English', currency: 'GBP', capital: 'London', flag: '🇬🇧', lat: 55.38, lng: -3.44, area: 242495, timezone: 'UTC+0', isoCode: 'GB', isoNumeric: 826 },
-  { id: 'it', name: 'Italy', continentId: 'eu', population: 60000000, language: 'Italian', currency: 'EUR', capital: 'Rome', flag: '🇮🇹', lat: 41.87, lng: 12.57, area: 301340, timezone: 'UTC+1', isoCode: 'IT', isoNumeric: 380 },
-  { id: 'es', name: 'Spain', continentId: 'eu', population: 47000000, language: 'Spanish', currency: 'EUR', capital: 'Madrid', flag: '🇪🇸', lat: 40.46, lng: -3.75, area: 505990, timezone: 'UTC+1', isoCode: 'ES', isoNumeric: 724 },
-  // Asia
-  { id: 'cn', name: 'China', continentId: 'as', population: 1400000000, language: 'Mandarin', currency: 'CNY', capital: 'Beijing', flag: '🇨🇳', lat: 35.86, lng: 104.20, area: 9596960, timezone: 'UTC+8', isoCode: 'CN', isoNumeric: 156 },
-  { id: 'jp', name: 'Japan', continentId: 'as', population: 125000000, language: 'Japanese', currency: 'JPY', capital: 'Tokyo', flag: '🇯🇵', lat: 36.20, lng: 138.25, area: 377975, timezone: 'UTC+9', isoCode: 'JP', isoNumeric: 392 },
-  { id: 'in', name: 'India', continentId: 'as', population: 1380000000, language: 'Hindi', currency: 'INR', capital: 'New Delhi', flag: '🇮🇳', lat: 20.59, lng: 78.96, area: 3287263, timezone: 'UTC+5:30', isoCode: 'IN', isoNumeric: 356 },
-  { id: 'kr', name: 'South Korea', continentId: 'as', population: 51000000, language: 'Korean', currency: 'KRW', capital: 'Seoul', flag: '🇰🇷', lat: 35.91, lng: 127.77, area: 100210, timezone: 'UTC+9', isoCode: 'KR', isoNumeric: 410 },
-  // Africa
-  { id: 'ng', name: 'Nigeria', continentId: 'af', population: 206000000, language: 'English', currency: 'NGN', capital: 'Abuja', flag: '🇳🇬', lat: 9.08, lng: 8.68, area: 923768, timezone: 'UTC+1', isoCode: 'NG', isoNumeric: 566 },
-  { id: 'eg', name: 'Egypt', continentId: 'af', population: 102000000, language: 'Arabic', currency: 'EGP', capital: 'Cairo', flag: '🇪🇬', lat: 26.82, lng: 30.80, area: 1001449, timezone: 'UTC+2', isoCode: 'EG', isoNumeric: 818 },
-  { id: 'za', name: 'South Africa', continentId: 'af', population: 60000000, language: 'Zulu / English', currency: 'ZAR', capital: 'Cape Town', flag: '🇿🇦', lat: -30.56, lng: 22.94, area: 1219090, timezone: 'UTC+2', isoCode: 'ZA', isoNumeric: 710 },
+  { id: 'fr', name: 'França', continentId: 'eu', population: 67000000, language: 'Francês', currency: 'EUR', capital: 'Paris', flag: '🇫🇷', lat: 46.23, lng: 2.21, area: 551695, timezone: 'UTC+1', isoCode: 'FR', isoNumeric: 250 },
+  { id: 'de', name: 'Alemanha', continentId: 'eu', population: 83000000, language: 'Alemão', currency: 'EUR', capital: 'Berlim', flag: '🇩🇪', lat: 51.17, lng: 10.45, area: 357114, timezone: 'UTC+1', isoCode: 'DE', isoNumeric: 276 },
+  { id: 'gb', name: 'Reino Unido', continentId: 'eu', population: 67000000, language: 'Inglês', currency: 'GBP', capital: 'Londres', flag: '🇬🇧', lat: 55.38, lng: -3.44, area: 242495, timezone: 'UTC+0', isoCode: 'GB', isoNumeric: 826 },
+  { id: 'it', name: 'Itália', continentId: 'eu', population: 60000000, language: 'Italiano', currency: 'EUR', capital: 'Roma', flag: '🇮🇹', lat: 41.87, lng: 12.57, area: 301340, timezone: 'UTC+1', isoCode: 'IT', isoNumeric: 380 },
+  { id: 'es', name: 'Espanha', continentId: 'eu', population: 47000000, language: 'Espanhol', currency: 'EUR', capital: 'Madri', flag: '🇪🇸', lat: 40.46, lng: -3.75, area: 505990, timezone: 'UTC+1', isoCode: 'ES', isoNumeric: 724 },
+  // Ásia
+  { id: 'cn', name: 'China', continentId: 'as', population: 1400000000, language: 'Mandarim', currency: 'CNY', capital: 'Pequim', flag: '🇨🇳', lat: 35.86, lng: 104.20, area: 9596960, timezone: 'UTC+8', isoCode: 'CN', isoNumeric: 156 },
+  { id: 'jp', name: 'Japão', continentId: 'as', population: 125000000, language: 'Japonês', currency: 'JPY', capital: 'Tóquio', flag: '🇯🇵', lat: 36.20, lng: 138.25, area: 377975, timezone: 'UTC+9', isoCode: 'JP', isoNumeric: 392 },
+  { id: 'in', name: 'Índia', continentId: 'as', population: 1380000000, language: 'Hindi', currency: 'INR', capital: 'Nova Délhi', flag: '🇮🇳', lat: 20.59, lng: 78.96, area: 3287263, timezone: 'UTC+5:30', isoCode: 'IN', isoNumeric: 356 },
+  { id: 'kr', name: 'Coreia do Sul', continentId: 'as', population: 51000000, language: 'Coreano', currency: 'KRW', capital: 'Seul', flag: '🇰🇷', lat: 35.91, lng: 127.77, area: 100210, timezone: 'UTC+9', isoCode: 'KR', isoNumeric: 410 },
+  // África
+  { id: 'ng', name: 'Nigéria', continentId: 'af', population: 206000000, language: 'Inglês', currency: 'NGN', capital: 'Abuja', flag: '🇳🇬', lat: 9.08, lng: 8.68, area: 923768, timezone: 'UTC+1', isoCode: 'NG', isoNumeric: 566 },
+  { id: 'eg', name: 'Egito', continentId: 'af', population: 102000000, language: 'Árabe', currency: 'EGP', capital: 'Cairo', flag: '🇪🇬', lat: 26.82, lng: 30.80, area: 1001449, timezone: 'UTC+2', isoCode: 'EG', isoNumeric: 818 },
+  { id: 'za', name: 'África do Sul', continentId: 'af', population: 60000000, language: 'Zulu / Inglês', currency: 'ZAR', capital: 'Cidade do Cabo', flag: '🇿🇦', lat: -30.56, lng: 22.94, area: 1219090, timezone: 'UTC+2', isoCode: 'ZA', isoNumeric: 710 },
   // Oceania
-  { id: 'au', name: 'Australia', continentId: 'oc', population: 26000000, language: 'English', currency: 'AUD', capital: 'Canberra', flag: '🇦🇺', lat: -25.27, lng: 133.78, area: 7692024, timezone: 'UTC+10', isoCode: 'AU', isoNumeric: 36 },
-  { id: 'nz', name: 'New Zealand', continentId: 'oc', population: 5000000, language: 'English / Māori', currency: 'NZD', capital: 'Wellington', flag: '🇳🇿', lat: -40.90, lng: 174.89, area: 268021, timezone: 'UTC+12', isoCode: 'NZ', isoNumeric: 554 },
+  { id: 'au', name: 'Austrália', continentId: 'oc', population: 26000000, language: 'Inglês', currency: 'AUD', capital: 'Canberra', flag: '🇦🇺', lat: -25.27, lng: 133.78, area: 7692024, timezone: 'UTC+10', isoCode: 'AU', isoNumeric: 36 },
+  { id: 'nz', name: 'Nova Zelândia', continentId: 'oc', population: 5000000, language: 'Inglês / Maori', currency: 'NZD', capital: 'Wellington', flag: '🇳🇿', lat: -40.90, lng: 174.89, area: 268021, timezone: 'UTC+12', isoCode: 'NZ', isoNumeric: 554 },
 ];
 
 export const cities: City[] = [
@@ -44,12 +44,12 @@ export const cities: City[] = [
   { id: 'la', name: 'Los Angeles', countryId: 'us', population: 4000000, lat: 34.05, lng: -118.24, isCapital: false },
   { id: 'chi', name: 'Chicago', countryId: 'us', population: 2700000, lat: 41.88, lng: -87.63, isCapital: false },
   { id: 'dc', name: 'Washington D.C.', countryId: 'us', population: 705000, lat: 38.91, lng: -77.04, isCapital: true },
-  // Canada
+  // Canadá
   { id: 'tor', name: 'Toronto', countryId: 'ca', population: 2930000, lat: 43.65, lng: -79.38, isCapital: false },
   { id: 'van', name: 'Vancouver', countryId: 'ca', population: 631000, lat: 49.28, lng: -123.12, isCapital: false },
   { id: 'ott', name: 'Ottawa', countryId: 'ca', population: 994000, lat: 45.42, lng: -75.70, isCapital: true },
-  // Mexico
-  { id: 'mxc', name: 'Mexico City', countryId: 'mx', population: 9200000, lat: 19.43, lng: -99.13, isCapital: true },
+  // México
+  { id: 'mxc', name: 'México City', countryId: 'mx', population: 9200000, lat: 19.43, lng: -99.13, isCapital: true },
   { id: 'gdl', name: 'Guadalajara', countryId: 'mx', population: 1500000, lat: 20.66, lng: -103.35, isCapital: false },
   // Brazil
   { id: 'sao', name: 'São Paulo', countryId: 'br', population: 12325000, lat: -23.55, lng: -46.63, isCapital: false },
@@ -100,7 +100,7 @@ export const cities: City[] = [
   // Egypt
   { id: 'cai', name: 'Cairo', countryId: 'eg', population: 10100000, lat: 30.04, lng: 31.24, isCapital: true },
   { id: 'ale', name: 'Alexandria', countryId: 'eg', population: 5200000, lat: 31.20, lng: 29.92, isCapital: false },
-  // South Africa
+  // África do Sul
   { id: 'cap', name: 'Cape Town', countryId: 'za', population: 4618000, lat: -33.93, lng: 18.42, isCapital: true },
   { id: 'joh', name: 'Johannesburg', countryId: 'za', population: 5635000, lat: -26.20, lng: 28.04, isCapital: false },
   // Australia

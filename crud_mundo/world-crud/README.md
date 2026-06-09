@@ -1,6 +1,6 @@
 # World CRUD
 
-Aplicacao fullstack para gerenciar continentes, paises e cidades com autenticacao JWT, dashboard protegido, CRUD completo e mapa mundi 3D com CesiumJS.
+Aplicação fullstack para gerenciar continentes, países e cidades com autenticação JWT, dashboard protegido, CRUD completo e mapa mundi 3D com CesiumJS.
 
 ## Stack
 
@@ -8,7 +8,7 @@ Backend:
 - Node.js, Express, TypeScript
 - Prisma ORM, PostgreSQL
 - JWT, bcrypt, Zod, dotenv, CORS
-- Integracoes REST Countries, GeoNames e OpenWeather/Open-Meteo
+- Integrações REST Countries, GeoNames e OpenWeather/Open-Meteo
 
 Frontend:
 - React, Vite, TypeScript
@@ -118,8 +118,8 @@ Nunca coloque chaves de OpenWeather ou GeoNames no frontend. Chamadas com segred
 ## Seed inicial
 
 O seed cria:
-- America do Sul, America do Norte, Europa, Asia, Africa, Oceania e Antartida
-- Brasil, Estados Unidos, Franca, Japao, Argentina e Alemanha
+- América do Sul, América do Norte, Europa, Ásia, África, Oceania e Antártida
+- Brasil, Estados Unidos, França, Japão, Argentina e Alemanha
 - Sao Paulo, Rio de Janeiro, Brasilia, New York, Los Angeles, Washington, Paris, Lyon, Tokyo, Osaka, Buenos Aires e Berlin
 
 Rode:
@@ -133,7 +133,7 @@ Tambem existem endpoints protegidos para seed:
 - `POST /api/seed/continents`
 - `POST /api/seed/countries`
 
-## Autenticacao
+## Autenticação
 
 Fluxo:
 1. Crie uma conta em `/register`.
@@ -142,7 +142,7 @@ Fluxo:
 4. O Axios envia `Authorization: Bearer <token>` nos endpoints privados.
 5. O backend valida o token no middleware `authMiddleware`.
 
-## Principais endpoints
+## Principaís endpoints
 
 Publicos:
 - `POST /api/auth/register`
@@ -160,7 +160,7 @@ Continentes:
 - `PUT /api/continents/:id`
 - `DELETE /api/continents/:id`
 
-Paises:
+Países:
 - `POST /api/countries`
 - `GET /api/countries`
 - `GET /api/countries/:id`
@@ -184,15 +184,15 @@ Clima e dados externos:
 ## Arquitetura
 
 Backend:
-- `routes`: define URLs e aplica validacoes.
+- `routes`: define URLs e aplica validações.
 - `controllers`: recebe request e response.
-- `services`: concentra regras de negocio, validacoes de relacionamento e integracoes externas.
+- `services`: concentra regras de negocio, validações de relacionamento e integrações externas.
 - `repositories`: encapsula acesso Prisma.
-- `middlewares`: JWT, validacao Zod e tratamento global de erros.
+- `middlewares`: JWT, validação Zod e tratamento global de erros.
 - `config`: variaveis de ambiente e providers externos.
 
 Frontend:
-- `context/AuthContext`: sessao, login, cadastro e logout.
+- `context/AuthContext`: sessão, login, cadastro e logout.
 - `hooks`: React Query para CRUD, dashboard e clima.
 - `services`: chamadas Axios para a API.
 - `components`: layout, tabelas, modais, formularios, cards, mapa e painel lateral.
@@ -200,12 +200,12 @@ Frontend:
 
 ## Mapa 3D
 
-A pagina `/map`:
+A página `/map`:
 - Renderiza globo com CesiumJS.
 - Mostra marcadores para cidades vindas do backend.
 - Permite clicar em uma cidade.
-- Abre painel lateral com cidade, pais, continente, coordenadas, populacao, timezone e clima atual.
-- Permite selecionar pais ou cidade para aproximar a camera.
+- Abre painel lateral com cidade, país, continente, coordenadas, população, timezone e clima atual.
+- Permite selecionar país ou cidade para aproximar a câmera.
 - Possui botao de reset para a visao global.
 
 ## Scripts uteis

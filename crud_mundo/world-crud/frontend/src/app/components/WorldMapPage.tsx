@@ -1,4 +1,4 @@
-﻿import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import Globe from 'react-globe.gl';
 import { feature } from 'topojson-client';
 import { useApp } from '../context/AppContext';
@@ -105,7 +105,10 @@ export default function WorldMapPage() {
   const getLabel = useCallback((d: object) => {
     const c = isoMap[(d as GeoFeature).id];
     if (!c) return '';
-    return `<div style="background:rgba(2,8,20,0.92);color:#14b8a6;padding:5px 10px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid rgba(20,184,166,0.4);white-space:nowrap;pointer-events:none">${c.flag} ${c.name}</div>`;
+    const flag = c.flagUrl
+      ? `<img src="${c.flagUrl}" alt="" style="width:28px;height:19px;object-fit:cover;border-radius:4px;box-shadow:0 4px 10px rgba(0,0,0,0.28)" />`
+      : `<span style="font-size:1.15rem;line-height:1">${c.flag}</span>`;
+    return `<div style="display:flex;align-items:center;gap:9px;background:rgba(3,18,32,0.94);color:#e0f2fe;padding:8px 11px;border-radius:12px;font-size:13px;font-weight:800;border:1px solid rgba(125,211,252,0.28);white-space:nowrap;pointer-events:none;box-shadow:0 12px 34px rgba(0,0,0,0.38),0 0 18px rgba(14,165,233,0.12)">${flag}<span style="display:flex;align-items:baseline;gap:6px"><span style="color:#7dd3fc;font-size:0.72rem;font-weight:900;letter-spacing:0.05em">${c.isoCode}</span><span>${c.name}</span></span></div>`;
   }, [isoMap]);
 
   const handlePolygonClick = useCallback((d: object) => {
@@ -237,7 +240,7 @@ export default function WorldMapPage() {
             style={{ background: 'rgba(20,184,166,0.12)', color: '#14b8a6', border: '1px solid rgba(20,184,166,0.22)', cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(20,184,166,0.22)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,184,166,0.12)'}>
-            <Pencil size={12} /> Editar pais
+            <Pencil size={12} /> Editar país
           </button>
           <button onClick={openAddCity}
             className="flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold transition-colors"
@@ -259,13 +262,13 @@ export default function WorldMapPage() {
       {/* Info rows */}
       <div className="px-5 py-4 space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', flexShrink: 0 }}>
         {selected && ([
-          { icon: Users, label: 'Populacao', value: selected.population.toLocaleString(), color: '#14b8a6' },
+          { icon: Users, label: 'População', value: selected.population.toLocaleString(), color: '#14b8a6' },
           { icon: Flag, label: 'Capital', value: selected.capital, color: '#0ea5e9' },
           { icon: DollarSign, label: 'Moeda', value: selected.currency, color: '#f59e0b' },
           { icon: Languages, label: 'Idioma', value: selected.language, color: '#8b5cf6' },
-          { icon: MapPin, label: 'Coordenadas', value: `${selected.lat.toFixed(2)} graus, ${selected.lng.toFixed(2)} graus`, color: '#ef4444' },
-          { icon: GlobeIcon, label: 'Area', value: `${selected.area.toLocaleString()} km2`, color: '#10b981' },
-          { icon: GlobeIcon, label: 'Fuso horario', value: selected.timezone, color: '#6366f1' },
+          { icon: MapPin, label: 'Coordenadas', value: `${selected.lat.toFixed(2)}°, ${selected.lng.toFixed(2)}°`, color: '#ef4444' },
+          { icon: GlobeIcon, label: 'Área', value: `${selected.area.toLocaleString('pt-BR')} km²`, color: '#10b981' },
+          { icon: GlobeIcon, label: 'Fuso horário', value: selected.timezone, color: '#6366f1' },
         ] as const).map(row => (
           <div key={row.label} className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${row.color}18` }}>
@@ -291,7 +294,7 @@ export default function WorldMapPage() {
                 <span style={{ fontSize: '1.6rem' }}>{getWeatherLabel(weather.description)}</span>
                 <div className="flex-1">
                   <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '1rem' }}>
-                    {Math.round(weather.temperature)} grausC - {weather.description ?? weather.provider}
+                    {Math.round(weather.temperature)}°C - {weather.description ?? weather.provider}
                   </p>
                   <div className="flex items-center gap-3 mt-0.5">
                     <span style={{ color: '#64748b', fontSize: '0.72rem' }}>Umidade {weather.humidity ?? '-'}%</span>
@@ -303,7 +306,7 @@ export default function WorldMapPage() {
               </>
             ) : (
               <div className="flex-1" style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponiveis'}
+                {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}
               </div>
             )}
           </div>
@@ -363,7 +366,7 @@ export default function WorldMapPage() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
-        <Field label="Nome do pais">
+        <Field label="Nome do país">
           <Input value={editForm.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} required />
         </Field>
         <Field label="Bandeira">
@@ -377,7 +380,7 @@ export default function WorldMapPage() {
         <Field label="Capital">
           <Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} />
         </Field>
-        <Field label="Populacao">
+        <Field label="População">
           <Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required />
         </Field>
         <Field label="Idioma">
@@ -394,7 +397,7 @@ export default function WorldMapPage() {
             <Input type="number" step="0.01" value={editForm.lng ?? 0} onChange={e => setEditForm(f => ({ ...f, lng: Number(e.target.value) }))} />
           </Field>
         </div>
-        <Field label="Fuso horario">
+        <Field label="Fuso horário">
           <Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} />
         </Field>
       </div>
@@ -408,7 +411,7 @@ export default function WorldMapPage() {
         <button type="submit" disabled={saving}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors"
           style={{ background: saving ? 'rgba(20,184,166,0.4)' : '#14b8a6', color: 'white', border: 'none', cursor: saving ? 'not-allowed' : 'pointer' }}>
-          <Save size={14} /> {saving ? 'Salvando...' : 'Salvar alteracoes'}
+          <Save size={14} /> {saving ? 'Salvando...' : 'Salvar alterações'}
         </button>
       </div>
     </form>
@@ -433,7 +436,7 @@ export default function WorldMapPage() {
         <Field label="Nome da cidade *">
           <Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" />
         </Field>
-        <Field label="Populacao">
+        <Field label="População">
           <Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required />
         </Field>
         <div className="grid grid-cols-2 gap-3">
@@ -494,7 +497,7 @@ export default function WorldMapPage() {
           <div className="rounded-xl px-3 py-2.5"
             style={{ background: 'rgba(2,8,20,0.88)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <span style={{ color: '#64748b', fontSize: '0.72rem' }}>
-              <span style={{ color: '#14b8a6', fontWeight: 700 }}>{countries.length}</span> paises -{' '}
+              <span style={{ color: '#14b8a6', fontWeight: 700 }}>{countries.length}</span> países -{' '}
               <span style={{ color: '#0ea5e9', fontWeight: 700 }}>{cities.length}</span> cidades
             </span>
           </div>
@@ -507,7 +510,7 @@ export default function WorldMapPage() {
             <p style={{ color: '#64748b', fontSize: '0.78rem' }}>
               <span style={{ color: '#14b8a6', fontWeight: 600 }}>Arraste</span> para girar -{' '}
               <span style={{ color: '#14b8a6', fontWeight: 600 }}>Role</span> para aproximar -{' '}
-              <span style={{ color: '#14b8a6', fontWeight: 600 }}>Clique</span> em um pais destacado
+              <span style={{ color: '#14b8a6', fontWeight: 600 }}>Clique</span> em um país destacado
             </p>
           </div>
         )}
@@ -565,7 +568,7 @@ export default function WorldMapPage() {
       <DeleteDialog
         open={deleteType === 'country'}
         entityName={selected?.name ?? ''}
-        warning="Todas as cidades associadas tambem serao excluidas."
+        warning="Todas as cidades associadas também serão excluídas."
         onConfirm={handleDeleteCountry}
         onCancel={() => setDeleteType(null)}
       />

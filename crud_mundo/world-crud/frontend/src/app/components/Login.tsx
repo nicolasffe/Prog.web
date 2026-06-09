@@ -47,8 +47,8 @@ export default function Login() {
 
     setError(
       isRegister
-        ? 'Nao foi possivel criar a conta. Verifique os dados informados.'
-        : 'Email ou senha invalidos.'
+        ? 'Não foi possível criar a conta. Verifique os dados informados.'
+        : 'E-mail ou senha inválidos.'
     );
   };
 
@@ -78,7 +78,7 @@ export default function Login() {
               {isRegister ? 'Criar conta' : 'Entrar no GeoCRUD'}
             </h1>
             <p className="mt-1" style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
-              {isRegister ? 'Cadastre-se para gerenciar os dados geograficos.' : 'Acesse para gerenciar continentes, paises e cidades.'}
+              {isRegister ? 'Cadastre-se para gerenciar os dados geográficos.' : 'Acesse para gerenciar continentes, países e cidades.'}
             </p>
           </div>
 
@@ -202,13 +202,13 @@ export default function Login() {
 
           <div className="mt-6 text-center">
             <p style={{ color: '#64748b', fontSize: '0.75rem' }}>
-              {isRegister ? 'A senha deve ter pelo menos 6 caracteres.' : 'Ainda nao tem conta? Use a aba Criar conta.'}
+              {isRegister ? 'A senha deve ter pelo menos 6 caracteres.' : 'Ainda não tem conta? Use a aba Criar conta.'}
             </p>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-8 mt-6">
-          {[{ label: 'Continentes', value: '6' }, { label: 'Paises', value: '20+' }, { label: 'Cidades', value: '50+' }].map(s => (
+          {[{ label: 'Continentes', value: '6' }, { label: 'Países', value: '20+' }, { label: 'Cidades', value: '50+' }].map(s => (
             <div key={s.label} className="text-center">
               <p style={{ color: '#14b8a6', fontSize: '1.1rem', fontWeight: 700 }}>{s.value}</p>
               <p style={{ color: '#64748b', fontSize: '0.75rem' }}>{s.label}</p>

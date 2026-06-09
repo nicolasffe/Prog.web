@@ -1,4 +1,4 @@
-﻿import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ActivityItem, City, Continent, Country } from '../data/types';
 
 type User = {
@@ -125,7 +125,7 @@ async function request<T>(path: string, options: RequestInit = {}, token = local
   });
 
   if (!response.ok) {
-    let message = 'Nao foi possivel concluir a acao.';
+    let message = 'Não foi possível concluir a ação.';
     try {
       const body = await response.json();
       if (typeof body.message === 'string') message = body.message;
