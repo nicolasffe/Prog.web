@@ -15,7 +15,7 @@ const navItems = [
 ];
 
 export default function Layout() {
-  const { isAuthenticated, logout, continents, countries, cities } = useApp();
+  const { isAuthenticated, logout, continents, countries, cities, user } = useApp();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [search, setSearch] = useState('');
@@ -170,8 +170,8 @@ export default function Layout() {
                 <User size={15} className="text-white" />
               </div>
               <div>
-                <p style={{ color: '#e2e8f0', fontSize: '0.8rem', fontWeight: 500, lineHeight: 1.2 }}>Admin User</p>
-                <p style={{ color: '#94a3b8', fontSize: '0.7rem' }}>admin@geocrud.app</p>
+                <p style={{ color: '#e2e8f0', fontSize: '0.8rem', fontWeight: 500, lineHeight: 1.2 }}>{user?.name || 'Usuário'}</p>
+                <p style={{ color: '#94a3b8', fontSize: '0.7rem' }}>{user?.email || 'Conta autenticada'}</p>
               </div>
             </div>
           </div>

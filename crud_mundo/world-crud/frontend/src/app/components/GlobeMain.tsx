@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+﻿import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import Globe from 'react-globe.gl';
 import { feature } from 'topojson-client';
 import { Link } from 'react-router';
@@ -6,8 +6,10 @@ import { Toaster, toast } from 'sonner';
 import { useApp } from '../context/AppContext';
 import { Country, City } from '../data/types';
 import { DeleteDialog } from './ui/DeleteDialog';
-import { Field, Input, Select } from './ui/Modal';
+import { Field, Input, SearchableSelect, FlagImageInput } from './ui/Modal';
 import { getCountryWeatherCity, getWeatherLabel, useCitiesWeather, useCityWeather } from '../hooks/useCityWeather';
+import { numberInputValue, parseNumberInput } from '../utils/numberInput';
+import { validateCityPopulation } from '../utils/cityValidation';
 import {
   Globe as GlobeIcon, Search, User, LogOut, LayoutDashboard,
   Flag, Layers, Building2, Users, DollarSign, Languages, MapPin,
@@ -37,11 +39,11 @@ const SPACE_BACKGROUND = `
 `;
 
 const CONTINENTS_NAV = [
-  { name: 'África', lat: 3, lng: 22, color: '#8bc6b2' },
-  { name: 'Ásia', lat: 34, lng: 100, color: '#8fbfd4' },
+  { name: 'Ãfrica', lat: 3, lng: 22, color: '#8bc6b2' },
+  { name: 'Ãsia', lat: 34, lng: 100, color: '#8fbfd4' },
   { name: 'Europa', lat: 52, lng: 15, color: '#9cb7d8' },
-  { name: 'América N.', lat: 46, lng: -100, color: '#8fc9c1' },
-  { name: 'América S.', lat: -14, lng: -57, color: '#9dc58b' },
+  { name: 'AmÃ©rica N.', lat: 46, lng: -100, color: '#8fc9c1' },
+  { name: 'AmÃ©rica S.', lat: -14, lng: -57, color: '#9dc58b' },
   { name: 'Oceania', lat: -24, lng: 134, color: '#67e8f9' },
 ];
 
@@ -109,10 +111,8 @@ export default function GlobeMain() {
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
-  const [globeLayer, setGlobeLayer] = useState<GlobeLayer>('weather');
-  const [tempMin, setTempMin] = useState(-10);
-  const [tempMax, setTempMax] = useState(45);
-  const [showExtremes, setShowExtremes] = useState(true);
+  const globeLayer: GlobeLayer = 'weather';
+  const [weatherSearch, setWeatherSearch] = useState('');
   const { citiesWeather, citiesWeatherLoading, citiesWeatherRefreshing, refreshCitiesWeather } = useCitiesWeather(isAuthenticated);
   const isCompact = size.w < 820;
   const isTiny = size.w < 560;
@@ -162,22 +162,19 @@ export default function GlobeMain() {
   }, [countries]);
 
   const cityWeatherMarkers = useMemo(() => citiesWeather.filter(item =>
-    Number.isFinite(item.city.latitude) &&
-    Number.isFinite(item.city.longitude) &&
-    item.temperature >= tempMin &&
-    item.temperature <= tempMax
-  ), [citiesWeather, tempMin, tempMax]);
-
-  const allWeatherMarkers = useMemo(() => citiesWeather.filter(item =>
     Number.isFinite(item.city.latitude) && Number.isFinite(item.city.longitude)
   ), [citiesWeather]);
 
-  const rankedWeather = useMemo(
-    () => [...cityWeatherMarkers].sort((a, b) => b.temperature - a.temperature),
-    [cityWeatherMarkers]
-  );
-  const hottestCity = rankedWeather[0] ?? null;
-  const coldestCity = rankedWeather[rankedWeather.length - 1] ?? null;
+  const rankedWeather = useMemo(() => {
+    const q = weatherSearch.trim().toLowerCase();
+    return cityWeatherMarkers
+      .filter(item => {
+        if (!q) return true;
+        const country = countries.find(countryItem => countryItem.id === item.city.countryId);
+        return item.city.name.toLowerCase().includes(q) || country?.name.toLowerCase().includes(q);
+      })
+      .sort((a, b) => b.temperature - a.temperature);
+  }, [cityWeatherMarkers, countries, weatherSearch]);
 
   // Globe color/altitude callbacks
   const getCapColor = useCallback((d: object) => {
@@ -298,8 +295,8 @@ export default function GlobeMain() {
     setLoginLoading(false);
     if (!result.ok) {
       setLoginError(result.message || authError || (authMode === 'register'
-        ? 'Informe nome, e-mail válido e senha com pelo menos 6 caracteres.'
-        : 'Use um e-mail válido e uma senha com pelo menos 6 caracteres.'));
+        ? 'Informe nome, e-mail vÃ¡lido e senha com pelo menos 6 caracteres.'
+        : 'Use um e-mail vÃ¡lido e uma senha com pelo menos 6 caracteres.'));
       return;
     }
     toast.success(authMode === 'register' ? 'Conta criada com sucesso' : 'Login realizado com sucesso');
@@ -321,18 +318,29 @@ export default function GlobeMain() {
   const handleSaveCity = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selected) return;
-    setSaving(true);
-    await new Promise(r => setTimeout(r, 400));
-    if (editingCity) {
-      updateCity(editingCity.id, cityForm);
-      toast.success(`${cityForm.name} atualizada`);
-    } else {
-      addCity({ ...cityForm, countryId: selected.id });
-      toast.success(`${cityForm.name} adicionada`);
+    const payload = { ...cityForm, countryId: editingCity ? cityForm.countryId : selected.id };
+    const populationError = validateCityPopulation(payload, countries);
+    if (populationError) {
+      toast.error(populationError);
+      return;
     }
-    setSaving(false);
-    setEditingCity(null);
-    setMode('view');
+    setSaving(true);
+    try {
+      await new Promise(r => setTimeout(r, 400));
+      if (editingCity) {
+        await updateCity(editingCity.id, payload);
+        toast.success(`${cityForm.name} atualizada`);
+      } else {
+        await addCity(payload);
+        toast.success(`${cityForm.name} adicionada`);
+      }
+      setEditingCity(null);
+      setMode('view');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível salvar a cidade.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteCountry = async () => {
@@ -340,11 +348,11 @@ export default function GlobeMain() {
     setSaving(true);
     try {
       await deleteCountry(selected.id);
-      toast.success(`${selected.name} excluído`);
+      toast.success(`${selected.name} excluÃ­do`);
       setDeleteType(null);
       closePanel();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
+      toast.error(error instanceof Error ? error.message : 'NÃ£o foi possÃ­vel excluir o paÃ­s.');
     } finally {
       setSaving(false);
     }
@@ -450,11 +458,11 @@ export default function GlobeMain() {
       <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(148,163,184,0.08)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 22 }}>
           {selected && ([
-            { icon: Users, label: 'População', value: selected.population.toLocaleString('pt-BR'), color: '#5eead4' },
+            { icon: Users, label: 'PopulaÃ§Ã£o', value: selected.population.toLocaleString('pt-BR'), color: '#5eead4' },
             { icon: Flag, label: 'Capital', value: selected.capital || '-', color: '#7dd3fc' },
             { icon: DollarSign, label: 'Moeda', value: selected.currency, color: '#facc15' },
             { icon: Languages, label: 'Idioma', value: selected.language.split('/')[0].trim(), color: '#c4b5fd' },
-            { icon: GlobeIcon, label: 'Área', value: `${Math.round(selected.area).toLocaleString('pt-BR')} km²`, color: '#86efac' },
+            { icon: GlobeIcon, label: 'Ãrea', value: `${Math.round(selected.area).toLocaleString('pt-BR')} kmÂ²`, color: '#86efac' },
             { icon: MapPin, label: 'Coordenadas', value: `${selected.lat.toFixed(2)}, ${selected.lng.toFixed(2)}`, color: '#93c5fd' },
           ] as const).map(row => (
             <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '18px 1fr', gap: 8, alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(148,163,184,0.08)' }}>
@@ -478,7 +486,7 @@ export default function GlobeMain() {
                   <p style={{ color: '#64748b', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.09em', fontWeight: 850, marginBottom: 5 }}>{weatherCity?.name ? `Clima em ${weatherCity.name}` : 'Clima atual'}</p>
                   <div className="flex items-end gap-2">
                     <p style={{ color: '#f8fafc', fontSize: '1.55rem', fontWeight: 900, lineHeight: 1 }}>
-                      {Math.round(weather.temperature)}<span style={{ color: '#bae6fd', fontSize: '0.92rem', fontWeight: 850, marginLeft: 3 }}>°C</span>
+                      {Math.round(weather.temperature)}<span style={{ color: '#bae6fd', fontSize: '0.92rem', fontWeight: 850, marginLeft: 3 }}>Â°C</span>
                     </p>
                     <p style={{ color: '#94a3b8', fontSize: '0.78rem', fontWeight: 700 }}>{getWeatherLabel(weather.description)}</p>
                   </div>
@@ -486,7 +494,7 @@ export default function GlobeMain() {
                 </div>
               </div>
             ) : (
-              <p style={{ color: '#64748b', fontSize: '0.78rem', fontWeight: 700 }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}</p>
+              <p style={{ color: '#64748b', fontSize: '0.78rem', fontWeight: 700 }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponÃ­veis'}</p>
             )}
           </div>
         </div>
@@ -536,26 +544,38 @@ export default function GlobeMain() {
           style={{ color: '#475569', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, padding: '5px', cursor: 'pointer' }}>
           <ChevronLeft size={14} />
         </button>
-        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Editar país</span>
+        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Editar paÃ­s</span>
         <span style={{ fontSize: '1.1rem' }}>{selected?.flag}</span>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
         <Field label="Nome"><Input value={editForm.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} required /></Field>
         <Field label="Bandeira"><Input value={editForm.flag ?? ''} onChange={e => setEditForm(f => ({ ...f, flag: e.target.value }))} /></Field>
+        <Field label="Imagem da bandeira">
+          <FlagImageInput
+            value={editForm.flagUrl}
+            fallback={editForm.flag}
+            alt={editForm.flagAlt || `Bandeira de ${editForm.name ?? selected?.name ?? 'país'}`}
+            onChange={flagUrl => setEditForm(f => ({ ...f, flagUrl }))}
+          />
+        </Field>
         <Field label="Continente">
-          <Select value={editForm.continentId ?? ''} onChange={e => setEditForm(f => ({ ...f, continentId: e.target.value }))}>
-            {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </Select>
+          <SearchableSelect
+            value={editForm.continentId ?? ''}
+            onChange={continentId => setEditForm(f => ({ ...f, continentId }))}
+            placeholder="Selecione um continente"
+            searchPlaceholder="Buscar continente..."
+            options={continents.map(c => ({ value: c.id, label: c.name, description: c.code }))}
+          />
         </Field>
         <Field label="Capital"><Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} /></Field>
-        <Field label="População *"><Input type="number" value={editForm.population ?? 0} onChange={e => setEditForm(f => ({ ...f, population: Number(e.target.value) }))} required /></Field>
+        <Field label="PopulaÃ§Ã£o *"><Input type="number" value={numberInputValue(editForm.population)} onChange={e => setEditForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} required /></Field>
         <Field label="Idioma *"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required /></Field>
         <Field label="Moeda *"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required /></Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Latitude"><Input type="number" step="0.01" value={editForm.lat ?? 0} onChange={e => setEditForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
-          <Field label="Longitude"><Input type="number" step="0.01" value={editForm.lng ?? 0} onChange={e => setEditForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
+          <Field label="Latitude"><Input type="number" step="0.01" value={numberInputValue(editForm.lat)} onChange={e => setEditForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} /></Field>
+          <Field label="Longitude"><Input type="number" step="0.01" value={numberInputValue(editForm.lng)} onChange={e => setEditForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} /></Field>
         </div>
-        <Field label="Fuso horário"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
+        <Field label="Fuso horÃ¡rio"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
       </div>
       <div className="flex gap-2 p-4 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button type="button" onClick={() => setMode('view')}
@@ -585,10 +605,10 @@ export default function GlobeMain() {
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
         <Field label="Nome da cidade *"><Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" /></Field>
-        <Field label="População *"><Input type="number" value={cityForm.population} onChange={e => setCityForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required /></Field>
+        <Field label="PopulaÃ§Ã£o *"><Input type="number" value={numberInputValue(cityForm.population)} onChange={e => setCityForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 250000" required /></Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Latitude"><Input type="number" step="0.0001" value={cityForm.lat} onChange={e => setCityForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
-          <Field label="Longitude"><Input type="number" step="0.0001" value={cityForm.lng} onChange={e => setCityForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
+          <Field label="Latitude"><Input type="number" step="0.0001" value={numberInputValue(cityForm.lat)} onChange={e => setCityForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} /></Field>
+          <Field label="Longitude"><Input type="number" step="0.0001" value={numberInputValue(cityForm.lng)} onChange={e => setCityForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} /></Field>
         </div>
         <div className="flex items-center gap-3 p-3 rounded-xl"
           style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -630,7 +650,7 @@ export default function GlobeMain() {
                 </div>
                 <div>
                   <p style={{ color: '#f8fafc', fontSize: '0.95rem', fontWeight: 900 }}>Preparando o globo</p>
-                  <p style={{ color: '#64748b', fontSize: '0.74rem', marginTop: 3 }}>Carregando países e relevo 3D</p>
+                  <p style={{ color: '#64748b', fontSize: '0.74rem', marginTop: 3 }}>Carregando paÃ­ses e relevo 3D</p>
                 </div>
               </div>
               <div style={{ height: 6, borderRadius: 999, overflow: 'hidden', background: 'rgba(148,163,184,0.14)' }}>
@@ -653,93 +673,61 @@ export default function GlobeMain() {
                 <div style={{ display: isTiny ? 'none' : 'flex', alignItems: 'center', gap: 6, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(34,211,238,0.16)', borderRadius: 12, padding: '7px 10px' }}>
                   <Thermometer size={13} style={{ color: OCEAN.aqua }} />
                   <span style={{ color: '#67e8f9', fontSize: '0.72rem', fontWeight: 700 }}>
-                    {citiesWeatherLoading ? 'Clima...' : `${allWeatherMarkers.length} temperaturas`}
+                    {citiesWeatherLoading ? 'Clima...' : `${cityWeatherMarkers.length} temperaturas`}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Weather controls */}
-            <div style={{ position: 'absolute', top: isCompact ? 112 : 58, left: 16, zIndex: 10, width: isCompact ? 'min(294px, calc(100vw - 32px))' : 294, background: 'rgba(2,8,20,0.64)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 16, padding: isTiny ? '10px 12px' : '12px 14px', boxShadow: '0 18px 44px rgba(0,0,0,0.24)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingBottom: 11, borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
-                {([
-                  { value: 'weather', label: 'Clima', icon: Thermometer },
-                  { value: 'countries', label: 'Países', icon: Flag },
-                ] as const).map(({ value, label, icon: Icon }) => (
-                  <button key={value} type="button" onClick={() => setGlobeLayer(value)}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 8px', borderRadius: 9, border: 'none', background: globeLayer === value ? 'rgba(125,211,252,0.13)' : 'transparent', color: globeLayer === value ? '#bae6fd' : '#64748b', fontSize: '0.72rem', fontWeight: 800, cursor: 'pointer' }}>
-                    <Icon size={12} /> {label}
-                  </button>
-                ))}
+            {/* Weather city list */}
+            <div style={{ position: 'absolute', top: isCompact ? 112 : 58, left: 16, zIndex: 10, width: isCompact ? 'min(310px, calc(100vw - 32px))' : 310, background: 'rgba(2,8,20,0.66)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 16, padding: isTiny ? '10px 12px' : '12px 14px', boxShadow: '0 18px 44px rgba(0,0,0,0.24)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 900 }}>Clima das cidades</p>
+                  <p style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 700, marginTop: 2 }}>{cityWeatherMarkers.length} temperaturas no globo</p>
+                </div>
                 <button type="button" onClick={handleRefreshWeather} disabled={citiesWeatherRefreshing}
                   title="Atualizar clima"
-                  style={{ width: 32, height: 32, borderRadius: 9, border: 'none', background: 'transparent', color: citiesWeatherRefreshing ? '#334155' : '#7dd3fc', cursor: citiesWeatherRefreshing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  style={{ width: 32, height: 32, borderRadius: 10, border: '1px solid rgba(125,211,252,0.14)', background: 'rgba(15,23,42,0.72)', color: citiesWeatherRefreshing ? '#334155' : '#7dd3fc', cursor: citiesWeatherRefreshing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <RefreshCw size={13} style={{ animation: citiesWeatherRefreshing ? 'spin 0.8s linear infinite' : 'none' }} />
                 </button>
               </div>
 
-              <div style={{ padding: '12px 0 10px', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ color: '#94a3b8', fontSize: '0.68rem', fontWeight: 850, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Faixa</span>
-                  <span style={{ color: '#cbd5e1', fontSize: '0.72rem', fontWeight: 850 }}>{tempMin}°C a {tempMax}°C</span>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <label style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 800 }}>
-                  Min
-                  <input type="range" min="-20" max="50" value={tempMin}
-                    onChange={e => setTempMin(Math.min(Number(e.target.value), tempMax))}
-                    style={{ width: '100%', accentColor: '#7dd3fc' }} />
-                </label>
-                <label style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 800 }}>
-                  Max
-                  <input type="range" min="-20" max="50" value={tempMax}
-                    onChange={e => setTempMax(Math.max(Number(e.target.value), tempMin))}
-                    style={{ width: '100%', accentColor: '#7dd3fc' }} />
-                </label>
-                </div>
+              <div style={{ position: 'relative', marginBottom: 8 }}>
+                <Search size={13} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#64748b', pointerEvents: 'none' }} />
+                <input
+                  value={weatherSearch}
+                  onChange={e => setWeatherSearch(e.target.value)}
+                  placeholder="Buscar cidade ou país..."
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 10px 8px 32px', borderRadius: 11, border: '1px solid rgba(148,163,184,0.14)', background: 'rgba(15,23,42,0.76)', color: '#e2e8f0', fontSize: '0.78rem', outline: 'none' }}
+                />
               </div>
 
-              <p style={{ display: isTiny ? 'none' : 'block', color: '#64748b', fontSize: '0.68rem', lineHeight: 1.35, margin: '10px 0' }}>
-                Temperaturas exibidas por cidade. Os países ficam neutros para evitar leitura de clima uniforme.
-              </p>
-
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#94a3b8', fontSize: '0.72rem', fontWeight: 800, marginBottom: 9, cursor: 'pointer' }}>
-                <input type="checkbox" checked={showExtremes} onChange={e => setShowExtremes(e.target.checked)}
-                  style={{ accentColor: '#7dd3fc' }} />
-                Destacar mais quente e mais fria
-              </label>
-
-              <div style={{ display: isTiny ? 'none' : 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 14, padding: '9px 0', borderTop: '1px solid rgba(148,163,184,0.1)', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
-                {hottestCity && (
-                  <button type="button" onClick={() => flyToWeatherCity(hottestCity.city.countryId)}
-                    style={{ textAlign: 'left', border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', minWidth: 0 }}>
-                    <p style={{ color: '#c99a63', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mais quente</p>
-                    <p style={{ color: '#e2e8f0', fontSize: '0.76rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 3 }}>{hottestCity.city.name}</p>
-                    <p style={{ color: '#c99a63', fontSize: '0.76rem', fontWeight: 900, marginTop: 2 }}>{Math.round(hottestCity.temperature)}°C</p>
-                  </button>
-                )}
-                {coldestCity && (
-                  <button type="button" onClick={() => flyToWeatherCity(coldestCity.city.countryId)}
-                    style={{ textAlign: 'left', border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', minWidth: 0 }}>
-                    <p style={{ color: '#90b8c0', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mais fria</p>
-                    <p style={{ color: '#e2e8f0', fontSize: '0.76rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 3 }}>{coldestCity.city.name}</p>
-                    <p style={{ color: '#90b8c0', fontSize: '0.76rem', fontWeight: 900, marginTop: 2 }}>{Math.round(coldestCity.temperature)}°C</p>
-                  </button>
-                )}
-              </div>
-
-              <div style={{ display: isTiny ? 'none' : 'flex', flexDirection: 'column', marginTop: 8 }}>
-                {rankedWeather.slice(0, 5).map((item, index) => (
-                  <button key={item.city.id} type="button" onClick={() => flyToWeatherCity(item.city.countryId)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', background: 'transparent', border: 'none', borderBottom: index < 4 ? '1px solid rgba(148,163,184,0.08)' : 'none', padding: '8px 0', cursor: 'pointer', textAlign: 'left' }}>
-                    <span style={{ color: '#475569', fontSize: '0.68rem', width: 16, fontWeight: 900 }}>{index + 1}</span>
-                    <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontWeight: 800, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.city.name}</span>
-                    <span style={{ color: temperatureAccent(item.temperature), fontSize: '0.74rem', fontWeight: 900 }}>{Math.round(item.temperature)}°C</span>
-                  </button>
-                ))}
+              <div className="weather-city-list" style={{ display: isTiny ? 'none' : 'flex', flexDirection: 'column', maxHeight: 230, overflowY: 'auto', paddingRight: 2 }}>
+                {rankedWeather.length === 0 ? (
+                  <p style={{ color: '#64748b', fontSize: '0.72rem', padding: '10px 0' }}>
+                    {citiesWeatherLoading ? 'Carregando temperaturas...' : 'Nenhuma cidade encontrada'}
+                  </p>
+                ) : rankedWeather.slice(0, 10).map((item, index) => {
+                  const country = countries.find(countryItem => countryItem.id === item.city.countryId);
+                  return (
+                    <button key={item.city.id} type="button" onClick={() => flyToWeatherCity(item.city.countryId)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 9, width: '100%', background: 'transparent', border: 'none', borderBottom: index < Math.min(rankedWeather.length, 10) - 1 ? '1px solid rgba(148,163,184,0.08)' : 'none', padding: '8px 0', cursor: 'pointer', textAlign: 'left' }}>
+                      {country?.flagUrl ? (
+                        <img src={country.flagUrl} alt="" aria-hidden="true" style={{ width: 22, height: 15, objectFit: 'cover', borderRadius: 3, flexShrink: 0 }} />
+                      ) : (
+                        <span style={{ width: 22, color: '#64748b', fontSize: '0.86rem', flexShrink: 0 }}>{country?.flag}</span>
+                      )}
+                      <span style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ display: 'block', color: '#cbd5e1', fontSize: '0.76rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.city.name}</span>
+                        <span style={{ display: 'block', color: '#64748b', fontSize: '0.64rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>{country?.name ?? 'País não vinculado'}</span>
+                      </span>
+                      <span style={{ color: temperatureAccent(item.temperature), fontSize: '0.78rem', fontWeight: 950, flexShrink: 0 }}>{Math.round(item.temperature)}°C</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-
             {/* Search - top center */}
             <div style={{ position: 'absolute', top: isCompact ? 58 : 16, left: isCompact ? 16 : '50%', right: isCompact ? 16 : 'auto', transform: isCompact ? 'none' : 'translateX(-50%)', zIndex: 20, width: isCompact ? 'auto' : 380, maxWidth: isCompact ? 'calc(100vw - 32px)' : undefined }}>
               <div style={{ position: 'relative' }}>
@@ -749,7 +737,7 @@ export default function GlobeMain() {
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
-                  placeholder="Buscar países, capitais..."
+                  placeholder="Buscar paÃ­ses, capitais..."
                   style={{
                     width: '100%', paddingLeft: 38, paddingRight: 14, paddingTop: 9, paddingBottom: 9,
                     background: 'rgba(2,8,20,0.72)', backdropFilter: 'blur(16px)',
@@ -793,14 +781,14 @@ export default function GlobeMain() {
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: `linear-gradient(135deg, ${OCEAN.teal}, ${OCEAN.aqua})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={11} style={{ color: 'white' }} />
                 </div>
-                <span style={{ display: isTiny ? 'none' : 'inline', fontSize: '0.75rem', fontWeight: 600, maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</span>
+                <span style={{ display: isTiny ? 'none' : 'inline', fontSize: '0.75rem', fontWeight: 600, maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'UsuÃ¡rio'}</span>
                 <ChevronDown size={12} style={{ transform: menuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
 
               {menuOpen && (
                 <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, minWidth: 210, borderRadius: 14, overflow: 'hidden', background: 'rgba(3,12,30,0.97)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 20px 60px rgba(0,0,0,0.6)' }}>
                   <div style={{ padding: '12px 14px 10px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</p>
+                    <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'UsuÃ¡rio'}</p>
                     <p style={{ color: '#64748b', fontSize: '0.7rem', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
                   </div>
                   <button onClick={() => { setProfileOpen(true); setMenuOpen(false); }}
@@ -813,7 +801,7 @@ export default function GlobeMain() {
                   {([
                     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
                     { to: '/app/continents', icon: Layers, label: 'Continentes', count: continents.length },
-                    { to: '/app/countries', icon: Flag, label: 'Países', count: countries.length },
+                    { to: '/app/countries', icon: Flag, label: 'PaÃ­ses', count: countries.length },
                     { to: '/app/cities', icon: Building2, label: 'Cidades', count: cities.length },
                   ] as const).map(item => (
                     <Link key={item.to} to={item.to}
@@ -856,7 +844,7 @@ export default function GlobeMain() {
               {([
                 { icon: ZoomIn, action: zoomIn, title: 'Aproximar' },
                 { icon: ZoomOut, action: zoomOut, title: 'Afastar' },
-                { icon: RotateCcw, action: resetView, title: 'Redefinir visualização' },
+                { icon: RotateCcw, action: resetView, title: 'Redefinir visualizaÃ§Ã£o' },
               ] as const).map(({ icon: Icon, action, title }) => (
                 <button key={title} onClick={action} title={title}
                   style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.07)', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
@@ -874,7 +862,7 @@ export default function GlobeMain() {
                   {[
                     ['Arraste', 'girar'],
                     ['Role', 'zoom'],
-                    ['Clique', 'abrir país'],
+                    ['Clique', 'abrir paÃ­s'],
                   ].map(([action, detail]) => (
                     <div key={action} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span style={{ color: '#d5e4ea', fontSize: '0.7rem', fontWeight: 800 }}>{action}</span>
@@ -918,7 +906,7 @@ export default function GlobeMain() {
             labelAltitude={0.014}
             labelText={(d: object) => {
               const item = d as any;
-              return `${item.city.name} ${Math.round(item.temperature)}°C`;
+              return `${item.city.name} ${Math.round(item.temperature)}Â°C`;
             }}
             labelSize={0.56}
             labelDotRadius={0.16}
@@ -926,10 +914,10 @@ export default function GlobeMain() {
             labelResolution={2}
             labelLabel={(d: object) => {
               const item = d as any;
-              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,211,238,0.24);font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>${Math.round(item.temperature)}°C - ${item.description ?? item.provider}<br/>Umidade ${item.humidity ?? '-'}% | Vento ${item.windSpeed ?? '-'} km/h</div>`;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,211,238,0.24);font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>${Math.round(item.temperature)}Â°C - ${item.description ?? item.provider}<br/>Umidade ${item.humidity ?? '-'}% | Vento ${item.windSpeed ?? '-'} km/h</div>`;
             }}
             onLabelClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
-            pointsData={isAuthenticated && globeLayer === 'weather' && showExtremes ? [hottestCity, coldestCity].filter(Boolean) : []}
+            pointsData={[]}
             pointLat={(d: object) => (d as any).city.latitude}
             pointLng={(d: object) => (d as any).city.longitude}
             pointAltitude={0.02}
@@ -937,7 +925,7 @@ export default function GlobeMain() {
             pointColor={(d: object) => temperatureColor((d as any).temperature)}
             pointLabel={(d: object) => {
               const item = d as any;
-              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid ${temperatureAccent(item.temperature)};font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>Destaque: ${Math.round(item.temperature)}°C</div>`;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid ${temperatureAccent(item.temperature)};font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>Destaque: ${Math.round(item.temperature)}Â°C</div>`;
             }}
             onPointClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
           />
@@ -964,7 +952,7 @@ export default function GlobeMain() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(148,163,184,0.08)' }}>
                 {[
                   { label: 'Continentes', value: continents.length, icon: Layers },
-                  { label: 'Países', value: countries.length, icon: Flag },
+                  { label: 'PaÃ­ses', value: countries.length, icon: Flag },
                   { label: 'Cidades', value: cities.length, icon: Building2 },
                 ].map(item => (
                   <div key={item.label} style={{ background: 'rgba(3,8,22,0.96)', padding: '16px 12px', textAlign: 'center' }}>
@@ -996,7 +984,7 @@ export default function GlobeMain() {
                   </div>
                   <div>
                     <span style={{ color: '#e2e8f0', fontSize: '0.98rem', fontWeight: 900, letterSpacing: '0.04em' }}>GeoCRUD</span>
-                    <p style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700, marginTop: 2 }}>Plataforma geográfica</p>
+                    <p style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700, marginTop: 2 }}>Plataforma geogrÃ¡fica</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#7dd3fc', background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(125,211,252,0.16)', borderRadius: 999, padding: '6px 10px', fontSize: '0.68rem', fontWeight: 850 }}>
@@ -1008,7 +996,7 @@ export default function GlobeMain() {
               <div style={{ marginBottom: 22 }}>
                 <p style={{ color: '#f8fafc', fontSize: '1.55rem', fontWeight: 900, lineHeight: 1, marginBottom: 8 }}>{authMode === 'register' ? 'Criar conta' : 'Entrar'}</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.86rem', lineHeight: 1.45 }}>
-                  {authMode === 'register' ? 'Cadastre-se para começar a gerenciar dados geográficos.' : 'Acesse o painel para gerenciar continentes, países, cidades e clima.'}
+                  {authMode === 'register' ? 'Cadastre-se para comeÃ§ar a gerenciar dados geogrÃ¡ficos.' : 'Acesse o painel para gerenciar continentes, paÃ­ses, cidades e clima.'}
                 </p>
               </div>
 
@@ -1069,12 +1057,12 @@ export default function GlobeMain() {
               <button type="button"
                 onClick={() => { setAuthMode(authMode === 'register' ? 'login' : 'register'); setLoginError(''); }}
                 style={{ width: '100%', marginTop: 14, background: 'transparent', border: 'none', color: '#7dd3fc', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800 }}>
-                {authMode === 'register' ? 'Já tenho uma conta' : 'Criar uma nova conta'}
+                {authMode === 'register' ? 'JÃ¡ tenho uma conta' : 'Criar uma nova conta'}
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, color: '#64748b', fontSize: '0.74rem', fontWeight: 700, marginTop: 18 }}>
                 <span style={{ width: 5, height: 5, borderRadius: 999, background: '#5eead4', boxShadow: '0 0 16px rgba(94,234,212,0.8)' }} />
-                {authMode === 'register' ? 'A senha será protegida com criptografia.' : 'Use uma conta cadastrada para acessar o sistema.'}
+                {authMode === 'register' ? 'A senha serÃ¡ protegida com criptografia.' : 'Use uma conta cadastrada para acessar o sistema.'}
               </div>
             </div>
           </div>
@@ -1113,10 +1101,17 @@ export default function GlobeMain() {
       </div>
 
       {/* Dialogs */}
-      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades e climas vinculados também serão excluídos." loading={saving} onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
+      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades e climas vinculados tambÃ©m serÃ£o excluÃ­dos." loading={saving} onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
       <DeleteDialog open={deleteType === 'city'} entityName={deleteCityTarget?.name ?? ''} onConfirm={handleDeleteCity} onCancel={() => setDeleteType(null)} />
 
       <style>{`
+        .weather-city-list {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .weather-city-list::-webkit-scrollbar {
+          display: none;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes loadingBar {
           0% { transform: translateX(-70%); width: 42%; }

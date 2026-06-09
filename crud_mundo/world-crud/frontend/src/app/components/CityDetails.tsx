@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Building2, Users, MapPin, Thermometer, Wind, Pencil, Trash2, Save, X, Flag } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { DeleteDialog } from './ui/DeleteDialog';
-import { Field, Input, Select, FormActions } from './ui/Modal';
+import { Field, Input, SearchableSelect, FormActions } from './ui/Modal';
 import { toast } from 'sonner';
+import { numberInputValue, parseNumberInput } from '../utils/numberInput';
+import { validateCityPopulation } from '../utils/cityValidation';
 import { City } from '../data/types';
 
 type Weather = {
@@ -41,7 +43,7 @@ export default function CityDetails() {
     return (
       <div className="flex flex-col items-center justify-center h-full" style={{ color: '#94a3b8' }}>
         <Building2 size={48} style={{ opacity: 0.3, marginBottom: 12 }} />
-        <p>Cidade não encontrada.</p>
+        <p>Cidade nÃ£o encontrada.</p>
         <button onClick={() => navigate('/app/cities')} className="mt-4 px-4 py-2 rounded-xl"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
           Voltar para cidades
@@ -79,17 +81,27 @@ export default function CityDetails() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    const populationError = validateCityPopulation(form, countries);
+    if (populationError) {
+      toast.error(populationError);
+      return;
+    }
     setSaving(true);
-    await new Promise(r => setTimeout(r, 500));
-    await updateCity(city.id, form);
-    toast.success(`${form.name} atualizada com sucesso`);
-    setSaving(false);
-    setEditing(false);
+    try {
+      await new Promise(r => setTimeout(r, 500));
+      await updateCity(city.id, form);
+      toast.success(`${form.name} atualizada com sucesso`);
+      setEditing(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível salvar a cidade.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDelete = () => {
     deleteCity(city.id);
-    toast.success(`${city.name} excluída`);
+    toast.success(`${city.name} excluÃ­da`);
     navigate('/app/cities');
   };
 
@@ -187,24 +199,32 @@ export default function CityDetails() {
           <h3 style={{ color: '#f8fafc', fontWeight: 700 }}>Editar detalhes da cidade</h3>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Nome"><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required /></Field>
-            <Field label="País">
-              <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))}>
-                {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
-              </Select>
+            <Field label="PaÃ­s">
+              <SearchableSelect
+                value={form.countryId}
+                onChange={countryId => setForm(f => ({ ...f, countryId }))}
+                placeholder="Selecione um país"
+                searchPlaceholder="Buscar país..."
+                options={countries.map(c => ({
+                  value: c.id,
+                  label: `${c.flag} ${c.name}`,
+                  description: continents.find(continent => continent.id === c.continentId)?.name,
+                }))}
+              />
             </Field>
           </div>
-          <Field label="População">
-            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} />
+          <Field label="PopulaÃ§Ã£o">
+            <Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} />
           </Field>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Latitude"><Input type="number" step="0.0001" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: Number(e.target.value) }))} /></Field>
-            <Field label="Longitude"><Input type="number" step="0.0001" value={form.lng} onChange={e => setForm(f => ({ ...f, lng: Number(e.target.value) }))} /></Field>
+            <Field label="Latitude"><Input type="number" step="0.0001" value={numberInputValue(form.lat)} onChange={e => setForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} /></Field>
+            <Field label="Longitude"><Input type="number" step="0.0001" value={numberInputValue(form.lng)} onChange={e => setForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} /></Field>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <input type="checkbox" id="capEdit" checked={form.isCapital} onChange={e => setForm(f => ({ ...f, isCapital: e.target.checked }))}
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }} />
             <label htmlFor="capEdit" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              Esta cidade é a capital do país
+              Esta cidade Ã© a capital do paÃ­s
             </label>
           </div>
         </form>
@@ -213,10 +233,10 @@ export default function CityDetails() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { icon: Users, label: 'População', value: city.population.toLocaleString(), color: '#14b8a6' },
+          { icon: Users, label: 'PopulaÃ§Ã£o', value: city.population.toLocaleString(), color: '#14b8a6' },
           { icon: MapPin, label: 'Latitude', value: `${city.lat.toFixed(4)} graus`, color: '#0ea5e9' },
           { icon: MapPin, label: 'Longitude', value: `${city.lng.toFixed(4)} graus`, color: '#8b5cf6' },
-          { icon: Flag, label: 'País', value: country?.name ?? '-', color: '#f59e0b' },
+          { icon: Flag, label: 'PaÃ­s', value: country?.name ?? '-', color: '#f59e0b' },
         ].map(card => (
           <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}15` }}>
@@ -233,7 +253,7 @@ export default function CityDetails() {
         {/* Location preview */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="p-5 pb-0">
-            <p style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>Prévia da localização</p>
+            <p style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>PrÃ©via da localizaÃ§Ã£o</p>
           </div>
           <div className="mx-5 mb-5 rounded-xl overflow-hidden" style={{ background: '#0f172a' }}>
             <div className="relative" style={{ height: 180 }}>
@@ -275,7 +295,7 @@ export default function CityDetails() {
                 </span>
               </div>
               <div>
-                <p style={{ color: '#f8fafc', fontSize: '2rem', fontWeight: 800 }}>{Math.round(weather.temperature)}°C</p>
+                <p style={{ color: '#f8fafc', fontSize: '2rem', fontWeight: 800 }}>{Math.round(weather.temperature)}Â°C</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>{weather.description ?? weather.provider}</p>
               </div>
             </div>
@@ -297,7 +317,7 @@ export default function CityDetails() {
           <div className="rounded-2xl p-5 flex items-center justify-center" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
             <div className="text-center" style={{ color: '#94a3b8' }}>
               <Thermometer size={32} style={{ margin: '0 auto 8px', opacity: 0.3 }} />
-              <p style={{ fontSize: '0.85rem' }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}</p>
+              <p style={{ fontSize: '0.85rem' }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponÃ­veis'}</p>
             </div>
           </div>
         )}
@@ -312,5 +332,4 @@ export default function CityDetails() {
     </div>
   );
 }
-
 

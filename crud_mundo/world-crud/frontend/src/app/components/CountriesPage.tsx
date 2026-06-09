@@ -1,11 +1,12 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Flag, ChevronLeft, ChevronRight, Eye, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useApp } from '../context/AppContext';
 import { Country } from '../data/types';
-import { Modal, Field, Input, Select, FormActions } from './ui/Modal';
+import { Modal, Field, Input, SearchableSelect, FlagImageInput, FormActions } from './ui/Modal';
 import { DeleteDialog } from './ui/DeleteDialog';
 import { toast } from 'sonner';
+import { numberInputValue, parseNumberInput } from '../utils/numberInput';
 
 const PAGE_SIZE = 8;
 
@@ -61,10 +62,10 @@ export default function CountriesPage() {
     setLoading(true);
     try {
       await deleteCountry(deleteTarget.id);
-      toast.success(`${deleteTarget.name} excluído`);
+      toast.success(`${deleteTarget.name} excluÃ­do`);
       setDeleteTarget(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
+      toast.error(error instanceof Error ? error.message : 'NÃ£o foi possÃ­vel excluir o paÃ­s.');
     } finally {
       setLoading(false);
     }
@@ -75,15 +76,15 @@ export default function CountriesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>Países</h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{countries.length} países cadastrados</p>
+          <h1 style={{ color: '#f8fafc', fontSize: '1.4rem', fontWeight: 700 }}>PaÃ­ses</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{countries.length} paÃ­ses cadastrados</p>
         </div>
         <button onClick={openCreate}
           className="flex items-center gap-2 rounded-xl px-4 py-2.5 transition-colors"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#0d9488'}
           onMouseLeave={e => e.currentTarget.style.background = '#14b8a6'}>
-          <Plus size={16} /> Adicionar país
+          <Plus size={16} /> Adicionar paÃ­s
         </button>
       </div>
 
@@ -94,20 +95,25 @@ export default function CountriesPage() {
           <input
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(0); }}
-            placeholder="Buscar países..."
+            placeholder="Buscar paÃ­ses..."
             className="pl-9 pr-4 py-2.5 rounded-xl outline-none transition-all"
             style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', color: '#e2e8f0', fontSize: '0.875rem', width: 220 }}
             onFocus={e => e.target.style.borderColor = '#14b8a6'}
             onBlur={e => e.target.style.borderColor = '#e2e8f0'}
           />
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', width: 240 }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
-          <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">Todos os continentes</option>
-            {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          <SearchableSelect
+            value={continentFilter}
+            onChange={value => { setContinentFilter(value); setPage(0); }}
+            placeholder="Filtrar continente"
+            searchPlaceholder="Buscar continente..."
+            options={[
+              { value: '', label: 'Todos os continentes' },
+              ...continents.map(c => ({ value: c.id, label: c.name, description: c.code })),
+            ]}
+          />
         </div>
       </div>
 
@@ -116,7 +122,7 @@ export default function CountriesPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'País', 'Continente', 'Capital', 'População', 'Idioma', 'Moeda', 'Ações'].map(h => (
+              {['#', 'PaÃ­s', 'Continente', 'Capital', 'PopulaÃ§Ã£o', 'Idioma', 'Moeda', 'AÃ§Ãµes'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
@@ -128,7 +134,7 @@ export default function CountriesPage() {
               <tr>
                 <td colSpan={8} style={{ padding: '48px 16px', textAlign: 'center', color: '#94a3b8' }}>
                   <Flag size={32} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
-                  <p>Nenhum país encontrado</p>
+                  <p>Nenhum paÃ­s encontrado</p>
                 </td>
               </tr>
             ) : paged.map((c, idx) => {
@@ -220,67 +226,76 @@ export default function CountriesPage() {
       )}
 
       {/* Create/Edit Modal */}
-      <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Adicionar país' : 'Editar país'} maxWidth={560}>
+      <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Adicionar paÃ­s' : 'Editar paÃ­s'} maxWidth={560}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <Field label="Nome *">
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Portugal" />
             </Field>
-            <Field label="URL da bandeira">
-              <Input value={form.flagUrl ?? ''} onChange={e => setForm(f => ({ ...f, flagUrl: e.target.value }))} placeholder="https://flagcdn.com/pt.svg" />
+            <Field label="Imagem da bandeira">
+              <FlagImageInput
+                value={form.flagUrl}
+                fallback={form.flag}
+                alt={form.flagAlt || `Bandeira de ${form.name || 'paÃ­s'}`}
+                onChange={flagUrl => setForm(f => ({ ...f, flagUrl }))}
+              />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Continente *">
-              <Select value={form.continentId} onChange={e => setForm(f => ({ ...f, continentId: e.target.value }))} required>
-                <option value="">Selecione um continente</option>
-                {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </Select>
+              <SearchableSelect
+                value={form.continentId}
+                onChange={continentId => setForm(f => ({ ...f, continentId }))}
+                required
+                placeholder="Selecione um continente"
+                searchPlaceholder="Buscar continente..."
+                options={continents.map(c => ({ value: c.id, label: c.name, description: c.code }))}
+              />
             </Field>
             <Field label="Capital *">
               <Input value={form.capital} onChange={e => setForm(f => ({ ...f, capital: e.target.value }))} required placeholder="Ex.: Lisboa" />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="População *">
-              <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 10000000" required />
+            <Field label="PopulaÃ§Ã£o *">
+              <Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 10000000" required />
             </Field>
-            <Field label="Área (km²)">
-              <Input type="number" value={form.area} onChange={e => setForm(f => ({ ...f, area: Number(e.target.value) }))} placeholder="e.g. 92212" />
+            <Field label="Ãrea (kmÂ²)">
+              <Input type="number" value={numberInputValue(form.area)} onChange={e => setForm(f => ({ ...f, area: parseNumberInput(e.target.value) }))} placeholder="Ex.: 92212" />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Idioma *">
-              <Input value={form.language} onChange={e => setForm(f => ({ ...f, language: e.target.value }))} placeholder="Ex.: Português" required />
+              <Input value={form.language} onChange={e => setForm(f => ({ ...f, language: e.target.value }))} placeholder="Ex.: PortuguÃªs" required />
             </Field>
             <Field label="Moeda *">
               <Input value={form.currency} onChange={e => setForm(f => ({ ...f, currency: e.target.value }))} placeholder="Ex.: EUR" required />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Código ISO">
+            <Field label="CÃ³digo ISO">
               <Input value={form.isoCode} onChange={e => setForm(f => ({ ...f, isoCode: e.target.value.toUpperCase() }))} placeholder="Ex.: PT" maxLength={3} />
             </Field>
-            <Field label="Fuso horário">
+            <Field label="Fuso horÃ¡rio">
               <Input value={form.timezone} onChange={e => setForm(f => ({ ...f, timezone: e.target.value }))} placeholder="Ex.: UTC+0" />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Latitude">
-              <Input type="number" step="0.01" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: Number(e.target.value) }))} placeholder="Ex.: 39.40" />
+              <Input type="number" step="0.01" value={numberInputValue(form.lat)} onChange={e => setForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} placeholder="Ex.: 39.40" />
             </Field>
             <Field label="Longitude">
-              <Input type="number" step="0.01" value={form.lng} onChange={e => setForm(f => ({ ...f, lng: Number(e.target.value) }))} placeholder="Ex.: -8.22" />
+              <Input type="number" step="0.01" value={numberInputValue(form.lng)} onChange={e => setForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} placeholder="Ex.: -8.22" />
             </Field>
           </div>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alterações'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteraÃ§Ãµes'} />
         </form>
       </Modal>
 
       <DeleteDialog
         open={!!deleteTarget}
         entityName={deleteTarget?.name ?? ''}
-        warning="Todas as cidades e climas vinculados também serão excluídos."
+        warning="Todas as cidades e climas vinculados tambÃ©m serÃ£o excluÃ­dos."
         loading={loading}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
@@ -288,5 +303,3 @@ export default function CountriesPage() {
     </div>
   );
 }
-
-

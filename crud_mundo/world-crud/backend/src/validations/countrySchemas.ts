@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { latitudeSchema, longitudeSchema } from "./commonSchemas";
 
+const imageDataUrlSchema = z.string().regex(/^data:image\/(png|jpe?g|svg\+xml|webp);base64,/i);
+
 export const countryBodySchema = z.object({
   name: z.string().trim().min(1, "Nome e obrigatório."),
   officialName: z.string().trim().optional().nullable(),
@@ -14,7 +16,7 @@ export const countryBodySchema = z.object({
   area: z.coerce.number().nonnegative().optional().nullable(),
   latitude: latitudeSchema.optional().nullable(),
   longitude: longitudeSchema.optional().nullable(),
-  flagUrl: z.string().url().optional().or(z.literal("")).nullable(),
+  flagUrl: z.union([z.string().url(), imageDataUrlSchema, z.literal("")]).optional().nullable(),
   continentId: z.string().min(1, "País precisa pertencer a um continente.")
 });
 

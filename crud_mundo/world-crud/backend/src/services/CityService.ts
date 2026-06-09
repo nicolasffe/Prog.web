@@ -1,11 +1,11 @@
-import { Prisma } from "@prisma/client";
+﻿import { Prisma } from "@prisma/client";
 import { cityRepository } from "../repositories/CityRepository";
 import { countryRepository } from "../repositories/CountryRepository";
 import { HttpError } from "../utils/HttpError";
 
 export class CityService {
   async create(data: Prisma.CityUncheckedCreateInput) {
-    await this.ensureCountry(data.countryId);
+    await this.ensurePopulationFitsCountry(data.countryId, Number(data.population));
     return cityRepository.create(data);
   }
 
@@ -28,9 +28,11 @@ export class CityService {
   }
 
   async update(id: string, data: Prisma.CityUncheckedUpdateInput) {
-    if (typeof data.countryId === "string") {
-      await this.ensureCountry(data.countryId);
-    }
+    const currentCity = await this.findById(id);
+    const countryId = typeof data.countryId === "string" ? data.countryId : currentCity.countryId;
+    const population = this.getPopulationValue(data.population, currentCity.population);
+
+    await this.ensurePopulationFitsCountry(countryId, population);
 
     return cityRepository.update(id, data);
   }
@@ -39,12 +41,27 @@ export class CityService {
     return cityRepository.delete(id);
   }
 
-  private async ensureCountry(countryId: string) {
+  private async ensurePopulationFitsCountry(countryId: string, cityPopulation: number) {
     const country = await countryRepository.findById(countryId);
 
     if (!country) {
       throw new HttpError(400, "País informado não existe.");
     }
+
+    if (cityPopulation > country.population) {
+      throw new HttpError(
+        400,
+        `A população da cidade não pode ser maior que a população do país (${country.population.toLocaleString("pt-BR")} habitantes).`
+      );
+    }
+  }
+
+  private getPopulationValue(value: Prisma.CityUncheckedUpdateInput["population"], fallback: number) {
+    if (typeof value === "number") return value;
+    if (value && typeof value === "object" && "set" in value && typeof value.set === "number") {
+      return value.set;
+    }
+    return fallback;
   }
 }
 

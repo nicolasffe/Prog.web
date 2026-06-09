@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 interface ModalProps {
   open: boolean;
@@ -83,6 +83,178 @@ export function Select({ onFocus, onBlur, children, ...props }: React.SelectHTML
       onBlur={e => { e.target.style.borderColor = 'rgba(148,163,184,0.22)'; onBlur?.(e); }}>
       {children}
     </select>
+  );
+}
+
+export type SearchableSelectOption = {
+  value: string;
+  label: string;
+  description?: string;
+};
+
+interface SearchableSelectProps {
+  value: string;
+  options: SearchableSelectOption[];
+  onChange: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  required?: boolean;
+}
+
+export function SearchableSelect({
+  value,
+  options,
+  onChange,
+  placeholder = 'Selecione uma opção',
+  searchPlaceholder = 'Digite para buscar...',
+  required,
+}: SearchableSelectProps) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = options.find(option => option.value === value);
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return options;
+    return options.filter(option =>
+      option.label.toLowerCase().includes(q) ||
+      option.description?.toLowerCase().includes(q)
+    );
+  }, [options, query]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <div ref={rootRef} style={{ position: 'relative', width: '100%' }}>
+      <input
+        value={open ? query : selected?.label ?? ''}
+        onChange={e => {
+          setQuery(e.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => {
+          setQuery('');
+          setOpen(true);
+        }}
+        placeholder={selected ? searchPlaceholder : placeholder}
+        required={required && !value}
+        style={inputStyle}
+      />
+      {open && (
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 70,
+            top: 'calc(100% + 6px)',
+            left: 0,
+            right: 0,
+            maxHeight: 220,
+            overflowY: 'auto',
+            background: 'rgba(8,16,34,0.98)',
+            border: '1px solid rgba(56,189,248,0.24)',
+            borderRadius: 12,
+            boxShadow: '0 22px 60px rgba(0,0,0,0.48)',
+            padding: 6,
+          }}
+        >
+          {filtered.length === 0 ? (
+            <div style={{ color: '#64748b', fontSize: '0.8rem', padding: '10px 12px' }}>Nenhuma opção encontrada</div>
+          ) : filtered.map(option => (
+            <button
+              key={option.value}
+              type="button"
+              onMouseDown={event => {
+                event.preventDefault();
+                onChange(option.value);
+                setQuery('');
+                setOpen(false);
+              }}
+              style={{
+                width: '100%',
+                display: 'block',
+                textAlign: 'left',
+                background: option.value === value ? 'rgba(56,189,248,0.14)' : 'transparent',
+                border: 'none',
+                borderRadius: 9,
+                padding: '9px 10px',
+                color: '#e2e8f0',
+                cursor: 'pointer',
+              }}
+            >
+              <span style={{ display: 'block', fontSize: '0.86rem', fontWeight: 700 }}>{option.label}</span>
+              {option.description && (
+                <span style={{ display: 'block', color: '#64748b', fontSize: '0.72rem', marginTop: 2 }}>{option.description}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface FlagImageInputProps {
+  value?: string | null;
+  fallback?: string;
+  alt?: string;
+  onChange: (value: string) => void;
+}
+
+export function FlagImageInput({ value, fallback, alt = 'Bandeira', onChange }: FlagImageInputProps) {
+  const [error, setError] = useState('');
+
+  const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Selecione uma imagem válida.');
+      return;
+    }
+    if (file.size > 900_000) {
+      setError('Use uma imagem de até 900 KB.');
+      event.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      onChange(String(reader.result));
+      setError('');
+    };
+    reader.onerror = () => setError('Não foi possível carregar a imagem.');
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ width: 74, height: 48, borderRadius: 10, overflow: 'hidden', background: 'rgba(15,23,42,0.82)', border: '1px solid rgba(148,163,184,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        {value ? (
+          <img src={value} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <span style={{ color: '#94a3b8', fontSize: '1.35rem' }}>{fallback || '🏳️'}</span>
+        )}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <label style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, padding: '8px 12px', background: 'rgba(56,189,248,0.12)', border: '1px solid rgba(56,189,248,0.22)', color: '#7dd3fc', fontSize: '0.8rem', fontWeight: 800, cursor: 'pointer' }}>
+          Escolher imagem
+          <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" onChange={handleFile} style={{ display: 'none' }} />
+        </label>
+        {value && (
+          <button type="button" onClick={() => onChange('')} style={{ marginLeft: 8, background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}>
+            Remover
+          </button>
+        )}
+        <p style={{ color: error ? '#fca5a5' : '#64748b', fontSize: '0.68rem', marginTop: 6, lineHeight: 1.35 }}>
+          {error || 'PNG, JPG, SVG ou WEBP.'}
+        </p>
+      </div>
+    </div>
   );
 }
 

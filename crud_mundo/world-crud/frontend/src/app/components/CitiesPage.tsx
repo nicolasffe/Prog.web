@@ -1,11 +1,13 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Plus, Search, Pencil, Trash2, Building2, ChevronLeft, ChevronRight, Eye, Filter, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useApp } from '../context/AppContext';
 import { City } from '../data/types';
-import { Modal, Field, Input, Select, FormActions } from './ui/Modal';
+import { Modal, Field, Input, SearchableSelect, FormActions } from './ui/Modal';
 import { DeleteDialog } from './ui/DeleteDialog';
 import { toast } from 'sonner';
+import { numberInputValue, parseNumberInput } from '../utils/numberInput';
+import { validateCityPopulation } from '../utils/cityValidation';
 
 const PAGE_SIZE = 10;
 
@@ -50,23 +52,33 @@ export default function CitiesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 400));
-    if (editing && modal === 'edit') {
-      await updateCity(editing.id, form);
-      toast.success(`${form.name} atualizada`);
-    } else {
-      await addCity(form);
-      toast.success(`${form.name} criada`);
+    const populationError = validateCityPopulation(form, countries);
+    if (populationError) {
+      toast.error(populationError);
+      return;
     }
-    setLoading(false);
-    setModal(null);
+    setLoading(true);
+    try {
+      await new Promise(r => setTimeout(r, 400));
+      if (editing && modal === 'edit') {
+        await updateCity(editing.id, form);
+        toast.success(`${form.name} atualizada`);
+      } else {
+        await addCity(form);
+        toast.success(`${form.name} criada`);
+      }
+      setModal(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível salvar a cidade.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteCity(deleteTarget.id);
-    toast.success(`${deleteTarget.name} excluída`);
+    toast.success(`${deleteTarget.name} excluÃ­da`);
     setDeleteTarget(null);
   };
 
@@ -101,21 +113,35 @@ export default function CitiesPage() {
             onBlur={e => e.target.style.borderColor = '#e2e8f0'}
           />
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', width: 240 }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
-          <select value={continentFilter} onChange={e => { setContinentFilter(e.target.value); setCountryFilter(''); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">Todos os continentes</option>
-            {continents.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          <SearchableSelect
+            value={continentFilter}
+            onChange={value => { setContinentFilter(value); setCountryFilter(''); setPage(0); }}
+            placeholder="Filtrar continente"
+            searchPlaceholder="Buscar continente..."
+            options={[
+              { value: '', label: 'Todos os continentes' },
+              ...continents.map(c => ({ value: c.id, label: c.name, description: c.code })),
+            ]}
+          />
         </div>
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)', width: 240 }}>
           <Filter size={14} style={{ color: '#94a3b8' }} />
-          <select value={countryFilter} onChange={e => { setCountryFilter(e.target.value); setPage(0); }}
-            style={{ background: 'transparent', border: 'none', color: '#cbd5e1', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
-            <option value="">Todos os países</option>
-            {filteredCountries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
-          </select>
+          <SearchableSelect
+            value={countryFilter}
+            onChange={value => { setCountryFilter(value); setPage(0); }}
+            placeholder="Filtrar país"
+            searchPlaceholder="Buscar país..."
+            options={[
+              { value: '', label: 'Todos os países' },
+              ...filteredCountries.map(c => ({
+                value: c.id,
+                label: `${c.flag} ${c.name}`,
+                description: continents.find(continent => continent.id === c.continentId)?.name,
+              })),
+            ]}
+          />
         </div>
       </div>
 
@@ -124,7 +150,7 @@ export default function CitiesPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'Cidade', 'País', 'População', 'Latitude', 'Longitude', 'Status', 'Ações'].map(h => (
+              {['#', 'Cidade', 'PaÃ­s', 'PopulaÃ§Ã£o', 'Latitude', 'Longitude', 'Status', 'AÃ§Ãµes'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
@@ -246,22 +272,30 @@ export default function CitiesPage() {
             <Field label="Nome *">
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" />
             </Field>
-            <Field label="País *">
-              <Select value={form.countryId} onChange={e => setForm(f => ({ ...f, countryId: e.target.value }))} required>
-                <option value="">Selecione um país</option>
-                {countries.map(c => <option key={c.id} value={c.id}>{c.flag} {c.name}</option>)}
-              </Select>
+            <Field label="PaÃ­s *">
+              <SearchableSelect
+                value={form.countryId}
+                onChange={countryId => setForm(f => ({ ...f, countryId }))}
+                required
+                placeholder="Selecione um país"
+                searchPlaceholder="Buscar país..."
+                options={countries.map(c => ({
+                  value: c.id,
+                  label: `${c.flag} ${c.name}`,
+                  description: continents.find(continent => continent.id === c.continentId)?.name,
+                }))}
+              />
             </Field>
           </div>
-          <Field label="População *">
-            <Input type="number" value={form.population} onChange={e => setForm(f => ({ ...f, population: Number(e.target.value) }))} placeholder="Ex.: 250000" required />
+          <Field label="PopulaÃ§Ã£o *">
+            <Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 250000" required />
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Latitude">
-              <Input type="number" step="0.0001" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: Number(e.target.value) }))} placeholder="e.g. 41.15" />
+              <Input type="number" step="0.0001" value={numberInputValue(form.lat)} onChange={e => setForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} placeholder="e.g. 41.15" />
             </Field>
             <Field label="Longitude">
-              <Input type="number" step="0.0001" value={form.lng} onChange={e => setForm(f => ({ ...f, lng: Number(e.target.value) }))} placeholder="e.g. -8.61" />
+              <Input type="number" step="0.0001" value={numberInputValue(form.lng)} onChange={e => setForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} placeholder="e.g. -8.61" />
             </Field>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
@@ -273,10 +307,10 @@ export default function CitiesPage() {
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
             />
             <label htmlFor="isCapital" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              Esta cidade é a capital do país
+              Esta cidade Ã© a capital do paÃ­s
             </label>
           </div>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alterações'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteraÃ§Ãµes'} />
         </form>
       </Modal>
 
@@ -289,5 +323,4 @@ export default function CitiesPage() {
     </div>
   );
 }
-
 
