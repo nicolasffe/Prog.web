@@ -9,6 +9,10 @@ type JwtPayload = {
   email: string;
 };
 
+type AuthenticatedRequest = Request & {
+  user?: JwtPayload;
+};
+
 export function authMiddleware(req: Request, _res: Response, next: NextFunction) {
   const authorization = req.headers.authorization;
 
@@ -20,7 +24,8 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
-    req.user = {
+    const authenticatedRequest = req as AuthenticatedRequest;
+    authenticatedRequest.user = {
       id: decoded.id,
       name: decoded.name,
       email: decoded.email
