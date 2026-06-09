@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Activity,
@@ -72,7 +72,7 @@ function EmptyActivity() {
     <div className="rounded-2xl p-5 text-center" style={{ background: 'rgba(15,23,42,0.5)', border: '1px dashed rgba(148,163,184,0.2)' }}>
       <Activity size={24} style={{ color: '#38bdf8', margin: '0 auto 10px' }} />
       <p style={{ color: '#cbd5e1', fontWeight: 700 }}>Nenhuma atividade recente</p>
-      <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 4 }}>Alterações feitas nesta sessão aparecerao aqui.</p>
+      <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 4 }}>AlteraÃ§Ãµes feitas nesta sessÃ£o aparecerao aqui.</p>
     </div>
   );
 }
@@ -110,7 +110,7 @@ export default function Dashboard() {
       <div className="p-6 min-h-full" style={{ background: '#020617' }}>
         <div className="rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.82)', border: '1px solid rgba(148,163,184,0.2)' }}>
           <p style={{ color: '#f8fafc', fontWeight: 800 }}>Carregando painel...</p>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 4 }}>Buscando dados geográficos no backend.</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 4 }}>Buscando dados geogrÃ¡ficos no backend.</p>
         </div>
       </div>
     );
@@ -130,13 +130,13 @@ export default function Dashboard() {
             <span style={{ color: '#bae6fd', fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em' }}>PAINEL DE CONTROLE</span>
           </div>
           <h1 style={{ color: '#f8fafc', fontSize: '1.9rem', fontWeight: 900, letterSpacing: 0 }}>Painel GeoCRUD</h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginTop: 4 }}>Monitore continentes, países, cidades e dados externos em um único painel.</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginTop: 4 }}>Monitore continentes, paÃ­ses, cidades e dados externos em um Ãºnico painel.</p>
         </div>
 
         <div className="flex items-center gap-2">
           {[
             { label: 'Continente', to: '/app/continents', icon: Layers },
-            { label: 'País', to: '/app/countries', icon: Flag },
+            { label: 'PaÃ­s', to: '/app/countries', icon: Flag },
             { label: 'Cidade', to: '/app/cities', icon: Building2 },
           ].map(({ label, to, icon: Icon }) => (
             <button
@@ -155,17 +155,17 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricCard icon={Globe} label="Continentes" value={continents.length} sub="Regiões mapeadas" color="#38bdf8" onClick={() => navigate('/app/continents')} />
-        <MetricCard icon={Flag} label="Países" value={countries.length} sub="Dados enriquecidos por APIs" color="#2dd4bf" onClick={() => navigate('/app/countries')} />
+        <MetricCard icon={Globe} label="Continentes" value={continents.length} sub="RegiÃµes mapeadas" color="#38bdf8" onClick={() => navigate('/app/continents')} />
+        <MetricCard icon={Flag} label="PaÃ­ses" value={countries.length} sub="Dados enriquecidos por APIs" color="#2dd4bf" onClick={() => navigate('/app/countries')} />
         <MetricCard icon={Building2} label="Cidades" value={cities.length} sub="Coordenadas cadastradas" color="#a78bfa" onClick={() => navigate('/app/cities')} />
-        <MetricCard icon={Users} label="População" value={formatNumber(populationTotal)} sub="População total cadastrada" color="#facc15" />
+        <MetricCard icon={Users} label="PopulaÃ§Ã£o" value={formatNumber(populationTotal)} sub="PopulaÃ§Ã£o total cadastrada" color="#facc15" />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         <section className="xl:col-span-2 rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 24px 70px rgba(2,8,23,0.28)' }}>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>Resumo geográfico</p>
+              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>Resumo geogrÃ¡fico</p>
               <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Projecao baseada nos registros atuais.</p>
             </div>
             <div className="flex items-center gap-2 rounded-full px-3 py-1.5" style={{ background: 'rgba(45,212,191,0.12)', color: '#99f6e4', fontSize: '0.75rem', fontWeight: 800 }}>
@@ -199,8 +199,8 @@ export default function Dashboard() {
         <section className="rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)', boxShadow: '0 24px 70px rgba(2,8,23,0.28)' }}>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>País em destaque</p>
-              <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Principal país monitorado.</p>
+              <p style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 800 }}>PaÃ­s em destaque</p>
+              <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 3 }}>Principal paÃ­s monitorado.</p>
             </div>
             <Compass size={18} style={{ color: '#38bdf8' }} />
           </div>
@@ -219,7 +219,7 @@ export default function Dashboard() {
                   )}
                   <div>
                     <p style={{ color: '#f8fafc', fontSize: '1.2rem', fontWeight: 900 }}>{featuredCountry.name}</p>
-                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2 }}>{featuredCountry.region || featuredCountry.subregion || 'Região desconhecida'}</p>
+                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2 }}>{featuredCountry.region || featuredCountry.subregion || 'RegiÃ£o desconhecida'}</p>
                   </div>
                 </div>
               </button>
@@ -239,15 +239,15 @@ export default function Dashboard() {
               </div>
             </div>
           ) : (
-            <p style={{ color: '#94a3b8' }}>Cadastre um país para ativar este painel.</p>
+            <p style={{ color: '#94a3b8' }}>Cadastre um paÃ­s para ativar este painel.</p>
           )}
         </section>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         <section className="rounded-3xl p-5" style={{ background: 'rgba(15,23,42,0.74)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="flex items-center justify-between mb-5">
-            <p style={{ color: '#f8fafc', fontWeight: 800 }}>Maiores populações</p>
+            <p style={{ color: '#f8fafc', fontWeight: 800 }}>Maiores populaÃ§Ãµes</p>
             <TrendingUp size={18} style={{ color: '#facc15' }} />
           </div>
           <div className="space-y-4">
@@ -273,17 +273,22 @@ export default function Dashboard() {
             <p style={{ color: '#f8fafc', fontWeight: 800 }}>Grade continental</p>
             <Database size={18} style={{ color: '#2dd4bf' }} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {continents.map(continent => {
               const countryCount = countries.filter(country => country.continentId === continent.id).length;
               return (
                 <button
                   key={continent.id}
                   onClick={() => navigate('/app/continents')}
-                  className="rounded-2xl p-3 text-left transition-colors"
-                  style={{ background: `${continent.color}12`, border: `1px solid ${continent.color}35`, cursor: 'pointer' }}>
-                  <p style={{ color: '#f8fafc', fontWeight: 800, fontSize: '0.82rem' }}>{continent.name}</p>
-                  <p style={{ color: continent.color, fontSize: '0.78rem', marginTop: 4, fontWeight: 800 }}>{countryCount} países</p>
+                  className="text-left transition-colors"
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(148,163,184,0.1)', cursor: 'pointer', padding: '11px 0' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(148,163,184,0.04)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 999, background: continent.color, boxShadow: `0 0 14px ${continent.color}66`, flexShrink: 0 }} />
+                    <span style={{ color: '#f8fafc', fontWeight: 800, fontSize: '0.86rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{continent.name}</span>
+                  </span>
+                  <span style={{ color: continent.color, fontSize: '0.78rem', fontWeight: 850, whiteSpace: 'nowrap' }}>{countryCount} países</span>
                 </button>
               );
             })}
@@ -298,33 +303,33 @@ export default function Dashboard() {
           {activity.length === 0 ? (
             <EmptyActivity />
           ) : (
-            <div className="space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {activity.slice(0, 7).map(item => (
-                <div key={item.id} className="rounded-2xl p-3" style={{ background: 'rgba(2,6,23,0.45)', border: '1px solid rgba(148,163,184,0.12)' }}>
-                  <div className="flex items-center justify-between">
-                    <span style={{ color: item.action === 'deleted' ? '#fb7185' : item.action === 'updated' ? '#38bdf8' : item.action === 'refreshed' ? '#a78bfa' : '#2dd4bf', fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase' }}>
-                      {{
-                        created: 'criado',
-                        updated: 'editado',
-                        deleted: 'excluído',
-                        signed_in: 'login',
-                        signed_out: 'saída',
-                        registered: 'cadastro',
-                        refreshed: 'atualizado',
-                      }[item.action]}
-                    </span>
-                    <span style={{ color: '#64748b', fontSize: '0.72rem' }}>{timeAgo(item.timestamp)}</span>
-                  </div>
-                  <p style={{ color: '#e2e8f0', fontWeight: 800, fontSize: '0.86rem', marginTop: 5 }}>{item.name}</p>
-                  <p style={{ color: '#64748b', fontSize: '0.72rem', textTransform: 'capitalize', marginTop: 2 }}>
+                <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '88px 1fr auto', alignItems: 'start', gap: 12, borderBottom: '1px solid rgba(148,163,184,0.1)', padding: '11px 0' }}>
+                  <span style={{ color: item.action === 'deleted' ? '#fb7185' : item.action === 'updated' ? '#38bdf8' : item.action === 'refreshed' ? '#a78bfa' : '#2dd4bf', fontSize: '0.68rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em', paddingTop: 2 }}>
                     {{
-                      continent: 'continente',
-                      country: 'país',
-                      city: 'cidade',
-                      user: 'usuário',
-                      weather: 'clima',
-                    }[item.entity]}
-                  </p>
+                      created: 'criado',
+                      updated: 'editado',
+                      deleted: 'excluído',
+                      signed_in: 'login',
+                      signed_out: 'saída',
+                      registered: 'cadastro',
+                      refreshed: 'atualizado',
+                    }[item.action]}
+                  </span>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ color: '#e2e8f0', fontWeight: 800, fontSize: '0.86rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                    <p style={{ color: '#64748b', fontSize: '0.72rem', textTransform: 'capitalize', marginTop: 2 }}>
+                      {{
+                        continent: 'continente',
+                        country: 'país',
+                        city: 'cidade',
+                        user: 'usuário',
+                        weather: 'clima',
+                      }[item.entity]}
+                    </p>
+                  </div>
+                  <span style={{ color: '#64748b', fontSize: '0.72rem', whiteSpace: 'nowrap', paddingTop: 2 }}>{timeAgo(item.timestamp)}</span>
                 </div>
               ))}
             </div>

@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { numberInputValue, parseNumberInput } from '../utils/numberInput';
 import { validateCityPopulation } from '../utils/cityValidation';
 import { City } from '../data/types';
+import { API_URL } from '../config/api';
 
 type Weather = {
   temperature: number;
@@ -19,7 +20,6 @@ type Weather = {
   cached?: boolean;
 };
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const TOKEN_KEY = 'world_crud_token';
 
 export default function CityDetails() {

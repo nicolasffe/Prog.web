@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { City, Country } from '../data/types';
+import { API_URL } from '../config/api';
 
 export type Weather = {
   temperature: number;
@@ -11,7 +12,6 @@ export type Weather = {
   cached?: boolean;
 };
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const TOKEN_KEY = 'world_crud_token';
 
 export function getCountryWeatherCity(country: Country | null | undefined, cities: City[]) {

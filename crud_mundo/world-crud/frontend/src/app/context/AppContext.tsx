@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ActivityItem, City, Continent, Country } from '../data/types';
+import { API_URL } from '../config/api';
 
 type User = {
   id: string;
@@ -96,7 +97,6 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const TOKEN_KEY = 'world_crud_token';
 const USER_KEY = 'world_crud_user';
 const ACTIVITY_KEY = 'world_crud_activity';
