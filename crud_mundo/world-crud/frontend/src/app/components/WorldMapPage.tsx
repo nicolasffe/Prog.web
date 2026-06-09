@@ -169,13 +169,20 @@ export default function WorldMapPage() {
     setMode('view');
   };
 
-  const handleDeleteCountry = () => {
+  const handleDeleteCountry = async () => {
     if (!selected) return;
-    deleteCountry(selected.id);
-    toast.success(`${selected.name} deleted`);
-    setSelected(null);
-    setDeleteType(null);
-    if (globeRef.current) globeRef.current.controls().autoRotate = true;
+    setSaving(true);
+    try {
+      await deleteCountry(selected.id);
+      toast.success(`${selected.name} excluído`);
+      setSelected(null);
+      setDeleteType(null);
+      if (globeRef.current) globeRef.current.controls().autoRotate = true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteCity = () => {
@@ -568,7 +575,8 @@ export default function WorldMapPage() {
       <DeleteDialog
         open={deleteType === 'country'}
         entityName={selected?.name ?? ''}
-        warning="Todas as cidades associadas também serão excluídas."
+        warning="Todas as cidades e climas vinculados também serão excluídos."
+        loading={saving}
         onConfirm={handleDeleteCountry}
         onCancel={() => setDeleteType(null)}
       />

@@ -335,12 +335,19 @@ export default function GlobeMain() {
     setMode('view');
   };
 
-  const handleDeleteCountry = () => {
+  const handleDeleteCountry = async () => {
     if (!selected) return;
-    deleteCountry(selected.id);
-    toast.success(`${selected.name} removido`);
-    setSelected(null);
-    setDeleteType(null);
+    setSaving(true);
+    try {
+      await deleteCountry(selected.id);
+      toast.success(`${selected.name} excluído`);
+      setDeleteType(null);
+      closePanel();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteCity = () => {
@@ -1106,7 +1113,7 @@ export default function GlobeMain() {
       </div>
 
       {/* Dialogs */}
-      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades associadas também serão excluídas." onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
+      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades e climas vinculados também serão excluídos." loading={saving} onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
       <DeleteDialog open={deleteType === 'city'} entityName={deleteCityTarget?.name ?? ''} onConfirm={handleDeleteCity} onCancel={() => setDeleteType(null)} />
 
       <style>{`

@@ -37,23 +37,36 @@ export default function ContinentsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 400));
-    if (editing && modal === 'edit') {
-      updateContinent(editing.id, form);
-      toast.success(`${form.name} atualizado`);
-    } else {
-      addContinent(form);
-      toast.success(`${form.name} criado`);
+    try {
+      await new Promise(r => setTimeout(r, 400));
+      if (editing && modal === 'edit') {
+        await updateContinent(editing.id, form);
+        toast.success(`${form.name} atualizado`);
+      } else {
+        await addContinent(form);
+        toast.success(`${form.name} criado`);
+      }
+      setModal(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível salvar o continente.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-    setModal(null);
   };
 
-  const handleDelete = () => {
+
+  const handleDelete = async () => {
     if (!deleteTarget) return;
-    deleteContinent(deleteTarget.id);
-    toast.success(`${deleteTarget.name} excluído`);
-    setDeleteTarget(null);
+    setLoading(true);
+    try {
+      await deleteContinent(deleteTarget.id);
+      toast.success(`${deleteTarget.name} excluído`);
+      setDeleteTarget(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o continente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -262,7 +275,8 @@ export default function ContinentsPage() {
       <DeleteDialog
         open={!!deleteTarget}
         entityName={deleteTarget?.name ?? ''}
-        warning="Esta ação não pode ser desfeita."
+        warning="Todos os países, cidades e climas vinculados também serão excluídos."
+        loading={loading}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />

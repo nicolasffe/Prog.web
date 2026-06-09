@@ -32,15 +32,7 @@ export class ContinentService {
   }
 
   async delete(id: string) {
-    const countriesCount = await continentRepository.countCountries(id);
-
-    if (countriesCount > 0) {
-      throw new HttpError(
-        409,
-        "Não é possível excluir continente com países vinculados."
-      );
-    }
-
+    await this.findById(id);
     return continentRepository.delete(id);
   }
 }

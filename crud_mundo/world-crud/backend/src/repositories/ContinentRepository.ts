@@ -49,7 +49,18 @@ export class ContinentRepository {
   }
 
   delete(id: string) {
-    return prisma.continent.delete({ where: { id } });
+    return prisma.$transaction(async tx => {
+      await tx.weatherCache.deleteMany({
+        where: { city: { country: { continentId: id } } }
+      });
+      await tx.city.deleteMany({
+        where: { country: { continentId: id } }
+      });
+      await tx.country.deleteMany({
+        where: { continentId: id }
+      });
+      return tx.continent.delete({ where: { id } });
+    });
   }
 
   countCountries(id: string) {

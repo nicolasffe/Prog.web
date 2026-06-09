@@ -31,7 +31,8 @@ export class CountryService {
     return countryRepository.update(id, this.normalize(data));
   }
 
-  delete(id: string) {
+  async delete(id: string) {
+    await this.findById(id);
     return countryRepository.delete(id);
   }
 

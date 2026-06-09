@@ -54,10 +54,17 @@ export default function CountryDetails() {
     setEditing(false);
   };
 
-  const handleDelete = () => {
-    deleteCountry(country.id);
-    toast.success(`${country.name} excluído`);
-    navigate('/app/countries');
+  const handleDelete = async () => {
+    setSaving(true);
+    try {
+      await deleteCountry(country.id);
+      toast.success(`${country.name} excluído`);
+      navigate('/app/countries');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -336,7 +343,8 @@ export default function CountryDetails() {
       <DeleteDialog
         open={deleteOpen}
         entityName={country.name}
-        warning="Todas as cidades associadas também serão excluídas."
+        warning="Todas as cidades e climas vinculados também serão excluídos."
+        loading={saving}
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}
       />

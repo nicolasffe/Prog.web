@@ -3,7 +3,7 @@ import { prisma } from "../src/prisma/client";
 
 async function main() {
   await seedService.seedCountries();
-  console.log("Seed concluído com continentes, países e cidades iniciais.");
+  console.log("Seed concluído com continentes, países e cidades globais.");
 }
 
 main()
