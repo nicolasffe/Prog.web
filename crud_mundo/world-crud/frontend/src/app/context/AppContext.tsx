@@ -7,6 +7,11 @@ type User = {
   email: string;
 };
 
+type AuthResult = {
+  ok: boolean;
+  message?: string;
+};
+
 type ApiContinent = {
   id: string;
   name: string;
@@ -73,9 +78,11 @@ interface AppContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => Promise<boolean>;
+  authError: string | null;
+  login: (email: string, password: string) => Promise<AuthResult>;
+  register: (name: string, email: string, password: string) => Promise<AuthResult>;
   logout: () => void;
+  recordActivity: (item: Omit<ActivityItem, 'id' | 'timestamp'>) => void;
   addContinent: (c: Omit<Continent, 'id'>) => Promise<void>;
   updateContinent: (id: string, c: Partial<Continent>) => Promise<void>;
   deleteContinent: (id: string) => Promise<void>;
@@ -92,6 +99,7 @@ const AppContext = createContext<AppContextType | null>(null);
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const TOKEN_KEY = 'world_crud_token';
 const USER_KEY = 'world_crud_user';
+const ACTIVITY_KEY = 'world_crud_activity';
 const COLORS = ['#f59e0b', '#0ea5e9', '#8b5cf6', '#10b981', '#ef4444', '#06b6d4', '#f97316', '#ec4899'];
 const ISO_NUMERIC: Record<string, number> = {
   BR: 76, US: 840, FR: 250, JP: 392, AR: 32, DE: 276, CA: 124, MX: 484,
@@ -223,7 +231,18 @@ function toCityPayload(city: Partial<City>) {
   };
 }
 
-const initialActivity: ActivityItem[] = [];
+function readActivity(): ActivityItem[] {
+  try {
+    const stored = localStorage.getItem(ACTIVITY_KEY);
+    if (!stored) return [];
+    return (JSON.parse(stored) as Array<Omit<ActivityItem, 'timestamp'> & { timestamp: string }>).map(item => ({
+      ...item,
+      timestamp: new Date(item.timestamp),
+    }));
+  } catch {
+    return [];
+  }
+}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
@@ -234,11 +253,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [continents, setContinents] = useState<Continent[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [cities, setCities] = useState<City[]>([]);
-  const [activity, setActivity] = useState<ActivityItem[]>(initialActivity);
+  const [activity, setActivity] = useState<ActivityItem[]>(readActivity);
   const [isLoading, setIsLoading] = useState(Boolean(token));
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const addActivity = useCallback((item: Omit<ActivityItem, 'id' | 'timestamp'>) => {
-    setActivity(prev => [{ ...item, id: crypto.randomUUID(), timestamp: new Date() }, ...prev.slice(0, 19)]);
+    setActivity(prev => {
+      const next = [{ ...item, id: crypto.randomUUID(), timestamp: new Date() }, ...prev.slice(0, 19)];
+      localStorage.setItem(ACTIVITY_KEY, JSON.stringify(next));
+      return next;
+    });
   }, []);
 
   const saveSession = useCallback((nextToken: string, nextUser: User) => {
@@ -310,6 +334,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     try {
+      setAuthError(null);
       const result = await request<{ token: string; user: User }>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -317,15 +342,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       saveSession(result.token, result.user);
       await refreshData(result.token);
-      return true;
+      addActivity({ action: 'signed_in', entity: 'user', name: result.user.name || result.user.email });
+      return { ok: true };
     } catch (error) {
       console.error(error);
-      return false;
+      const message = error instanceof Error ? error.message : 'Não foi possível entrar.';
+      setAuthError(message);
+      return { ok: false, message };
     }
-  }, [refreshData, saveSession]);
+  }, [addActivity, refreshData, saveSession]);
 
   const register = useCallback(async (name: string, email: string, password: string) => {
     try {
+      setAuthError(null);
       const result = await request<{ token: string; user: User }>('/auth/register', {
         method: 'POST',
         body: JSON.stringify({ name, email, password }),
@@ -333,16 +362,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       saveSession(result.token, result.user);
       await refreshData(result.token);
-      return true;
+      addActivity({ action: 'registered', entity: 'user', name: result.user.name || result.user.email });
+      return { ok: true };
     } catch (error) {
       console.error(error);
-      return false;
+      const message = error instanceof Error ? error.message : 'Não foi possível criar a conta.';
+      setAuthError(message);
+      return { ok: false, message };
     }
-  }, [refreshData, saveSession]);
+  }, [addActivity, refreshData, saveSession]);
 
   const logout = useCallback(() => {
+    if (user) addActivity({ action: 'signed_out', entity: 'user', name: user.name || user.email });
     clearSession();
-  }, [clearSession]);
+  }, [addActivity, clearSession, user]);
 
   const addContinent = useCallback(async (continent: Omit<Continent, 'id'>) => {
     await request<ApiContinent>('/continents', {
@@ -457,9 +490,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     user,
     isAuthenticated: Boolean(token && user),
     isLoading,
+    authError,
     login,
     register,
     logout,
+    recordActivity: addActivity,
     addContinent,
     updateContinent,
     deleteContinent,
@@ -470,7 +505,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     updateCity,
     deleteCity,
   }), [
-    continents, countries, cities, activity, user, token, isLoading, login, register, logout,
+    continents, countries, cities, activity, user, token, isLoading, authError, login, register, logout, addActivity,
     addContinent, updateContinent, deleteContinent, addCountry, updateCountry,
     deleteCountry, addCity, updateCity, deleteCity,
   ]);

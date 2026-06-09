@@ -34,22 +34,20 @@ export default function Login() {
     }
 
     setLoading(true);
-    const ok = isRegister
+    const result = isRegister
       ? await register(name.trim(), email, password)
       : await login(email, password);
     setLoading(false);
 
-    if (ok) {
+    if (result.ok) {
       toast.success(isRegister ? 'Conta criada com sucesso!' : 'Login realizado com sucesso!');
       navigate('/app/dashboard');
       return;
     }
 
-    setError(
-      isRegister
-        ? 'Não foi possível criar a conta. Verifique os dados informados.'
-        : 'E-mail ou senha inválidos.'
-    );
+    setError(result.message || (isRegister
+      ? 'Não foi possível criar a conta. Verifique os dados informados.'
+      : 'E-mail ou senha inválidos.'));
   };
 
   return (

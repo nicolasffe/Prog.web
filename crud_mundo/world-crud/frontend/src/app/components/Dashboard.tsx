@@ -302,11 +302,29 @@ export default function Dashboard() {
               {activity.slice(0, 7).map(item => (
                 <div key={item.id} className="rounded-2xl p-3" style={{ background: 'rgba(2,6,23,0.45)', border: '1px solid rgba(148,163,184,0.12)' }}>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: item.action === 'deleted' ? '#fb7185' : item.action === 'updated' ? '#38bdf8' : '#2dd4bf', fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase' }}>{item.action}</span>
+                    <span style={{ color: item.action === 'deleted' ? '#fb7185' : item.action === 'updated' ? '#38bdf8' : item.action === 'refreshed' ? '#a78bfa' : '#2dd4bf', fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase' }}>
+                      {{
+                        created: 'criado',
+                        updated: 'editado',
+                        deleted: 'excluído',
+                        signed_in: 'login',
+                        signed_out: 'saída',
+                        registered: 'cadastro',
+                        refreshed: 'atualizado',
+                      }[item.action]}
+                    </span>
                     <span style={{ color: '#64748b', fontSize: '0.72rem' }}>{timeAgo(item.timestamp)}</span>
                   </div>
                   <p style={{ color: '#e2e8f0', fontWeight: 800, fontSize: '0.86rem', marginTop: 5 }}>{item.name}</p>
-                  <p style={{ color: '#64748b', fontSize: '0.72rem', textTransform: 'capitalize', marginTop: 2 }}>{item.entity}</p>
+                  <p style={{ color: '#64748b', fontSize: '0.72rem', textTransform: 'capitalize', marginTop: 2 }}>
+                    {{
+                      continent: 'continente',
+                      country: 'país',
+                      city: 'cidade',
+                      user: 'usuário',
+                      weather: 'clima',
+                    }[item.entity]}
+                  </p>
                 </div>
               ))}
             </div>

@@ -68,7 +68,7 @@ const mkEmptyCity = (lat = 0, lng = 0) => ({ name: '', population: 0, lat, lng, 
 
 export default function GlobeMain() {
   const {
-    isAuthenticated, login, register, logout,
+    isAuthenticated, login, register, logout, user, authError, recordActivity,
     countries, continents, cities,
     updateCountry, deleteCountry, addCity, updateCity, deleteCity,
   } = useApp();
@@ -99,6 +99,7 @@ export default function GlobeMain() {
 
   // User menu
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   // Login
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
@@ -113,6 +114,8 @@ export default function GlobeMain() {
   const [tempMax, setTempMax] = useState(45);
   const [showExtremes, setShowExtremes] = useState(true);
   const { citiesWeather, citiesWeatherLoading, citiesWeatherRefreshing, refreshCitiesWeather } = useCitiesWeather(isAuthenticated);
+  const isCompact = size.w < 820;
+  const isTiny = size.w < 560;
 
   // Resize observer
   useEffect(() => {
@@ -289,15 +292,17 @@ export default function GlobeMain() {
     setLoginError('');
     setLoginLoading(true);
     await new Promise(r => setTimeout(r, 600));
-    const ok = authMode === 'register'
+    const result = authMode === 'register'
       ? await register(registerName.trim(), loginEmail, loginPassword)
       : await login(loginEmail, loginPassword);
     setLoginLoading(false);
-    if (!ok) {
-      setLoginError(authMode === 'register'
+    if (!result.ok) {
+      setLoginError(result.message || authError || (authMode === 'register'
         ? 'Informe nome, e-mail válido e senha com pelo menos 6 caracteres.'
-        : 'Use um e-mail válido e uma senha com pelo menos 6 caracteres.');
+        : 'Use um e-mail válido e uma senha com pelo menos 6 caracteres.'));
+      return;
     }
+    toast.success(authMode === 'register' ? 'Conta criada com sucesso' : 'Login realizado com sucesso');
   };
 
   // Country CRUD
@@ -370,6 +375,7 @@ export default function GlobeMain() {
 
   const handleRefreshWeather = async () => {
     await refreshCitiesWeather();
+    recordActivity({ action: 'refreshed', entity: 'weather', name: 'Temperaturas do globo' });
     toast.success('Temperaturas atualizadas');
   };
 
@@ -609,9 +615,21 @@ export default function GlobeMain() {
 
         {/* Loading */}
         {loading && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 30, background: 'rgba(2,10,24,0.7)', backdropFilter: 'blur(6px)' }}>
-            <div style={{ width: 44, height: 44, borderRadius: '50%', border: `2px solid ${OCEAN.aqua}`, borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', marginBottom: 14 }} />
-            <p style={{ color: '#8bd8dd', fontSize: '0.85rem' }}>Carregando globo...</p>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 30, background: 'rgba(2,8,20,0.76)', backdropFilter: 'blur(8px)' }}>
+            <div style={{ width: 'min(340px, calc(100vw - 40px))', borderRadius: 22, padding: 24, background: 'rgba(8,16,34,0.82)', border: '1px solid rgba(125,211,252,0.16)', boxShadow: '0 30px 80px rgba(0,0,0,0.46)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 18 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg,#5eead4,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <GlobeIcon size={21} style={{ color: '#082f49' }} />
+                </div>
+                <div>
+                  <p style={{ color: '#f8fafc', fontSize: '0.95rem', fontWeight: 900 }}>Preparando o globo</p>
+                  <p style={{ color: '#64748b', fontSize: '0.74rem', marginTop: 3 }}>Carregando países e relevo 3D</p>
+                </div>
+              </div>
+              <div style={{ height: 6, borderRadius: 999, overflow: 'hidden', background: 'rgba(148,163,184,0.14)' }}>
+                <div style={{ width: '54%', height: '100%', borderRadius: 999, background: 'linear-gradient(90deg,#5eead4,#38bdf8)', animation: 'loadingBar 1.2s ease-in-out infinite' }} />
+              </div>
+            </div>
           </div>
         )}
 
@@ -625,7 +643,7 @@ export default function GlobeMain() {
                   <GlobeIcon size={14} style={{ color: OCEAN.aqua }} />
                   <span style={{ color: '#9bdfe5', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.07em' }}>GeoCRUD</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(34,211,238,0.16)', borderRadius: 12, padding: '7px 10px' }}>
+                <div style={{ display: isTiny ? 'none' : 'flex', alignItems: 'center', gap: 6, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(34,211,238,0.16)', borderRadius: 12, padding: '7px 10px' }}>
                   <Thermometer size={13} style={{ color: OCEAN.aqua }} />
                   <span style={{ color: '#67e8f9', fontSize: '0.72rem', fontWeight: 700 }}>
                     {citiesWeatherLoading ? 'Clima...' : `${allWeatherMarkers.length} temperaturas`}
@@ -635,7 +653,7 @@ export default function GlobeMain() {
             </div>
 
             {/* Weather controls */}
-            <div style={{ position: 'absolute', top: 58, left: 16, zIndex: 10, width: 294, background: 'rgba(2,8,20,0.64)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 16, padding: '12px 14px', boxShadow: '0 18px 44px rgba(0,0,0,0.24)' }}>
+            <div style={{ position: 'absolute', top: isCompact ? 112 : 58, left: 16, zIndex: 10, width: isCompact ? 'min(294px, calc(100vw - 32px))' : 294, background: 'rgba(2,8,20,0.64)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 16, padding: isTiny ? '10px 12px' : '12px 14px', boxShadow: '0 18px 44px rgba(0,0,0,0.24)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingBottom: 11, borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
                 {([
                   { value: 'weather', label: 'Clima', icon: Thermometer },
@@ -674,7 +692,7 @@ export default function GlobeMain() {
                 </div>
               </div>
 
-              <p style={{ color: '#64748b', fontSize: '0.68rem', lineHeight: 1.35, margin: '10px 0' }}>
+              <p style={{ display: isTiny ? 'none' : 'block', color: '#64748b', fontSize: '0.68rem', lineHeight: 1.35, margin: '10px 0' }}>
                 Temperaturas exibidas por cidade. Os países ficam neutros para evitar leitura de clima uniforme.
               </p>
 
@@ -684,7 +702,7 @@ export default function GlobeMain() {
                 Destacar mais quente e mais fria
               </label>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 14, padding: '9px 0', borderTop: '1px solid rgba(148,163,184,0.1)', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
+              <div style={{ display: isTiny ? 'none' : 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 14, padding: '9px 0', borderTop: '1px solid rgba(148,163,184,0.1)', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
                 {hottestCity && (
                   <button type="button" onClick={() => flyToWeatherCity(hottestCity.city.countryId)}
                     style={{ textAlign: 'left', border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', minWidth: 0 }}>
@@ -703,7 +721,7 @@ export default function GlobeMain() {
                 )}
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8 }}>
+              <div style={{ display: isTiny ? 'none' : 'flex', flexDirection: 'column', marginTop: 8 }}>
                 {rankedWeather.slice(0, 5).map((item, index) => (
                   <button key={item.city.id} type="button" onClick={() => flyToWeatherCity(item.city.countryId)}
                     style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', background: 'transparent', border: 'none', borderBottom: index < 4 ? '1px solid rgba(148,163,184,0.08)' : 'none', padding: '8px 0', cursor: 'pointer', textAlign: 'left' }}>
@@ -716,7 +734,7 @@ export default function GlobeMain() {
             </div>
 
             {/* Search - top center */}
-            <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 20, width: 380 }}>
+            <div style={{ position: 'absolute', top: isCompact ? 58 : 16, left: isCompact ? 16 : '50%', right: isCompact ? 16 : 'auto', transform: isCompact ? 'none' : 'translateX(-50%)', zIndex: 20, width: isCompact ? 'auto' : 380, maxWidth: isCompact ? 'calc(100vw - 32px)' : undefined }}>
               <div style={{ position: 'relative' }}>
                 <Search size={14} style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', color: '#334155', pointerEvents: 'none' }} />
                 <input
@@ -768,15 +786,23 @@ export default function GlobeMain() {
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: `linear-gradient(135deg, ${OCEAN.teal}, ${OCEAN.aqua})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={11} style={{ color: 'white' }} />
                 </div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>Admin</span>
+                <span style={{ display: isTiny ? 'none' : 'inline', fontSize: '0.75rem', fontWeight: 600, maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</span>
                 <ChevronDown size={12} style={{ transform: menuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
 
               {menuOpen && (
                 <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, minWidth: 210, borderRadius: 14, overflow: 'hidden', background: 'rgba(3,12,30,0.97)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 20px 60px rgba(0,0,0,0.6)' }}>
-                  <div style={{ padding: '10px 14px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <p style={{ color: '#475569', fontSize: '0.7rem' }}>admin@geocrud.app</p>
+                  <div style={{ padding: '12px 14px 10px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</p>
+                    <p style={{ color: '#64748b', fontSize: '0.7rem', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
                   </div>
+                  <button onClick={() => { setProfileOpen(true); setMenuOpen(false); }}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '0.82rem', fontWeight: 700, textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.03)' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,211,238,0.08)'; e.currentTarget.style.color = '#bae6fd'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}>
+                    <User size={14} />
+                    <span>Meu perfil</span>
+                  </button>
                   {([
                     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
                     { to: '/app/continents', icon: Layers, label: 'Continentes', count: continents.length },
@@ -792,7 +818,7 @@ export default function GlobeMain() {
                       {'count' in item && <span style={{ background: 'rgba(34,211,238,0.16)', color: OCEAN.aqua, fontSize: '0.65rem', fontWeight: 700, padding: '1px 6px', borderRadius: 8 }}>{item.count}</span>}
                     </Link>
                   ))}
-                  <button onClick={() => { logout(); setMenuOpen(false); }}
+                  <button onClick={() => { logout(); setMenuOpen(false); setProfileOpen(false); }}
                     style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#475569', fontSize: '0.82rem' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; e.currentTarget.style.color = '#f87171'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#475569'; }}>
@@ -804,7 +830,7 @@ export default function GlobeMain() {
             </div>
 
             {/* Continent navigator */}
-            <div style={{ position: 'absolute', bottom: 22, left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: 'min(720px, calc(100vw - 420px))', minWidth: 460 }}>
+            <div style={{ position: 'absolute', bottom: isCompact ? 16 : 22, left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: isCompact ? 'calc(100vw - 32px)' : 'min(720px, calc(100vw - 420px))', minWidth: isCompact ? 0 : 460, display: isTiny ? 'none' : 'block' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: 5, borderRadius: 16, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', boxShadow: '0 14px 40px rgba(0,0,0,0.24)' }}>
                 {CONTINENTS_NAV.map(c => (
                   <button key={c.name} onClick={() => flyToContinent(c.lat, c.lng)}
@@ -819,7 +845,7 @@ export default function GlobeMain() {
             </div>
 
             {/* Zoom controls - bottom right */}
-            <div style={{ position: 'absolute', bottom: 24, right: 16, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ position: 'absolute', bottom: isCompact && selected ? 256 : 24, right: 16, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {([
                 { icon: ZoomIn, action: zoomIn, title: 'Aproximar' },
                 { icon: ZoomOut, action: zoomOut, title: 'Afastar' },
@@ -835,7 +861,7 @@ export default function GlobeMain() {
             </div>
 
             {/* Hint - only when nothing selected */}
-            {!selected && !loading && (
+            {!selected && !loading && !isCompact && (
               <div style={{ position: 'absolute', bottom: 22, left: 16, zIndex: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 14, padding: '7px 10px', boxShadow: '0 14px 40px rgba(0,0,0,0.22)' }}>
                   {[
@@ -908,6 +934,47 @@ export default function GlobeMain() {
             }}
             onPointClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
           />
+        )}
+
+        {profileOpen && user && (
+          <div style={{ position: 'absolute', inset: 0, zIndex: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 18, background: 'rgba(2,8,20,0.46)', backdropFilter: 'blur(6px)' }} onMouseDown={() => setProfileOpen(false)}>
+            <div style={{ width: 'min(430px, calc(100vw - 32px))', borderRadius: 22, background: 'linear-gradient(180deg, rgba(8,16,34,0.98), rgba(3,8,22,0.98))', border: '1px solid rgba(125,211,252,0.16)', boxShadow: '0 34px 90px rgba(0,0,0,0.58)', overflow: 'hidden' }} onMouseDown={e => e.stopPropagation()}>
+              <div style={{ padding: 22, borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                  <div style={{ width: 54, height: 54, borderRadius: 16, background: `linear-gradient(135deg, ${OCEAN.teal}, ${OCEAN.aqua})`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <User size={24} style={{ color: '#082f49' }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ color: '#f8fafc', fontSize: '1.1rem', fontWeight: 900, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</p>
+                    <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</p>
+                    <p style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 800, marginTop: 9, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Conta autenticada</p>
+                  </div>
+                  <button onClick={() => setProfileOpen(false)} title="Fechar" style={{ width: 34, height: 34, borderRadius: 11, border: '1px solid rgba(148,163,184,0.12)', background: 'rgba(255,255,255,0.04)', color: '#64748b', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(148,163,184,0.08)' }}>
+                {[
+                  { label: 'Continentes', value: continents.length, icon: Layers },
+                  { label: 'Países', value: countries.length, icon: Flag },
+                  { label: 'Cidades', value: cities.length, icon: Building2 },
+                ].map(item => (
+                  <div key={item.label} style={{ background: 'rgba(3,8,22,0.96)', padding: '16px 12px', textAlign: 'center' }}>
+                    <item.icon size={16} style={{ color: '#7dd3fc', margin: '0 auto 7px' }} />
+                    <p style={{ color: '#f8fafc', fontSize: '1.05rem', fontWeight: 900 }}>{item.value}</p>
+                    <p style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 800, marginTop: 2 }}>{item.label}</p>
+                  </div>
+                ))}
+              </div>
+              <div style={{ padding: 18 }}>
+                <button onClick={() => { logout(); setProfileOpen(false); }}
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(248,113,113,0.2)', background: 'rgba(239,68,68,0.08)', color: '#fca5a5', borderRadius: 14, padding: '11px 12px', cursor: 'pointer', fontWeight: 850 }}>
+                  <LogOut size={15} /> Sair da conta
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* -- Login overlay ------------------------------------ */}
@@ -1009,17 +1076,28 @@ export default function GlobeMain() {
 
       {/* -- Country side panel ------------------------------------------- */}
       <div style={{
-        width: selected ? 380 : 0,
-        minWidth: selected ? 380 : 0,
+        position: isCompact ? 'absolute' : 'relative',
+        left: isCompact ? 0 : 'auto',
+        right: isCompact ? 0 : 'auto',
+        bottom: isCompact ? 0 : 'auto',
+        zIndex: isCompact ? 24 : 'auto',
+        width: isCompact ? '100%' : selected ? 380 : 0,
+        minWidth: isCompact ? 0 : selected ? 380 : 0,
+        height: isCompact ? selected ? 'min(54vh, 430px)' : 0 : 'auto',
+        maxHeight: isCompact ? '54vh' : 'none',
         overflow: 'hidden',
-        transition: 'width 0.28s ease, min-width 0.28s ease',
+        transition: isCompact ? 'height 0.28s ease' : 'width 0.28s ease, min-width 0.28s ease',
         background: 'rgba(2,8,20,0.98)',
-        borderLeft: selected ? '1px solid rgba(20,184,166,0.1)' : 'none',
+        borderLeft: !isCompact && selected ? '1px solid rgba(20,184,166,0.1)' : 'none',
+        borderTop: isCompact && selected ? '1px solid rgba(20,184,166,0.12)' : 'none',
+        borderTopLeftRadius: isCompact && selected ? 22 : 0,
+        borderTopRightRadius: isCompact && selected ? 22 : 0,
+        boxShadow: isCompact && selected ? '0 -24px 70px rgba(0,0,0,0.42)' : 'none',
         display: 'flex',
         flexDirection: 'column',
       }}>
         {selected && (
-          <div style={{ width: 380, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+          <div style={{ width: isCompact ? '100%' : 380, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
             {mode === 'view' && <ViewMode />}
             {mode === 'editCountry' && <EditCountryPanel />}
             {mode === 'cityForm' && <CityFormPanel />}
@@ -1031,7 +1109,14 @@ export default function GlobeMain() {
       <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades associadas também serão excluídas." onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
       <DeleteDialog open={deleteType === 'city'} entityName={deleteCityTarget?.name ?? ''} onConfirm={handleDeleteCity} onCancel={() => setDeleteType(null)} />
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes loadingBar {
+          0% { transform: translateX(-70%); width: 42%; }
+          55% { width: 70%; }
+          100% { transform: translateX(250%); width: 42%; }
+        }
+      `}</style>
     </div>
   );
 }

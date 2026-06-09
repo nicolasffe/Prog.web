@@ -47,8 +47,8 @@ export interface City {
 
 export interface ActivityItem {
   id: string;
-  action: 'created' | 'updated' | 'deleted';
-  entity: 'continent' | 'country' | 'city';
+  action: 'created' | 'updated' | 'deleted' | 'signed_in' | 'signed_out' | 'registered' | 'refreshed';
+  entity: 'continent' | 'country' | 'city' | 'user' | 'weather';
   name: string;
   timestamp: Date;
 }
