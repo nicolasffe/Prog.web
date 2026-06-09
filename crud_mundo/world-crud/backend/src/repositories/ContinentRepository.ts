@@ -50,6 +50,7 @@ export class ContinentRepository {
 
   delete(id: string) {
     return prisma.$transaction(async tx => {
+      // Cascata manual: remove clima, cidades e países antes do continente.
       await tx.weatherCache.deleteMany({
         where: { city: { country: { continentId: id } } }
       });

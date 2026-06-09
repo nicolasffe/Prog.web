@@ -56,6 +56,7 @@ export class CountryRepository {
 
   delete(id: string) {
     return prisma.$transaction(async tx => {
+      // Cascata manual: remove clima e cidades antes do país.
       await tx.weatherCache.deleteMany({
         where: { city: { countryId: id } }
       });

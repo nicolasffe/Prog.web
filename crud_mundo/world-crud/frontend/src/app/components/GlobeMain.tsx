@@ -873,7 +873,7 @@ export default function GlobeMain() {
           </>
         )}
 
-        {/* Globe canvas */}
+        {/* Globo 3D: países clicáveis e marcadores de temperatura das cidades. */}
         {size.w > 0 && (
           <Globe
             ref={globeRef}

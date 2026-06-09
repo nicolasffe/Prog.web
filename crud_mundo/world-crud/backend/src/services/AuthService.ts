@@ -24,6 +24,7 @@ export class AuthService {
     }
 
     const passwordHash = await criptografarSenha(input.password);
+    // O banco recebe apenas o hash, nunca a senha original.
     const user = await userRepository.create({
       name: input.name,
       email: input.email,
@@ -50,6 +51,7 @@ export class AuthService {
   }
 
   private authResponse(user: { id: string; name: string; email: string }) {
+    // O JWT mantém a sessão do usuário no frontend.
     const payload = {
       id: user.id,
       name: user.name,

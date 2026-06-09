@@ -36,6 +36,7 @@ export class WeatherService {
   async listCitiesWeather(forceRefresh = false) {
     const cities = await cityRepository.list();
 
+    // Busca o clima de todas as cidades sem derrubar a tela se uma API falhar.
     const results = await Promise.allSettled(
       cities.map(city => this.getByCityId(city.id, forceRefresh))
     );
@@ -70,6 +71,7 @@ export class WeatherService {
     const cached = await weatherRepository.findByCityId(cityId);
     const cacheTtlMs = externalProviders.weatherCacheMinutes * 60 * 1000;
 
+    // Reaproveita clima recente para evitar chamadas externas desnecessárias.
     if (!forceRefresh && cached && Date.now() - cached.fetchedAt.getTime() < cacheTtlMs) {
       return { ...cached, city, cached: true };
     }
@@ -84,6 +86,7 @@ export class WeatherService {
   }
 
   private async fetchCurrentWeather(latitude: number, longitude: number) {
+    // Usa OpenWeather quando há chave; sem chave, cai para Open-Meteo.
     if (externalProviders.openWeatherApiKey) {
       return this.fetchOpenWeather(latitude, longitude);
     }
