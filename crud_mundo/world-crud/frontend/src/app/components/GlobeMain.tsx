@@ -39,11 +39,11 @@ const SPACE_BACKGROUND = `
 `;
 
 const CONTINENTS_NAV = [
-  { name: 'Ãfrica', lat: 3, lng: 22, color: '#8bc6b2' },
-  { name: 'Ãsia', lat: 34, lng: 100, color: '#8fbfd4' },
+  { name: 'África', lat: 3, lng: 22, color: '#8bc6b2' },
+  { name: 'Ásia', lat: 34, lng: 100, color: '#8fbfd4' },
   { name: 'Europa', lat: 52, lng: 15, color: '#9cb7d8' },
-  { name: 'AmÃ©rica N.', lat: 46, lng: -100, color: '#8fc9c1' },
-  { name: 'AmÃ©rica S.', lat: -14, lng: -57, color: '#9dc58b' },
+  { name: 'América N.', lat: 46, lng: -100, color: '#8fc9c1' },
+  { name: 'América S.', lat: -14, lng: -57, color: '#9dc58b' },
   { name: 'Oceania', lat: -24, lng: 134, color: '#67e8f9' },
 ];
 
@@ -295,8 +295,8 @@ export default function GlobeMain() {
     setLoginLoading(false);
     if (!result.ok) {
       setLoginError(result.message || authError || (authMode === 'register'
-        ? 'Informe nome, e-mail vÃ¡lido e senha com pelo menos 6 caracteres.'
-        : 'Use um e-mail vÃ¡lido e uma senha com pelo menos 6 caracteres.'));
+        ? 'Informe nome, e-mail válido e senha com pelo menos 6 caracteres.'
+        : 'Use um e-mail válido e uma senha com pelo menos 6 caracteres.'));
       return;
     }
     toast.success(authMode === 'register' ? 'Conta criada com sucesso' : 'Login realizado com sucesso');
@@ -348,11 +348,11 @@ export default function GlobeMain() {
     setSaving(true);
     try {
       await deleteCountry(selected.id);
-      toast.success(`${selected.name} excluÃ­do`);
+      toast.success(`${selected.name} excluído`);
       setDeleteType(null);
       closePanel();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'NÃ£o foi possÃ­vel excluir o paÃ­s.');
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
     } finally {
       setSaving(false);
     }
@@ -458,11 +458,11 @@ export default function GlobeMain() {
       <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(148,163,184,0.08)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 22 }}>
           {selected && ([
-            { icon: Users, label: 'PopulaÃ§Ã£o', value: selected.population.toLocaleString('pt-BR'), color: '#5eead4' },
+            { icon: Users, label: 'População', value: selected.population.toLocaleString('pt-BR'), color: '#5eead4' },
             { icon: Flag, label: 'Capital', value: selected.capital || '-', color: '#7dd3fc' },
             { icon: DollarSign, label: 'Moeda', value: selected.currency, color: '#facc15' },
             { icon: Languages, label: 'Idioma', value: selected.language.split('/')[0].trim(), color: '#c4b5fd' },
-            { icon: GlobeIcon, label: 'Ãrea', value: `${Math.round(selected.area).toLocaleString('pt-BR')} kmÂ²`, color: '#86efac' },
+            { icon: GlobeIcon, label: 'Área', value: `${Math.round(selected.area).toLocaleString('pt-BR')} km²`, color: '#86efac' },
             { icon: MapPin, label: 'Coordenadas', value: `${selected.lat.toFixed(2)}, ${selected.lng.toFixed(2)}`, color: '#93c5fd' },
           ] as const).map(row => (
             <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '18px 1fr', gap: 8, alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(148,163,184,0.08)' }}>
@@ -486,7 +486,7 @@ export default function GlobeMain() {
                   <p style={{ color: '#64748b', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.09em', fontWeight: 850, marginBottom: 5 }}>{weatherCity?.name ? `Clima em ${weatherCity.name}` : 'Clima atual'}</p>
                   <div className="flex items-end gap-2">
                     <p style={{ color: '#f8fafc', fontSize: '1.55rem', fontWeight: 900, lineHeight: 1 }}>
-                      {Math.round(weather.temperature)}<span style={{ color: '#bae6fd', fontSize: '0.92rem', fontWeight: 850, marginLeft: 3 }}>Â°C</span>
+                      {Math.round(weather.temperature)}<span style={{ color: '#bae6fd', fontSize: '0.92rem', fontWeight: 850, marginLeft: 3 }}>°C</span>
                     </p>
                     <p style={{ color: '#94a3b8', fontSize: '0.78rem', fontWeight: 700 }}>{getWeatherLabel(weather.description)}</p>
                   </div>
@@ -494,7 +494,7 @@ export default function GlobeMain() {
                 </div>
               </div>
             ) : (
-              <p style={{ color: '#64748b', fontSize: '0.78rem', fontWeight: 700 }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponÃ­veis'}</p>
+              <p style={{ color: '#64748b', fontSize: '0.78rem', fontWeight: 700 }}>{weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}</p>
             )}
           </div>
         </div>
@@ -544,7 +544,7 @@ export default function GlobeMain() {
           style={{ color: '#475569', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, padding: '5px', cursor: 'pointer' }}>
           <ChevronLeft size={14} />
         </button>
-        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Editar paÃ­s</span>
+        <span style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.9rem' }}>Editar país</span>
         <span style={{ fontSize: '1.1rem' }}>{selected?.flag}</span>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
@@ -568,14 +568,14 @@ export default function GlobeMain() {
           />
         </Field>
         <Field label="Capital"><Input value={editForm.capital ?? ''} onChange={e => setEditForm(f => ({ ...f, capital: e.target.value }))} /></Field>
-        <Field label="PopulaÃ§Ã£o *"><Input type="number" value={numberInputValue(editForm.population)} onChange={e => setEditForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} required /></Field>
+        <Field label="População *"><Input type="number" value={numberInputValue(editForm.population)} onChange={e => setEditForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} required /></Field>
         <Field label="Idioma *"><Input value={editForm.language ?? ''} onChange={e => setEditForm(f => ({ ...f, language: e.target.value }))} required /></Field>
         <Field label="Moeda *"><Input value={editForm.currency ?? ''} onChange={e => setEditForm(f => ({ ...f, currency: e.target.value }))} required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.01" value={numberInputValue(editForm.lat)} onChange={e => setEditForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.01" value={numberInputValue(editForm.lng)} onChange={e => setEditForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} /></Field>
         </div>
-        <Field label="Fuso horÃ¡rio"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
+        <Field label="Fuso horário"><Input value={editForm.timezone ?? ''} onChange={e => setEditForm(f => ({ ...f, timezone: e.target.value }))} /></Field>
       </div>
       <div className="flex gap-2 p-4 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button type="button" onClick={() => setMode('view')}
@@ -605,7 +605,7 @@ export default function GlobeMain() {
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
         <Field label="Nome da cidade *"><Input value={cityForm.name} onChange={e => setCityForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" /></Field>
-        <Field label="PopulaÃ§Ã£o *"><Input type="number" value={numberInputValue(cityForm.population)} onChange={e => setCityForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 250000" required /></Field>
+        <Field label="População *"><Input type="number" value={numberInputValue(cityForm.population)} onChange={e => setCityForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 250000" required /></Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Latitude"><Input type="number" step="0.0001" value={numberInputValue(cityForm.lat)} onChange={e => setCityForm(f => ({ ...f, lat: parseNumberInput(e.target.value) }))} /></Field>
           <Field label="Longitude"><Input type="number" step="0.0001" value={numberInputValue(cityForm.lng)} onChange={e => setCityForm(f => ({ ...f, lng: parseNumberInput(e.target.value) }))} /></Field>
@@ -650,7 +650,7 @@ export default function GlobeMain() {
                 </div>
                 <div>
                   <p style={{ color: '#f8fafc', fontSize: '0.95rem', fontWeight: 900 }}>Preparando o globo</p>
-                  <p style={{ color: '#64748b', fontSize: '0.74rem', marginTop: 3 }}>Carregando paÃ­ses e relevo 3D</p>
+                  <p style={{ color: '#64748b', fontSize: '0.74rem', marginTop: 3 }}>Carregando países e relevo 3D</p>
                 </div>
               </div>
               <div style={{ height: 6, borderRadius: 999, overflow: 'hidden', background: 'rgba(148,163,184,0.14)' }}>
@@ -737,7 +737,7 @@ export default function GlobeMain() {
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
-                  placeholder="Buscar paÃ­ses, capitais..."
+                  placeholder="Buscar países, capitais..."
                   style={{
                     width: '100%', paddingLeft: 38, paddingRight: 14, paddingTop: 9, paddingBottom: 9,
                     background: 'rgba(2,8,20,0.72)', backdropFilter: 'blur(16px)',
@@ -781,14 +781,14 @@ export default function GlobeMain() {
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: `linear-gradient(135deg, ${OCEAN.teal}, ${OCEAN.aqua})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={11} style={{ color: 'white' }} />
                 </div>
-                <span style={{ display: isTiny ? 'none' : 'inline', fontSize: '0.75rem', fontWeight: 600, maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'UsuÃ¡rio'}</span>
+                <span style={{ display: isTiny ? 'none' : 'inline', fontSize: '0.75rem', fontWeight: 600, maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</span>
                 <ChevronDown size={12} style={{ transform: menuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
 
               {menuOpen && (
                 <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, minWidth: 210, borderRadius: 14, overflow: 'hidden', background: 'rgba(3,12,30,0.97)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 20px 60px rgba(0,0,0,0.6)' }}>
                   <div style={{ padding: '12px 14px 10px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'UsuÃ¡rio'}</p>
+                    <p style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Usuário'}</p>
                     <p style={{ color: '#64748b', fontSize: '0.7rem', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
                   </div>
                   <button onClick={() => { setProfileOpen(true); setMenuOpen(false); }}
@@ -801,7 +801,7 @@ export default function GlobeMain() {
                   {([
                     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
                     { to: '/app/continents', icon: Layers, label: 'Continentes', count: continents.length },
-                    { to: '/app/countries', icon: Flag, label: 'PaÃ­ses', count: countries.length },
+                    { to: '/app/countries', icon: Flag, label: 'Países', count: countries.length },
                     { to: '/app/cities', icon: Building2, label: 'Cidades', count: cities.length },
                   ] as const).map(item => (
                     <Link key={item.to} to={item.to}
@@ -824,16 +824,31 @@ export default function GlobeMain() {
               )}
             </div>
 
-            {/* Continent navigator */}
-            <div style={{ position: 'absolute', bottom: isCompact ? 16 : 22, left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: isCompact ? 'calc(100vw - 32px)' : 'min(720px, calc(100vw - 420px))', minWidth: isCompact ? 0 : 460, display: isTiny ? 'none' : 'block' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: 5, borderRadius: 16, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', boxShadow: '0 14px 40px rgba(0,0,0,0.24)' }}>
+            {/* Bottom navigation */}
+            <div style={{ position: 'absolute', bottom: isCompact ? 16 : 22, left: 22, right: isCompact ? 22 : 72, zIndex: 10, display: isTiny ? 'none' : 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: '10px 0', borderTop: '1px solid rgba(148,163,184,0.12)', background: 'linear-gradient(180deg, transparent, rgba(2,8,20,0.18))', backdropFilter: 'blur(4px)' }}>
+              {!selected && !loading && !isCompact ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+                  {[
+                    ['Arraste', 'girar'],
+                    ['Role', 'zoom'],
+                    ['Clique', 'abrir país'],
+                  ].map(([action, detail]) => (
+                    <span key={action} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5, whiteSpace: 'nowrap' }}>
+                      <span style={{ color: '#d5e4ea', fontSize: '0.68rem', fontWeight: 850 }}>{action}</span>
+                      <span style={{ color: '#64748b', fontSize: '0.64rem', fontWeight: 650 }}>{detail}</span>
+                    </span>
+                  ))}
+                </div>
+              ) : <span />}
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: isCompact ? 12 : 18, flexWrap: 'wrap', minWidth: 0 }}>
                 {CONTINENTS_NAV.map(c => (
                   <button key={c.name} onClick={() => flyToContinent(c.lat, c.lng)}
-                    style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(148,163,184,0.1)', borderRadius: 12, padding: '8px 11px', color: '#d5e4ea', fontSize: '0.74rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.18s', letterSpacing: '0.01em', whiteSpace: 'nowrap' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,41,59,0.72)'; e.currentTarget.style.borderColor = `${c.color}66`; e.currentTarget.style.color = c.color; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(15,23,42,0.5)'; e.currentTarget.style.borderColor = 'rgba(148,163,184,0.1)'; e.currentTarget.style.color = '#d5e4ea'; }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'transparent', border: 'none', padding: '3px 0', color: '#cbd5e1', fontSize: '0.73rem', fontWeight: 800, cursor: 'pointer', transition: 'color 0.18s', letterSpacing: '0.01em', whiteSpace: 'nowrap' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = c.color; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#cbd5e1'; }}>
                     <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.color, boxShadow: `0 0 12px ${c.color}55`, flexShrink: 0 }} />
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</span>
+                    <span>{c.name}</span>
                   </button>
                 ))}
               </div>
@@ -844,7 +859,7 @@ export default function GlobeMain() {
               {([
                 { icon: ZoomIn, action: zoomIn, title: 'Aproximar' },
                 { icon: ZoomOut, action: zoomOut, title: 'Afastar' },
-                { icon: RotateCcw, action: resetView, title: 'Redefinir visualizaÃ§Ã£o' },
+                { icon: RotateCcw, action: resetView, title: 'Redefinir visualização' },
               ] as const).map(({ icon: Icon, action, title }) => (
                 <button key={title} onClick={action} title={title}
                   style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(2,8,20,0.65)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.07)', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
@@ -855,23 +870,6 @@ export default function GlobeMain() {
               ))}
             </div>
 
-            {/* Hint - only when nothing selected */}
-            {!selected && !loading && !isCompact && (
-              <div style={{ position: 'absolute', bottom: 22, left: 16, zIndex: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(3,10,24,0.58)', backdropFilter: 'blur(18px)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 14, padding: '7px 10px', boxShadow: '0 14px 40px rgba(0,0,0,0.22)' }}>
-                  {[
-                    ['Arraste', 'girar'],
-                    ['Role', 'zoom'],
-                    ['Clique', 'abrir paÃ­s'],
-                  ].map(([action, detail]) => (
-                    <div key={action} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ color: '#d5e4ea', fontSize: '0.7rem', fontWeight: 800 }}>{action}</span>
-                      <span style={{ color: '#64748b', fontSize: '0.66rem', fontWeight: 600 }}>{detail}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </>
         )}
 
@@ -906,7 +904,7 @@ export default function GlobeMain() {
             labelAltitude={0.014}
             labelText={(d: object) => {
               const item = d as any;
-              return `${item.city.name} ${Math.round(item.temperature)}Â°C`;
+              return `${item.city.name} ${Math.round(item.temperature)}°C`;
             }}
             labelSize={0.56}
             labelDotRadius={0.16}
@@ -914,7 +912,7 @@ export default function GlobeMain() {
             labelResolution={2}
             labelLabel={(d: object) => {
               const item = d as any;
-              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,211,238,0.24);font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>${Math.round(item.temperature)}Â°C - ${item.description ?? item.provider}<br/>Umidade ${item.humidity ?? '-'}% | Vento ${item.windSpeed ?? '-'} km/h</div>`;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,211,238,0.24);font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>${Math.round(item.temperature)}°C - ${item.description ?? item.provider}<br/>Umidade ${item.humidity ?? '-'}% | Vento ${item.windSpeed ?? '-'} km/h</div>`;
             }}
             onLabelClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
             pointsData={[]}
@@ -925,7 +923,7 @@ export default function GlobeMain() {
             pointColor={(d: object) => temperatureColor((d as any).temperature)}
             pointLabel={(d: object) => {
               const item = d as any;
-              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid ${temperatureAccent(item.temperature)};font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>Destaque: ${Math.round(item.temperature)}Â°C</div>`;
+              return `<div style="background:rgba(3,12,30,0.96);color:#e2e8f0;padding:8px 10px;border-radius:10px;border:1px solid ${temperatureAccent(item.temperature)};font-size:12px;line-height:1.35"><strong>${item.city.name}</strong><br/>Destaque: ${Math.round(item.temperature)}°C</div>`;
             }}
             onPointClick={(d: object) => flyToWeatherCity((d as any).city.countryId)}
           />
@@ -952,7 +950,7 @@ export default function GlobeMain() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(148,163,184,0.08)' }}>
                 {[
                   { label: 'Continentes', value: continents.length, icon: Layers },
-                  { label: 'PaÃ­ses', value: countries.length, icon: Flag },
+                  { label: 'Países', value: countries.length, icon: Flag },
                   { label: 'Cidades', value: cities.length, icon: Building2 },
                 ].map(item => (
                   <div key={item.label} style={{ background: 'rgba(3,8,22,0.96)', padding: '16px 12px', textAlign: 'center' }}>
@@ -984,7 +982,7 @@ export default function GlobeMain() {
                   </div>
                   <div>
                     <span style={{ color: '#e2e8f0', fontSize: '0.98rem', fontWeight: 900, letterSpacing: '0.04em' }}>GeoCRUD</span>
-                    <p style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700, marginTop: 2 }}>Plataforma geogrÃ¡fica</p>
+                    <p style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700, marginTop: 2 }}>Plataforma geográfica</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#7dd3fc', background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(125,211,252,0.16)', borderRadius: 999, padding: '6px 10px', fontSize: '0.68rem', fontWeight: 850 }}>
@@ -996,7 +994,7 @@ export default function GlobeMain() {
               <div style={{ marginBottom: 22 }}>
                 <p style={{ color: '#f8fafc', fontSize: '1.55rem', fontWeight: 900, lineHeight: 1, marginBottom: 8 }}>{authMode === 'register' ? 'Criar conta' : 'Entrar'}</p>
                 <p style={{ color: '#94a3b8', fontSize: '0.86rem', lineHeight: 1.45 }}>
-                  {authMode === 'register' ? 'Cadastre-se para comeÃ§ar a gerenciar dados geogrÃ¡ficos.' : 'Acesse o painel para gerenciar continentes, paÃ­ses, cidades e clima.'}
+                  {authMode === 'register' ? 'Cadastre-se para começar a gerenciar dados geográficos.' : 'Acesse o painel para gerenciar continentes, países, cidades e clima.'}
                 </p>
               </div>
 
@@ -1057,12 +1055,12 @@ export default function GlobeMain() {
               <button type="button"
                 onClick={() => { setAuthMode(authMode === 'register' ? 'login' : 'register'); setLoginError(''); }}
                 style={{ width: '100%', marginTop: 14, background: 'transparent', border: 'none', color: '#7dd3fc', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800 }}>
-                {authMode === 'register' ? 'JÃ¡ tenho uma conta' : 'Criar uma nova conta'}
+                {authMode === 'register' ? 'Já tenho uma conta' : 'Criar uma nova conta'}
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, color: '#64748b', fontSize: '0.74rem', fontWeight: 700, marginTop: 18 }}>
                 <span style={{ width: 5, height: 5, borderRadius: 999, background: '#5eead4', boxShadow: '0 0 16px rgba(94,234,212,0.8)' }} />
-                {authMode === 'register' ? 'A senha serÃ¡ protegida com criptografia.' : 'Use uma conta cadastrada para acessar o sistema.'}
+                {authMode === 'register' ? 'A senha será protegida com criptografia.' : 'Use uma conta cadastrada para acessar o sistema.'}
               </div>
             </div>
           </div>
@@ -1101,7 +1099,7 @@ export default function GlobeMain() {
       </div>
 
       {/* Dialogs */}
-      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades e climas vinculados tambÃ©m serÃ£o excluÃ­dos." loading={saving} onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
+      <DeleteDialog open={deleteType === 'country'} entityName={selected?.name ?? ''} warning="Todas as cidades e climas vinculados também serão excluídos." loading={saving} onConfirm={handleDeleteCountry} onCancel={() => setDeleteType(null)} />
       <DeleteDialog open={deleteType === 'city'} entityName={deleteCityTarget?.name ?? ''} onConfirm={handleDeleteCity} onCancel={() => setDeleteType(null)} />
 
       <style>{`
@@ -1155,4 +1153,3 @@ function CityRow({ city, onEdit, onDelete }: { city: City; onEdit: (c: City) => 
     </div>
   );
 }
-

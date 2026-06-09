@@ -33,10 +33,10 @@ export default function CountryDetails() {
     return (
       <div className="flex flex-col items-center justify-center h-full" style={{ color: '#94a3b8' }}>
         <Globe size={48} style={{ opacity: 0.3, marginBottom: 12 }} />
-        <p>PaÃ­s nÃ£o encontrado.</p>
+        <p>País não encontrado.</p>
         <button onClick={() => navigate('/app/countries')} className="mt-4 px-4 py-2 rounded-xl"
           style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Voltar para paÃ­ses
+          Voltar para países
         </button>
       </div>
     );
@@ -59,10 +59,10 @@ export default function CountryDetails() {
     setSaving(true);
     try {
       await deleteCountry(country.id);
-      toast.success(`${country.name} excluÃ­do`);
+      toast.success(`${country.name} excluído`);
       navigate('/app/countries');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'NÃ£o foi possÃ­vel excluir o paÃ­s.');
+      toast.error(error instanceof Error ? error.message : 'Não foi possível excluir o país.');
     } finally {
       setSaving(false);
     }
@@ -77,7 +77,7 @@ export default function CountryDetails() {
           style={{ background: 'rgba(15,23,42,0.78)', color: '#cbd5e1', border: '1px solid rgba(148,163,184,0.18)', cursor: 'pointer', fontSize: '0.875rem' }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,41,59,0.82)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(15,23,42,0.78)'}>
-          <ArrowLeft size={16} /> Voltar para paÃ­ses
+          <ArrowLeft size={16} /> Voltar para países
         </button>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -90,7 +90,7 @@ export default function CountryDetails() {
               <button type="submit" form="countryForm"
                 className="flex items-center gap-2 rounded-xl px-4 py-2 transition-colors"
                 style={{ background: '#14b8a6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar alteraÃ§Ãµes'}
+                <Save size={15} /> {saving ? 'Salvando...' : 'Salvar alterações'}
               </button>
             </>
           ) : (
@@ -150,9 +150,9 @@ export default function CountryDetails() {
       {editing ? (
         <form id="countryForm" onSubmit={handleSave} className="rounded-2xl p-6 mb-6 space-y-4"
           style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
-          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Editar detalhes do paÃ­s</h3>
+          <h3 style={{ color: '#f8fafc', fontWeight: 700, marginBottom: 4 }}>Editar detalhes do país</h3>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Name"><Input value={form.name} onChange={e => setForm(f => ({ ...f!, name: e.target.value }))} required /></Field>
+            <Field label="Nome"><Input value={form.name} onChange={e => setForm(f => ({ ...f!, name: e.target.value }))} required /></Field>
             <Field label="Bandeira"><Input value={form.flag} onChange={e => setForm(f => ({ ...f!, flag: e.target.value }))} /></Field>
           </div>
           <Field label="Imagem da bandeira">
@@ -176,23 +176,23 @@ export default function CountryDetails() {
             <Field label="Capital"><Input value={form.capital} onChange={e => setForm(f => ({ ...f!, capital: e.target.value }))} /></Field>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <Field label="PopulaÃ§Ã£o *"><Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f!, population: parseNumberInput(e.target.value) }))} required /></Field>
+            <Field label="População *"><Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f!, population: parseNumberInput(e.target.value) }))} required /></Field>
             <Field label="Moeda *"><Input value={form.currency} onChange={e => setForm(f => ({ ...f!, currency: e.target.value }))} required /></Field>
             <Field label="Idioma *"><Input value={form.language} onChange={e => setForm(f => ({ ...f!, language: e.target.value }))} required /></Field>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <Field label="Latitude"><Input type="number" step="0.01" value={numberInputValue(form.lat)} onChange={e => setForm(f => ({ ...f!, lat: parseNumberInput(e.target.value) }))} /></Field>
             <Field label="Longitude"><Input type="number" step="0.01" value={numberInputValue(form.lng)} onChange={e => setForm(f => ({ ...f!, lng: parseNumberInput(e.target.value) }))} /></Field>
-            <Field label="Timezone"><Input value={form.timezone} onChange={e => setForm(f => ({ ...f!, timezone: e.target.value }))} /></Field>
+            <Field label="Fuso horário"><Input value={form.timezone} onChange={e => setForm(f => ({ ...f!, timezone: e.target.value }))} /></Field>
           </div>
         </form>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { icon: Users, label: 'PopulaÃ§Ã£o', value: country.population.toLocaleString(), color: '#14b8a6' },
+            { icon: Users, label: 'População', value: country.population.toLocaleString(), color: '#14b8a6' },
             { icon: DollarSign, label: 'Moeda', value: country.currency, color: '#f59e0b' },
             { icon: Languages, label: 'Idioma', value: country.language, color: '#8b5cf6' },
-            { icon: MapPin, label: 'Ãrea', value: `${country.area.toLocaleString('pt-BR')} kmÂ²`, color: '#0ea5e9' },
+            { icon: MapPin, label: 'Área', value: `${country.area.toLocaleString('pt-BR')} km²`, color: '#0ea5e9' },
           ].map(card => (
             <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}15` }}>
@@ -208,20 +208,20 @@ export default function CountryDetails() {
       {(country.region || country.subregion || country.timezones?.length || country.maps?.googleMaps || country.maps?.openStreetMaps) && (
         <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="flex items-center justify-between mb-4">
-            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Dados externos do paÃ­s</p>
+            <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Dados externos do país</p>
             <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>REST Countries</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Region</p>
+              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Região</p>
               <p style={{ color: '#e2e8f0', fontWeight: 700, marginTop: 4 }}>{[country.region, country.subregion].filter(Boolean).join(' - ') || 'N/A'}</p>
             </div>
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Timezones</p>
+              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Fusos horários</p>
               <p style={{ color: '#e2e8f0', fontWeight: 700, marginTop: 4 }}>{country.timezones?.slice(0, 3).join(', ') || country.timezone}</p>
             </div>
             <div className="rounded-xl p-3" style={{ background: 'rgba(15,23,42,0.62)', border: '1px solid rgba(148,163,184,0.18)' }}>
-              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Maps</p>
+              <p style={{ color: '#94a3b8', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mapas</p>
               <div className="flex gap-2 mt-3">
                 {country.maps?.googleMaps && <a href={country.maps.googleMaps} target="_blank" rel="noreferrer" style={{ color: '#14b8a6', fontWeight: 700, fontSize: '0.82rem' }}>Google</a>}
                 {country.maps?.openStreetMaps && <a href={country.maps.openStreetMaps} target="_blank" rel="noreferrer" style={{ color: '#0ea5e9', fontWeight: 700, fontSize: '0.82rem' }}>OSM</a>}
@@ -237,7 +237,7 @@ export default function CountryDetails() {
         <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(15,23,42,0.78)', border: '1px solid rgba(148,163,184,0.18)' }}>
           <div className="p-5 pb-0">
             <div className="flex items-center justify-between mb-4">
-              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Location & Coordinates</p>
+              <p style={{ color: '#e2e8f0', fontWeight: 600 }}>Localização e coordenadas</p>
               <Globe size={16} style={{ color: '#94a3b8' }} />
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function CountryDetails() {
                     <span style={{ fontSize: '1.5rem' }}>{getWeatherLabel(weather.description)}</span>
                   </div>
                   <div>
-                    <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{Math.round(weather.temperature)}Â°C</p>
+                    <p style={{ color: '#f8fafc', fontSize: '1.8rem', fontWeight: 800 }}>{Math.round(weather.temperature)}°C</p>
                     <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{weather.description ?? weather.provider}</p>
                   </div>
                   <div className="ml-auto space-y-1">
@@ -303,7 +303,7 @@ export default function CountryDetails() {
                 </div>
               ) : (
                 <div className="py-4 text-center" style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-                  {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponÃ­veis'}
+                  {weatherLoading ? 'Carregando clima...' : 'Dados de clima indisponíveis'}
                 </div>
               )}
             </div>
@@ -322,7 +322,7 @@ export default function CountryDetails() {
             {countryCities.length === 0 ? (
               <div className="text-center py-6" style={{ color: '#94a3b8' }}>
                 <Building2 size={28} style={{ margin: '0 auto 8px', opacity: 0.3 }} />
-                <p style={{ fontSize: '0.85rem' }}>Nenhuma cidade cadastrada para este paÃ­s</p>
+                <p style={{ fontSize: '0.85rem' }}>Nenhuma cidade cadastrada para este país</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -356,7 +356,7 @@ export default function CountryDetails() {
       <DeleteDialog
         open={deleteOpen}
         entityName={country.name}
-        warning="Todas as cidades e climas vinculados tambÃ©m serÃ£o excluÃ­dos."
+        warning="Todas as cidades e climas vinculados também serão excluídos."
         loading={saving}
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}

@@ -155,7 +155,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricCard icon={Globe} label="Continentes" value={continents.length} sub="Regioes mapeadas" color="#38bdf8" onClick={() => navigate('/app/continents')} />
+        <MetricCard icon={Globe} label="Continentes" value={continents.length} sub="Regiões mapeadas" color="#38bdf8" onClick={() => navigate('/app/continents')} />
         <MetricCard icon={Flag} label="Países" value={countries.length} sub="Dados enriquecidos por APIs" color="#2dd4bf" onClick={() => navigate('/app/countries')} />
         <MetricCard icon={Building2} label="Cidades" value={cities.length} sub="Coordenadas cadastradas" color="#a78bfa" onClick={() => navigate('/app/cities')} />
         <MetricCard icon={Users} label="População" value={formatNumber(populationTotal)} sub="População total cadastrada" color="#facc15" />

@@ -47,7 +47,7 @@ export default function Layout() {
             {sidebarOpen && (
               <div>
                 <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.2 }}>GeoCRUD</p>
-                <p style={{ color: '#38bdf8', fontSize: '0.65rem', letterSpacing: '0.1em' }}>GESTAO MUNDO</p>
+                <p style={{ color: '#38bdf8', fontSize: '0.65rem', letterSpacing: '0.1em' }}>GESTÃO MUNDO</p>
               </div>
             )}
           </Link>

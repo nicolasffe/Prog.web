@@ -78,7 +78,7 @@ export default function CitiesPage() {
   const handleDelete = () => {
     if (!deleteTarget) return;
     deleteCity(deleteTarget.id);
-    toast.success(`${deleteTarget.name} excluÃ­da`);
+    toast.success(`${deleteTarget.name} excluída`);
     setDeleteTarget(null);
   };
 
@@ -150,7 +150,7 @@ export default function CitiesPage() {
         <table className="w-full" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.16)' }}>
-              {['#', 'Cidade', 'PaÃ­s', 'PopulaÃ§Ã£o', 'Latitude', 'Longitude', 'Status', 'AÃ§Ãµes'].map(h => (
+              {['#', 'Cidade', 'País', 'População', 'Latitude', 'Longitude', 'Status', 'Ações'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(15,23,42,0.62)', whiteSpace: 'nowrap' }}>
                   {h}
                 </th>
@@ -272,7 +272,7 @@ export default function CitiesPage() {
             <Field label="Nome *">
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required placeholder="Ex.: Porto" />
             </Field>
-            <Field label="PaÃ­s *">
+            <Field label="País *">
               <SearchableSelect
                 value={form.countryId}
                 onChange={countryId => setForm(f => ({ ...f, countryId }))}
@@ -287,7 +287,7 @@ export default function CitiesPage() {
               />
             </Field>
           </div>
-          <Field label="PopulaÃ§Ã£o *">
+          <Field label="População *">
             <Input type="number" value={numberInputValue(form.population)} onChange={e => setForm(f => ({ ...f, population: parseNumberInput(e.target.value) }))} placeholder="Ex.: 250000" required />
           </Field>
           <div className="grid grid-cols-2 gap-4">
@@ -307,10 +307,10 @@ export default function CitiesPage() {
               style={{ width: 16, height: 16, accentColor: '#14b8a6', cursor: 'pointer' }}
             />
             <label htmlFor="isCapital" style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer' }}>
-              Esta cidade Ã© a capital do paÃ­s
+              Esta cidade é a capital do país
             </label>
           </div>
-          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alteraÃ§Ãµes'} />
+          <FormActions onCancel={() => setModal(null)} loading={loading} submitLabel={modal === 'create' ? 'Criar' : 'Salvar alterações'} />
         </form>
       </Modal>
 
@@ -323,4 +323,3 @@ export default function CitiesPage() {
     </div>
   );
 }
-
