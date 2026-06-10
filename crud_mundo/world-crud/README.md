@@ -6,6 +6,8 @@ Sistema web para gerenciar continentes, países e cidades com CRUD completo, aut
 
 **Documento de testes:** [docs/Testes_Nicolas_Ferreira.docx](docs/Testes_Nicolas_Ferreira.docx)
 
+**Documento de testes online:** [Google Docs](https://docs.google.com/document/d/e/2PACX-1vRi6oq11G_qP6xXsV352Hx-2Ph-W7yJCYfD6vxVgqY5NJ8nUF_wMjpeRxQRkOr6Bw/pub)
+
 **Vídeo de apresentação:**
 
 - [YouTube](https://youtu.be/b-P7oAij1fw)
