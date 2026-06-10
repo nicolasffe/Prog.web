@@ -6,7 +6,10 @@ Sistema web para gerenciar continentes, países e cidades com CRUD completo, aut
 
 **Documento de testes:** [docs/Testes_Nicolas_Ferreira.docx](docs/Testes_Nicolas_Ferreira.docx)
 
-**Vídeo de apresentação:** adicionar link aqui
+**Vídeo de apresentação:**
+
+- [YouTube](https://youtu.be/b-P7oAij1fw)
+- [Loom](https://www.loom.com/share/33b35014841a4f11a9da26170a18e666)
 
 ## Tecnologias
 
