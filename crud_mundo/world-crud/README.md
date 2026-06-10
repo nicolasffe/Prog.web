@@ -1,19 +1,19 @@
 # GeoCRUD
 
-Sistema web para gerenciar continentes, paises e cidades com CRUD completo, autenticacao, banco PostgreSQL, clima real e globo 3D interativo.
+Sistema web para gerenciar continentes, países e cidades com CRUD completo, autenticação, banco PostgreSQL, clima real e globo 3D interativo.
 
-## Documentacao
+## Documentação
 
 **Documento de testes:** [docs/Testes_Nicolas_Ferreira.docx](docs/Testes_Nicolas_Ferreira.docx)
 
-**Video de apresentacao:** adicionar link aqui
+**Vídeo de apresentação:** adicionar link aqui
 
 ## Tecnologias
 
 - Frontend: React, Vite, TypeScript, React Router, react-globe.gl
 - Backend: Node.js, Express, TypeScript, Prisma
 - Banco de dados: PostgreSQL
-- Autenticacao: JWT e bcrypt
+- Autenticação: JWT e bcrypt
 - APIs externas: OpenWeather ou Open-Meteo para clima
 
 ## Requisitos
@@ -22,7 +22,7 @@ Sistema web para gerenciar continentes, paises e cidades com CRUD completo, aute
 - npm instalado
 - PostgreSQL local ou banco online
 
-## Configuracao do Backend
+## Configuração do Backend
 
 Crie o arquivo `backend/.env` com:
 
@@ -35,11 +35,11 @@ OPENWEATHER_API_KEY=""
 GEONAMES_USERNAME=""
 ```
 
-`OPENWEATHER_API_KEY` e `GEONAMES_USERNAME` sao opcionais.
+`OPENWEATHER_API_KEY` e `GEONAMES_USERNAME` são opcionais.
 
 ## Como Rodar
 
-Instale as dependencias:
+Instale as dependências:
 
 ```bash
 npm run install:all
@@ -79,7 +79,7 @@ API local:
 http://localhost:3333/api
 ```
 
-## Scripts Uteis
+## Scripts Úteis
 
 Na raiz do projeto:
 
@@ -92,13 +92,13 @@ npm run build:frontend
 
 ## Funcionalidades
 
-- Cadastro e login de usuario
+- Cadastro e login de usuário
 - Senhas protegidas com bcrypt
-- CRUD de continentes, paises e cidades
-- Exclusao em cascata de dados vinculados
-- Validacao de populacao de cidade
-- Upload de bandeira do pais
+- CRUD de continentes, países e cidades
+- Exclusão em cascata de dados vinculados
+- Validação de população de cidade
+- Upload de bandeira do país
 - Dashboard com indicadores
-- Globo 3D com paises e temperaturas por cidade
+- Globo 3D com países e temperaturas por cidade
 - Consulta de clima real por coordenadas
 - Deploy preparado para Vercel
